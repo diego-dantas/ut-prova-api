@@ -31,11 +31,14 @@ public class AreaConhecimentoController {
             
             areaConhecimentoEntity.setId(areaConhecimentoDTO.getId());
             areaConhecimentoEntity.setDescription(areaConhecimentoDTO.getDescription());
+            areaConhecimentoEntity.setStatus(areaConhecimentoDTO.isStatus());
 
             areaConhecimentoEntity = areaConhecimentoRepository.save(areaConhecimentoEntity);
             
             areaConhecimentoDTO.setId(areaConhecimentoEntity.getId());
             areaConhecimentoDTO.setDescription(areaConhecimentoEntity.getDescription());
+            areaConhecimentoDTO.setStatus(areaConhecimentoEntity.isStatus());
+
 
             return ResponseEntity.ok(areaConhecimentoDTO);
         } catch (Exception e) {
@@ -55,6 +58,7 @@ public class AreaConhecimentoController {
                 AreaConhecimentoDTO areaConhecimentoDTO = new AreaConhecimentoDTO();
                 areaConhecimentoDTO.setId(areaConhecimentoEntity.getId());
                 areaConhecimentoDTO.setDescription(areaConhecimentoEntity.getDescription());
+                areaConhecimentoDTO.setStatus(areaConhecimentoEntity.isStatus());
                 areaConhecimentoDTOs.add(areaConhecimentoDTO);
             }
             return ResponseEntity.ok(areaConhecimentoDTOs);

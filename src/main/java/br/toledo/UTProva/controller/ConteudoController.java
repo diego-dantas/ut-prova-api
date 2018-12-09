@@ -31,11 +31,13 @@ public class ConteudoController {
             
             conteudoEntity.setId(conteudoDTO.getId());
             conteudoEntity.setDescription(conteudoDTO.getDescription());
+            conteudoEntity.setStatus(conteudoDTO.isStatus());
 
             conteudoEntity = conteudoRepository.save(conteudoEntity);
             
             conteudoDTO.setId(conteudoEntity.getId());
             conteudoDTO.setDescription(conteudoEntity.getDescription());
+            conteudoDTO.setStatus(conteudoEntity.isStatus());
 
             return ResponseEntity.ok(conteudoDTO);
         } catch (Exception e) {
@@ -55,6 +57,7 @@ public class ConteudoController {
                 ConteudoDTO conteudoDTO = new ConteudoDTO();
                 conteudoDTO.setId(conteudoEntity.getId());
                 conteudoDTO.setDescription(conteudoEntity.getDescription());
+                conteudoDTO.setStatus(conteudoEntity.isStatus());
                 conteudos.add(conteudoDTO);
             }
             return ResponseEntity.ok(conteudos);

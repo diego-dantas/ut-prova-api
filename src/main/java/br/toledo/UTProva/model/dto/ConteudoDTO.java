@@ -4,6 +4,7 @@ public class ConteudoDTO{
 
     private Long id;
     private String description;
+    private boolean status;
 
 
     public Long getId() {
@@ -20,5 +21,13 @@ public class ConteudoDTO{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+   
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

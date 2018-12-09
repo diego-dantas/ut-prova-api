@@ -28,14 +28,16 @@ public class HabilidadeController {
 
         try {
             HabilidadeEntity habilidadeEntity = new HabilidadeEntity();
-            
             habilidadeEntity.setId(habilidadeDTO.getId());
             habilidadeEntity.setDescription(habilidadeDTO.getDescription());
+            habilidadeEntity.setStatus(habilidadeDTO.isStatus());
 
             habilidadeEntity = habilidadeRepository.save(habilidadeEntity);
             
             habilidadeDTO.setId(habilidadeEntity.getId());
             habilidadeDTO.setDescription(habilidadeEntity.getDescription());
+            habilidadeDTO.setStatus(habilidadeEntity.isStatus());
+
 
             return ResponseEntity.ok(habilidadeDTO);
         } catch (Exception e) {
@@ -55,6 +57,7 @@ public class HabilidadeController {
                 HabilidadeDTO habilidadeDTO = new HabilidadeDTO();
                 habilidadeDTO.setId(habilidadeEntity.getId());
                 habilidadeDTO.setDescription(habilidadeEntity.getDescription());
+                habilidadeDTO.setStatus(habilidadeEntity.isStatus());
                 habilidadeDTOs.add(habilidadeDTO);
             }
             return ResponseEntity.ok(habilidadeDTOs);
