@@ -1,7 +1,9 @@
 package br.toledo.UTProva.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,25 +26,36 @@ public class ConteudoController {
     private ConteudoRepository conteudoRepository;
 
     @PostMapping(value = "/createUpdateConteudo")
-    public ResponseEntity<ConteudoDTO> createUpdateConteudo(@RequestBody ConteudoDTO conteudoDTO){
-
+    public ResponseEntity<Map> createUpdateConteudo(@RequestBody ConteudoDTO conteudoDTO){
+        Map<String, Object> map = new HashMap<String, Object>();
         try {
-            ConteudoEntity conteudoEntity = new ConteudoEntity();
+
+            if(conteudoDTO.getId() != null && conteudoDTO.isStatus() == false){
+                int qtd = conteudoRepository.countQuestao(conteudoDTO.getId());
+                if(qtd > 0){
+                    map.put("success", false);
+                    map.put("message", "Não foi possível efetuar a inativação. Motivo: O Conteudo possui vínculo com Questão.");
+                    return new ResponseEntity<>(map, HttpStatus.OK);
+                }
+            }
             
+            ConteudoEntity conteudoEntity = new ConteudoEntity();
             conteudoEntity.setId(conteudoDTO.getId());
             conteudoEntity.setDescription(conteudoDTO.getDescription());
             conteudoEntity.setStatus(conteudoDTO.isStatus());
 
             conteudoEntity = conteudoRepository.save(conteudoEntity);
             
-            conteudoDTO.setId(conteudoEntity.getId());
-            conteudoDTO.setDescription(conteudoEntity.getDescription());
-            conteudoDTO.setStatus(conteudoEntity.isStatus());
+            map.put("success", true);
+            map.put("message", "Conteudo salvo com sucesso");
 
-            return ResponseEntity.ok(conteudoDTO);
+            return new ResponseEntity<>(map, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();        
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            e.printStackTrace();       
+            map.put("success", false);
+            map.put("message", "Erro ao salvar o Conteudo");         
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+            
         }
     }
 
@@ -67,16 +80,50 @@ public class ConteudoController {
         }
     }
 
+    @GetMapping(value = "/getConteudos/ativo")
+    public ResponseEntity<List<ConteudoDTO>> getConteudosAtivo(){
 
-
-    @PostMapping(value = "/deleteConteudo")
-    public ResponseEntity<ConteudoDTO> deleteConteudo(@RequestBody ConteudoDTO conteudoDTO){
         try {
-            conteudoRepository.deleteById(conteudoDTO.getId());;
-            return ResponseEntity.ok(conteudoDTO);
+            List<ConteudoDTO> conteudos = new ArrayList<>();
+            List<ConteudoEntity> entities = conteudoRepository.findAtivas();
+            
+            for(ConteudoEntity conteudoEntity : entities){
+                ConteudoDTO conteudoDTO = new ConteudoDTO();
+                conteudoDTO.setId(conteudoEntity.getId());
+                conteudoDTO.setDescription(conteudoEntity.getDescription());
+                conteudoDTO.setStatus(conteudoEntity.isStatus());
+                conteudos.add(conteudoDTO);
+            }
+            return ResponseEntity.ok(conteudos);
         } catch (Exception e) {
             e.printStackTrace();        
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+
+    @PostMapping(value = "/deleteConteudo")
+    public ResponseEntity<Map> deleteConteudo(@RequestBody ConteudoDTO conteudoDTO){
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+
+            if(conteudoRepository.countQuestao(conteudoDTO.getId()) > 0){
+                map.put("success", false);
+                map.put("message", "Conteudo não pode ser excluída.");
+            }else{
+                conteudoRepository.deleteById(conteudoDTO.getId());;
+                map.put("success", true);
+                map.put("message", "Conteudo excluido.");
+            }
+            
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();        
+            map.put("success", false);
+            map.put("message", "Erro ao excluir o Conteudo.");
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
     }
 

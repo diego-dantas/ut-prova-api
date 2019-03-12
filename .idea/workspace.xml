@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3071d819-f794-47f3-bd20-132eecfb5c2e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" afterPath="$PROJECT_DIR$/.project" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.apt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.jdt.apt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.m2e.core.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/ServletInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/ServletInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/UTProvaApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/UTProvaApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/AreaConhecimentoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/AreaConhecimentoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/ConteudoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/ConteudoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/HabilidadeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/HabilidadeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/QuestaoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/QuestaoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/UserCTL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/UserCTL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/RoleName.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/RoleName.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/AlternativaEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/AlternativaEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/AreaConhecimentoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/AreaConhecimentoEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/ConteudoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/ConteudoEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/HabilidadeEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/HabilidadeEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/QuestaoEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/QuestaoEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/RoleEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/RoleEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/UsuarioEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/entity/UsuarioEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/AlternativaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/AlternativaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/AreaConhecimentoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/AreaConhecimentoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/ConteudoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/ConteudoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/HabilidadeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/HabilidadeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/QuestaoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/QuestaoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/RoleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/UsuarioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dao/repository/UsuarioRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/AlternativaDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/AlternativaDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/AreaConhecimentoDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/AreaConhecimentoDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/ConteudoDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/ConteudoDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/HabilidadeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/HabilidadeDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/QuestaoDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/QuestaoDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/UsuarioDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/model/dto/UsuarioDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/useful/audit/DateAudit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/useful/audit/DateAudit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/useful/configuration/CorsConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/toledo/UTProva/useful/configuration/CorsConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/br/toledo/UTProva/UtProvaApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/br/toledo/UTProva/UtProvaApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/UTProva-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/UTProva-1.0.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/UTProva-1.0.0.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/UTProva-1.0.0.jar.original" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/br/toledo/UTProva/UTProvaApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/br/toledo/UTProva/UTProvaApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/br/toledo/UTProva/controller/QuestaoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/br/toledo/UTProva/controller/QuestaoController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/br/toledo/UTProva/controller/UserCTL.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/br/toledo/UTProva/controller/UserCTL.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/br/toledo/UTProva/model/dao/entity/QuestaoEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/br/toledo/UTProva/model/dao/entity/QuestaoEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/br/toledo/UTProva/model/dao/repository/QuestaoRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/br/toledo/UTProva/model/dao/repository/QuestaoRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-br.toledo.UTProva.UtProvaApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-br.toledo.UTProva.UtProvaApplicationTests.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/br.toledo.UTProva.UtProvaApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/br.toledo.UTProva.UtProvaApplicationTests.txt" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/target/classes/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/SimuladoController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="271">
+              <caret line="199" column="13" selection-start-line="199" selection-start-column="13" selection-end-line="199" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#2749#8866#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1280" />
+    <option name="height" value="777" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="UTProva" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ut-prova-api" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="UTProva" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ut-prova-api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="UTProva" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ut-prova-api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="UTProva" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ut-prova-api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="UTProva" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ut-prova-api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="UTProva" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="UTProva" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ut-prova-api" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="UTProva" type="462c0819:PsiDirectoryNode" />
+              <item name="controller" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3071d819-f794-47f3-bd20-132eecfb5c2e" name="Default Changelist" comment="" />
+      <created>1549306353329</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1549306353329</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1280" height="777" extended-state="6" />
+    <layout>
+      <window_info id="Image Layers" />
+      <window_info id="Designer" />
+      <window_info id="UI Designer" />
+      <window_info id="Capture Tool" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24959612" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Palette" />
+      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="right" id="Maven" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="right" id="Palette&#9;" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/CoordenadorController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UTProva.iml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1207" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/QuestaoController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/br/toledo/UTProva/controller/SimuladoController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="199" column="13" selection-start-line="199" selection-start-column="13" selection-end-line="199" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2749#8866#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

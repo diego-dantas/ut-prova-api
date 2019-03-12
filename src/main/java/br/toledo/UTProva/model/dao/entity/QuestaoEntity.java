@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -29,8 +30,10 @@ public class QuestaoEntity implements Serializable {
     private String imagem;
     private HabilidadeEntity habilidade;
     private ConteudoEntity conteudo;
+    private TipoQuestaoEntity tipo;
     private AreaConhecimentoEntity areaConhecimento;
     private List<AlternativaEntity> alternativa;
+    private List<SimuladoQuestoesEntity> simuladoQuestao;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -107,7 +110,8 @@ public class QuestaoEntity implements Serializable {
         this.alterCorreta = alterCorreta;
     }
 
-    @Column(name = "imagem", nullable = true, length = 500)
+    @Lob
+    @Column(name = "imagem", nullable = true, columnDefinition="LONGTEXT")
     public String getImagem() {
         return imagem;
     }
@@ -133,6 +137,15 @@ public class QuestaoEntity implements Serializable {
     public void setConteudo(ConteudoEntity conteudo) {
         this.conteudo = conteudo;
     }
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    public TipoQuestaoEntity getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoQuestaoEntity tipo) {
+        this.tipo = tipo;
+    }
 
     @ManyToOne(fetch = FetchType.EAGER)
     public AreaConhecimentoEntity getAreaConhecimento() {
@@ -150,5 +163,14 @@ public class QuestaoEntity implements Serializable {
 
     public void setAlternativa(List<AlternativaEntity> alternativa) {
         this.alternativa = alternativa;
+    }
+
+    @OneToMany(mappedBy = "questao", fetch = FetchType.LAZY)
+    public List<SimuladoQuestoesEntity> getSimuladoQuestao() {
+        return simuladoQuestao;
+    }
+
+    public void setSimuladoQuestao(List<SimuladoQuestoesEntity> simuladoQuestao) {
+        this.simuladoQuestao = simuladoQuestao;
     }
 }

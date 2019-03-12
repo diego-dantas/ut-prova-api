@@ -1,7 +1,9 @@
 package br.toledo.UTProva.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,28 +26,39 @@ public class HabilidadeController {
     private HabilidadeRepository habilidadeRepository;
 
     @PostMapping(value = "/createUpdateHabilidade")
-    public ResponseEntity<HabilidadeDTO> createUpdateHabilidade(@RequestBody HabilidadeDTO habilidadeDTO){
-
+    public ResponseEntity<Map> createUpdateHabilidade(@RequestBody HabilidadeDTO habilidadeDTO){
+        Map<String, Object> map = new HashMap<String, Object>();
         try {
+
+            if(habilidadeDTO.getId() != null && habilidadeDTO.isStatus() == false){
+                int qtd = habilidadeRepository.countQuestaoByHabilidade(habilidadeDTO.getId());
+                if(qtd > 0){
+                    map.put("success", false);
+                    map.put("message", "Não foi possível efetuar a inativação. Motivo: A Habilidade possui vínculo com Questão.");
+                    return new ResponseEntity<>(map, HttpStatus.OK);
+                }
+            }
             HabilidadeEntity habilidadeEntity = new HabilidadeEntity();
             habilidadeEntity.setId(habilidadeDTO.getId());
             habilidadeEntity.setDescription(habilidadeDTO.getDescription());
             habilidadeEntity.setStatus(habilidadeDTO.isStatus());
-
             habilidadeEntity = habilidadeRepository.save(habilidadeEntity);
-            
-            habilidadeDTO.setId(habilidadeEntity.getId());
-            habilidadeDTO.setDescription(habilidadeEntity.getDescription());
-            habilidadeDTO.setStatus(habilidadeEntity.isStatus());
 
+            map.put("success", true);
+            map.put("message", "Habilidade salva com sucesso");
 
-            return ResponseEntity.ok(habilidadeDTO);
+            return new ResponseEntity<>(map, HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();        
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            e.printStackTrace();   
+            map.put("success", false);
+            map.put("message", "Erro ao salvar Habilidade");     
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
     }
 
+    /**
+     * Metodo para buscar todas as habilidades no banco
+     */
     @GetMapping(value = "/getHabilidades")
     public ResponseEntity<List<HabilidadeDTO>> getHabilidades(){
 
@@ -67,16 +80,51 @@ public class HabilidadeController {
         }
     }
 
+    /**
+     * Metodo para buscar as habilidades ativas no banco
+     */
+    @GetMapping(value = "/getHabilidades/ativo")
+    public ResponseEntity<List<HabilidadeDTO>> getHabilidadesAtivo(){
 
-
-    @PostMapping(value = "/deleteHabilidade")
-    public ResponseEntity<HabilidadeDTO> deleteHabilidade(@RequestBody HabilidadeDTO habilidadeDTO){
         try {
-            habilidadeRepository.deleteById(habilidadeDTO.getId());;
-            return ResponseEntity.ok(habilidadeDTO);
+            List<HabilidadeDTO> habilidadeDTOs = new ArrayList<>();
+            List<HabilidadeEntity> entities = habilidadeRepository.findAtivas();
+            
+            for(HabilidadeEntity habilidadeEntity : entities){
+                HabilidadeDTO habilidadeDTO = new HabilidadeDTO();
+                habilidadeDTO.setId(habilidadeEntity.getId());
+                habilidadeDTO.setDescription(habilidadeEntity.getDescription());
+                habilidadeDTO.setStatus(habilidadeEntity.isStatus());
+                habilidadeDTOs.add(habilidadeDTO);
+            }
+            return ResponseEntity.ok(habilidadeDTOs);
         } catch (Exception e) {
             e.printStackTrace();        
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+    @PostMapping(value = "/deleteHabilidade")
+    public ResponseEntity<Map> deleteHabilidade(@RequestBody HabilidadeDTO habilidadeDTO){
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            if(habilidadeRepository.countQuestaoByHabilidade(habilidadeDTO.getId()) > 0){
+                map.put("success", false);
+                map.put("message", "Habilidade não pode ser excluída.");
+            }else{
+                habilidadeRepository.deleteById(habilidadeDTO.getId());;
+                map.put("success", true);
+                map.put("message", "Habilidade excluida.");
+            }
+            
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();        
+            map.put("success", false);
+            map.put("message", "Erro ao excluir a Habilidade.");
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
     }
 

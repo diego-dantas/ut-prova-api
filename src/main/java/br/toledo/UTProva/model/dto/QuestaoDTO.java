@@ -2,6 +2,8 @@ package br.toledo.UTProva.model.dto;
 
 import java.util.List;
 
+import br.toledo.UTProva.model.dto.TipoQuestaoDTO;;
+
 public class QuestaoDTO {
     
     private Long id;
@@ -15,9 +17,9 @@ public class QuestaoDTO {
     private String imagem;
     private HabilidadeDTO habilidade;
     private ConteudoDTO conteudo;
+    private TipoQuestaoDTO tipo;
     private AreaConhecimentoDTO areaConhecimento;
     private List<AlternativaDTO> alternativas;
-
 
     public Long getId() {
         return id;
@@ -105,6 +107,14 @@ public class QuestaoDTO {
         this.conteudo = conteudo;
     }
 
+    public TipoQuestaoDTO getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoQuestaoDTO tipo) {
+        this.tipo = tipo;
+    }
+    
     public AreaConhecimentoDTO getAreaConhecimento() {
         return areaConhecimento;
     }
