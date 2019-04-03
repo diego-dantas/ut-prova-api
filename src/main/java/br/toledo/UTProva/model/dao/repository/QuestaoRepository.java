@@ -14,14 +14,5 @@ import org.springframework.jdbc.core.RowMapper;
 import br.toledo.UTProva.model.dao.entity.QuestaoEntity;
 
 public interface QuestaoRepository extends JpaRepository<QuestaoEntity, Long>{
-
-
-    JdbcTemplate jdbcTemplate = new JdbcTemplate();
-
-    @Query(value = "select * from questoes where id in:ids ",
-        nativeQuery = true)
-    List<QuestaoEntity> findByFilter(
-                            @Param("ids")       List<Long> questoes
-                        );
    
 }

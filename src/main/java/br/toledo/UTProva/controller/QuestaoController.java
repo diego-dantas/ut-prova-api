@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.toledo.UTProva.model.dao.entity.AlternativaEntity;
 import br.toledo.UTProva.model.dao.entity.AreaConhecimentoEntity;
 import br.toledo.UTProva.model.dao.entity.ConteudoEntity;
+import br.toledo.UTProva.model.dao.entity.FonteEntity;
 import br.toledo.UTProva.model.dao.entity.HabilidadeEntity;
 import br.toledo.UTProva.model.dao.entity.QuestaoEntity;
 import br.toledo.UTProva.model.dao.entity.TipoQuestaoEntity;
@@ -25,6 +27,7 @@ import br.toledo.UTProva.model.dto.TipoQuestaoDTO;
 import br.toledo.UTProva.model.dao.repository.AlternativaRepository;
 import br.toledo.UTProva.model.dao.repository.AreaConhecimentoRepository;
 import br.toledo.UTProva.model.dao.repository.ConteudoRepository;
+import br.toledo.UTProva.model.dao.repository.FonteRepository;
 import br.toledo.UTProva.model.dao.repository.HabilidadeRepository;
 import br.toledo.UTProva.model.dao.repository.QuestaoFilterRepository;
 import br.toledo.UTProva.model.dao.repository.QuestaoRepository;
@@ -34,6 +37,7 @@ import br.toledo.UTProva.model.dao.serviceJDBC.AlternativaJDBC;
 import br.toledo.UTProva.model.dto.AlternativaDTO;
 import br.toledo.UTProva.model.dto.AreaConhecimentoDTO;
 import br.toledo.UTProva.model.dto.ConteudoDTO;
+import br.toledo.UTProva.model.dto.FonteDTO;
 import br.toledo.UTProva.model.dto.HabilidadeDTO;
 import br.toledo.UTProva.model.dto.QuestaoDTO;
 import br.toledo.UTProva.model.dto.QuestoesFilterDTO;
@@ -48,6 +52,8 @@ public class QuestaoController{
     private HabilidadeRepository habilidadeRepository;
     @Autowired
     private ConteudoRepository conteudoRepository;
+    @Autowired
+    private FonteRepository fonteRepository;
     @Autowired
     private AreaConhecimentoRepository areaConhecimentoRepository;
     @Autowired
@@ -80,6 +86,7 @@ public class QuestaoController{
                 }
             }
 
+            FonteEntity            fonte            = new FonteEntity();
             QuestaoEntity          questaoEntity    = new QuestaoEntity();
             ConteudoEntity         conteudo         = new ConteudoEntity();
             HabilidadeEntity       habilidade       = new HabilidadeEntity();
@@ -91,18 +98,20 @@ public class QuestaoController{
             habilidade.setId(questaoDTO.getHabilidade().getId());
             areaConhecimento.setId(questaoDTO.getAreaConhecimento().getId());
             tipo.setId(questaoDTO.getTipo().getId());
+            fonte.setId(questaoDTO.getFonte().getId());
 
             questaoEntity.setConteudo(conteudo);
             questaoEntity.setHabilidade(habilidade);
             questaoEntity.setAreaConhecimento(areaConhecimento);
             questaoEntity.setTipo(tipo);
+            questaoEntity.setFonte(fonte);
             
             questaoEntity.setId(questaoDTO.getId());
             questaoEntity.setDescricao(questaoDTO.getDescricao());
             questaoEntity.setEnade(questaoDTO.isEnade());
             questaoEntity.setStatus(questaoDTO.isStatus());
             questaoEntity.setDiscursiva(questaoDTO.isDiscursiva());
-            questaoEntity.setFonte(questaoDTO.getFonte());
+            questaoEntity.setDificuldade(questaoDTO.getDificuldade());
             questaoEntity.setAno(questaoDTO.getAno());
             questaoEntity.setAlterCorreta(questaoDTO.getAlterCorreta());
             questaoEntity.setImagem(questaoDTO.getImagem());
@@ -152,6 +161,7 @@ public class QuestaoController{
             
             
             for(QuestaoEntity qEntity : questaoEntities){
+                FonteDTO            fonte            = new FonteDTO();
                 QuestaoDTO          questaoDTO       = new QuestaoDTO();
                 ConteudoDTO         conteudo         = new ConteudoDTO();
                 HabilidadeDTO       habilidade       = new HabilidadeDTO();                
@@ -174,6 +184,11 @@ public class QuestaoController{
                 areaConhecimento.setId(areaConhecimentoEntity.getId());
                 areaConhecimento.setDescription(areaConhecimentoEntity.getDescription());
                 areaConhecimento.setStatus(areaConhecimentoEntity.isStatus());
+
+                FonteEntity fonteEntity = fonteRepository.getOne(qEntity.getFonte().getId());
+                fonte.setId(fonteEntity.getId());
+                fonte.setDescription(fonteEntity.getDescription());
+                fonte.setStatus(fonteEntity.isStatus());
 
                 TipoQuestaoEntity tipoQuestaoEntity = tipoQuestaoRepository.getOne(qEntity.getTipo().getId());
                 tipo.setId(tipoQuestaoEntity.getId());
@@ -200,7 +215,7 @@ public class QuestaoController{
                 questaoDTO.setEnade(qEntity.isEnade());
                 questaoDTO.setStatus(qEntity.isStatus());
                 questaoDTO.setDiscursiva(qEntity.isDiscursiva());
-                questaoDTO.setFonte(qEntity.getFonte());
+                questaoDTO.setDificuldade(qEntity.getDificuldade());
                 questaoDTO.setAno(qEntity.getAno());
                 questaoDTO.setAlterCorreta(qEntity.getAlterCorreta());
                 questaoDTO.setImagem(qEntity.getImagem());
@@ -209,6 +224,7 @@ public class QuestaoController{
                 questaoDTO.setConteudo(conteudo);
                 questaoDTO.setAreaConhecimento(areaConhecimento);
                 questaoDTO.setTipo(tipo);
+                questaoDTO.setFonte(fonte);
                 questaoDTO.setAlternativas(alternativas);
 
                 questaoDTOs.add(questaoDTO);
@@ -234,6 +250,7 @@ public class QuestaoController{
             ConteudoDTO         conteudo         = new ConteudoDTO();
             HabilidadeDTO       habilidade       = new HabilidadeDTO();                
             AreaConhecimentoDTO areaConhecimento = new AreaConhecimentoDTO();
+            FonteDTO            fonte            = new FonteDTO();
             TipoQuestaoDTO      tipo             = new TipoQuestaoDTO();
             List<AlternativaDTO> alternativas    = new ArrayList<>();
 
@@ -253,6 +270,11 @@ public class QuestaoController{
             areaConhecimento.setId(areaConhecimentoEntity.getId());
             areaConhecimento.setDescription(areaConhecimentoEntity.getDescription());
             areaConhecimento.setStatus(areaConhecimentoEntity.isStatus());
+
+            FonteEntity fonteEntity = fonteRepository.getOne(questao.getFonte().getId());
+            fonte.setId(fonteEntity.getId());
+            fonte.setDescription(fonteEntity.getDescription());
+            fonte.setStatus(fonteEntity.isStatus());
 
             TipoQuestaoEntity tipoQuestaoEntity = tipoQuestaoRepository.getOne(questao.getTipo().getId());
             tipo.setId(tipoQuestaoEntity.getId());
@@ -275,7 +297,7 @@ public class QuestaoController{
             questaoDTO.setEnade(questao.isEnade());
             questaoDTO.setStatus(questao.isStatus());
             questaoDTO.setDiscursiva(questao.isDiscursiva());
-            questaoDTO.setFonte(questao.getFonte());
+            questaoDTO.setDificuldade(questao.getDificuldade());
             questaoDTO.setAno(questao.getAno());
             questaoDTO.setAlterCorreta(questao.getAlterCorreta());
             questaoDTO.setImagem(questao.getImagem());
@@ -284,6 +306,7 @@ public class QuestaoController{
             questaoDTO.setConteudo(conteudo);
             questaoDTO.setAreaConhecimento(areaConhecimento);
             questaoDTO.setTipo(tipo);
+            questaoDTO.setFonte(fonte);
             questaoDTO.setAlternativas(alternativas);
             
             return ResponseEntity.ok(questaoDTO);
@@ -328,12 +351,6 @@ public class QuestaoController{
         }
     }
 
-    @GetMapping(value = "/testeGet")
-    public ResponseEntity<List<QuestaoDTO>> testeGet(){
-        List<QuestaoDTO> questaoDTO = questaoFilterRepository.joinQuestao("");
-        return ResponseEntity.ok(questaoDTO);
-    }
-
     @PostMapping(value = "/getQuestoesSimulado/{source}") 
     public ResponseEntity<List<QuestaoDTO>> getQuestoesSimulado(@PathVariable("source") String source,
                                                                 @RequestBody QuestoesFilterDTO questoesFilterDTO){
@@ -343,12 +360,13 @@ public class QuestaoController{
         
             // String sql = "select * from questoes ";
             String sql = " ";
-            List<Long> idsLongs = new ArrayList<>();
-            List<Long> habilidadeLongs = new ArrayList<>();
-            List<Long> conteudosLongs  = new ArrayList<>();
-            List<Long> areConhecimentosLongs  = new ArrayList<>();
-            List<Long> tipoQuestaoLongs  = new ArrayList<>();
-            List<String> anos = new ArrayList<>();
+            List<Long>   idsLongs               = new ArrayList<>();
+            List<Long>   fonteLongs             = new ArrayList<>();
+            List<Long>   habilidadeLongs        = new ArrayList<>();
+            List<Long>   conteudosLongs         = new ArrayList<>();
+            List<Long>   areConhecimentosLongs  = new ArrayList<>();
+            List<Long>   tipoQuestaoLongs       = new ArrayList<>();
+            List<String> anos                   = new ArrayList<>();
             
 
             if(source.equalsIgnoreCase("simulado")){
@@ -388,11 +406,11 @@ public class QuestaoController{
                 qtdFilter++;
             }
             
-            if(!questoesFilterDTO.getFonte().isEmpty()) {
+            if(!questoesFilterDTO.getDificuldade().isEmpty()) {
                 if(qtdFilter == 0) {
-                    sql += " where fonte like '%" + questoesFilterDTO.getFonte() + "%' ";
+                    sql += " where dificuldade like '%" + questoesFilterDTO.getDificuldade() + "%' ";
                 }else {
-                    sql += " and fonte like '%" + questoesFilterDTO.getFonte() + "%' ";
+                    sql += " and dificuldade like '%" + questoesFilterDTO.getDificuldade() + "%' ";
                 }
                 qtdFilter++;
             }
@@ -425,6 +443,16 @@ public class QuestaoController{
                 else
                     sql += " and area_conhecimento_id " + createIn(areConhecimentosLongs);
             
+                qtdFilter++ ;
+            }
+
+            if(!questoesFilterDTO.getFonte().isEmpty()){
+                questoesFilterDTO.getFonte().forEach(n -> fonteLongs.add(n.getId()));
+                if(qtdFilter == 0){
+                    sql += " where fonte_id " + createIn(fonteLongs);
+                }else{
+                    sql += " and fonte_id " + createIn(fonteLongs);
+                }
                 qtdFilter++ ;
             }
             

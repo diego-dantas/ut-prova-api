@@ -10,10 +10,10 @@ import br.toledo.UTProva.model.dao.entity.AreaConhecimentoEntity;
 
 public interface AreaConhecimentoRepository extends JpaRepository<AreaConhecimentoEntity, Long>{
 
-    @Query(value = "select count(id) from questoes s where s.area_conhecimento_id =:id ", nativeQuery = true)
+    @Query(value = "select count(id) from questoes s where s.area_conhecimento_id =:id", nativeQuery = true)
     int countQuestao(@Param("id") Long id);
 
-    @Query(value = "select * from areas_conhecimento where status = true", nativeQuery = true)
+    @Query(value = "select * from areas_conhecimento where status = true order by description", nativeQuery = true)
     List<AreaConhecimentoEntity>  findAreaAtivas();
     
 }

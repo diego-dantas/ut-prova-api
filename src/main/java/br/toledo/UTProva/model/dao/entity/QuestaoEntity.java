@@ -24,7 +24,7 @@ public class QuestaoEntity implements Serializable {
     private boolean status;
     private boolean enade;
     private boolean discursiva;
-    private String fonte;
+    private String dificuldade;
     private String ano;
     private char alterCorreta;
     private String imagem;
@@ -32,6 +32,7 @@ public class QuestaoEntity implements Serializable {
     private ConteudoEntity conteudo;
     private TipoQuestaoEntity tipo;
     private AreaConhecimentoEntity areaConhecimento;
+    private FonteEntity fonte;
     private List<AlternativaEntity> alternativa;
     private List<SimuladoQuestoesEntity> simuladoQuestao;
 
@@ -82,13 +83,13 @@ public class QuestaoEntity implements Serializable {
     }
 
 
-    @Column(name = "fonte", nullable = true, length = 300)
-    public String getFonte() {
-        return fonte;
+    @Column(name = "dificuldade", nullable = true, length = 50)
+    public String getDificuldade() {
+        return dificuldade;
     }
 
-    public void setFonte(String fonte) {
-        this.fonte = fonte;
+    public void setDificuldade(String dificuldade) {
+        this.dificuldade = dificuldade;
     }
 
 
@@ -155,6 +156,16 @@ public class QuestaoEntity implements Serializable {
     public void setAreaConhecimento(AreaConhecimentoEntity areaConhecimento) {
         this.areaConhecimento = areaConhecimento;
     }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    public FonteEntity getFonte() {
+        return fonte;
+    }
+
+    public void setFonte(FonteEntity fonte) {
+        this.fonte = fonte;
+    }
+
 
     @OneToMany(mappedBy = "questao", fetch = FetchType.LAZY)
     public List<AlternativaEntity> getAlternativa() {

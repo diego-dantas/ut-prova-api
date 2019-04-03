@@ -11,7 +11,7 @@ public class QuestaoDTO {
     private boolean status;
     private boolean enade;
     private boolean discursiva;
-    private String fonte;
+    private String dificuldade;
     private String ano;
     private char alterCorreta;
     private String imagem;
@@ -19,6 +19,7 @@ public class QuestaoDTO {
     private ConteudoDTO conteudo;
     private TipoQuestaoDTO tipo;
     private AreaConhecimentoDTO areaConhecimento;
+    private FonteDTO fonte;
     private List<AlternativaDTO> alternativas;
 
     public Long getId() {
@@ -59,12 +60,12 @@ public class QuestaoDTO {
         this.discursiva = discursiva;
     }
 
-    public String getFonte() {
-        return fonte;
+    public String getDificuldade() {
+        return dificuldade;
     }
 
-    public void setFonte(String fonte) {
-        this.fonte = fonte;
+    public void setDificuldade(String dificuldade) {
+        this.dificuldade = dificuldade;
     }
 
     public String getAno() {
@@ -121,6 +122,14 @@ public class QuestaoDTO {
 
     public void setAreaConhecimento(AreaConhecimentoDTO areaConhecimento) {
         this.areaConhecimento = areaConhecimento;
+    }
+    
+    public FonteDTO getFonte() {
+        return fonte;
+    }
+
+    public void setFonte(FonteDTO fonte) {
+        this.fonte = fonte;
     }
 
     public List<AlternativaDTO> getAlternativas() {

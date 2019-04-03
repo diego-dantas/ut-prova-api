@@ -13,7 +13,7 @@ public interface HabilidadeRepository extends JpaRepository<HabilidadeEntity, Lo
     @Query(value = "select count(id) from questoes s where s.habilidade_id =:id ", nativeQuery = true)
     int countQuestaoByHabilidade(@Param("id") Long id);
 
-    @Query(value = "select * from habilidades where status = true", nativeQuery = true)
+    @Query(value = "select * from habilidades where status = true order by description", nativeQuery = true)
     List<HabilidadeEntity>  findAtivas();
     
 }

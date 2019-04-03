@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
@@ -24,6 +26,7 @@ import br.toledo.UTProva.model.dto.AlternativaDTO;
 import br.toledo.UTProva.model.dto.AlternativaRetornoDTO;
 import br.toledo.UTProva.model.dto.AreaConhecimentoDTO;
 import br.toledo.UTProva.model.dto.ConteudoDTO;
+import br.toledo.UTProva.model.dto.FonteDTO;
 import br.toledo.UTProva.model.dto.HabilidadeDTO;
 import br.toledo.UTProva.model.dto.QuestaoDTO;
 import br.toledo.UTProva.model.dto.QuestaoRetornoDTO;
@@ -66,28 +69,32 @@ public class QuestaoFilterRepository {
     }
 
     public List<QuestaoDTO> joinQuestao(String sql){
-       String sql2 = "select 	q.id as id_questao, "+
-       "q.descricao as descricao_questao, "+
-       "q.alternativa_correta, "+
-       "q.ano, "+
-       "q.discursiva, "+
-       "q.enade, "+
-       "q.fonte, "+
-       "q.imagem , "+
-       "q.status as status_questao, "+
-       "h.id as id_habilidade, "+
-       "h.description as descricao_habilidade, "+
-       "c.id as id_conteudo, "+
-       "c.description as descricao_conteudo, "+
-       "ac.id as id_area_conhecimento, "+
-       "ac.description as descricao_area_conhecimento, "+
-       "tq.id as id_tipo, "+
-       "tq.descricao as descricao_tipo "+
-"from questoes q "+
-"join habilidades h on h.id = q.habilidade_id "+
-"join conteudos c on c.id = q.conteudo_id "+
-"join areas_conhecimento ac on ac.id = q.area_conhecimento_id "+
-"join tipo_questao tq on tq.id = q.tipo_id \n" + sql;
+        String sql2 = 
+        "select 	q.id as id_questao, "+
+            "q.descricao as descricao_questao, "+
+            "q.alternativa_correta, "+
+            "q.ano, "+
+            "q.discursiva, "+
+            "q.dificuldade, "+
+            "q.enade, "+            
+            "q.imagem , "+
+            "q.status as status_questao, "+
+            "h.id as id_habilidade, "+
+            "h.description as descricao_habilidade, "+
+            "c.id as id_conteudo, "+
+            "c.description as descricao_conteudo, "+
+            "ac.id as id_area_conhecimento, "+
+            "ac.description as descricao_area_conhecimento, "+
+            "tq.id as id_tipo, "+
+            "tq.descricao as descricao_tipo, "+
+            "f.id as id_fonte, " + 
+            "f.description as descricao_fonte " +
+        "from questoes q "+
+        "join habilidades h on h.id = q.habilidade_id "+
+        "join conteudos c on c.id = q.conteudo_id "+
+        "join areas_conhecimento ac on ac.id = q.area_conhecimento_id "+
+        "join tipo_questao tq on tq.id = q.tipo_id " + 
+        "join fonte f on f.id = q.fonte_id \n" + sql;
 
         try {
             List<QuestaoDTO> questaoDTO = this.jdbcTemplate.query(sql2,
@@ -97,7 +104,8 @@ public class QuestaoFilterRepository {
                 
                 QuestaoDTO          questaoDTO       = new QuestaoDTO();
                 ConteudoDTO         conteudo         = new ConteudoDTO();
-                HabilidadeDTO       habilidade       = new HabilidadeDTO(); 
+                HabilidadeDTO       habilidade       = new HabilidadeDTO();
+                FonteDTO            fonte            = new FonteDTO(); 
                 TipoQuestaoDTO      tipo             = new TipoQuestaoDTO();
                 AreaConhecimentoDTO areaConhecimento = new AreaConhecimentoDTO();
                 
@@ -106,7 +114,7 @@ public class QuestaoFilterRepository {
                 questaoDTO.setEnade(rs.getBoolean("enade"));
                 questaoDTO.setStatus(rs.getBoolean("status_questao"));
                 questaoDTO.setDiscursiva(rs.getBoolean("discursiva"));
-                questaoDTO.setFonte(rs.getString("fonte"));
+                questaoDTO.setDificuldade(rs.getString("dificuldade"));
                 questaoDTO.setAno(rs.getString("ano"));                
                 questaoDTO.setAlterCorreta(rs.getString("alternativa_correta").charAt(0));
                 questaoDTO.setImagem(rs.getString("imagem"));
@@ -127,14 +135,19 @@ public class QuestaoFilterRepository {
                 areaConhecimento.setDescription(rs.getString("descricao_area_conhecimento"));
                 //areaConhecimento.setStatus(areaConhecimentoEntity.isStatus());
 
+                fonte.setId(rs.getLong("id_fonte"));
+                fonte.setDescription(rs.getString("descricao_fonte"));
+
                 
                 tipo.setId(rs.getLong("id_tipo"));
                 tipo.setDescricao(rs.getString("descricao_tipo"));
                 
-                questaoDTO.setHabilidade(habilidade);
-                questaoDTO.setConteudo(conteudo);
-                questaoDTO.setAreaConhecimento(areaConhecimento);
                 questaoDTO.setTipo(tipo);
+                questaoDTO.setFonte(fonte);
+                questaoDTO.setConteudo(conteudo);
+                questaoDTO.setHabilidade(habilidade);
+                questaoDTO.setAreaConhecimento(areaConhecimento);
+                
                 
                 return questaoDTO;
             }

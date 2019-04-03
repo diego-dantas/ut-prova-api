@@ -12,11 +12,12 @@ public class QuestoesFilterDTO {
     private List<HabilidadeDTO> habilidades;
     private List<ConteudoDTO> conteudos;
     private List<AreaConhecimentoDTO> areaConhecimentos;
+    private List<FonteDTO> fonte;
     private List<AnosDTO> anos;
     private TipoQuestaoDTO tipo;
     private String enade;
     private String discursiva;
-    private String fonte;
+    private String dificuldade;
 
     public List<HabilidadeDTO> getHabilidades() {
         return habilidades;
@@ -85,11 +86,19 @@ public class QuestoesFilterDTO {
         this.discursiva = discursiva;
     }
 
-    public String getFonte() {
+    public List<FonteDTO> getFonte() {
         return fonte;
     }
   
-    public void setFonte(String fonte) {
+    public void setFonte(List<FonteDTO> fonte) {
         this.fonte = fonte;
+    }
+
+    public String getDificuldade() {
+        return dificuldade;
+    }
+
+    public void setDificuldade(String dificuldade) {
+        this.dificuldade = dificuldade;
     }
 }

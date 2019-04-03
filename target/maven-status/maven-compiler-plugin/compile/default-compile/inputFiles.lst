@@ -1,3 +1,4 @@
+/Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/FonteDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/controller/HabilidadeController.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/RoleEntity.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/SimuladoQuestoesRepository.java
@@ -25,6 +26,7 @@
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/SimuladoFilterRepositoty.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/useful/configuration/CorsConfiguration.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/service/Gateway.java
+/Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/FonteRepository.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/HabilidadeDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/AnosDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/SimuladoStatusEntity.java
@@ -44,6 +46,8 @@
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/controller/UserCTL.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/CursosDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/controller/QuestaoController.java
+/Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/controller/FonteController.java
+/Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/controller/FileController.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/QuestaoEntity.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/serviceJDBC/useful/DynamicSQL.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/SimuladoCursosRepository.java
@@ -60,12 +64,14 @@
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/AreaConhecimentoDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/SimuladoDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/PeriodoLetivoDTO.java
+/Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/FileRepository.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/RoleName.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/SimuladoStatusAlunoEntity.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/SimuladoDisciplinasEntity.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/serviceJDBC/SimuladoJDBC.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/UTProvaApplication.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/service/Endpoint.java
+/Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/FonteEntity.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/UsuarioEntity.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/serviceJDBC/AlternativaJDBC.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/SimuladoTurmasEntity.java

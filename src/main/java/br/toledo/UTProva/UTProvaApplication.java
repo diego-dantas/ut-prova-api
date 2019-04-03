@@ -1,9 +1,13 @@
 package br.toledo.UTProva;
 
 import java.io.IOException;
+
+import org.apache.coyote.http11.AbstractHttp11Protocol;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 })
 public class UTProvaApplication {
 	
-	
-	//Definição do fuso horário para UTC
-	// @PostConstruct
-	// void init(){
-	// 	TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-	// }
+	private int maxUploadSizeInMb = 10 * 1024 * 1024; // 10 MB
 
 	public static void main(String[] args) {
 		SpringApplication.run(UTProvaApplication.class, args);
@@ -31,7 +30,7 @@ public class UTProvaApplication {
 
 	@GetMapping(value = "/")
 	public String home() throws IOException{
-		return "API Rodando";
+		return "API Rodando  | Teste de Upload";
 	}
 
 }

@@ -538,7 +538,6 @@ public class SimuladoController {
                 questaoDTO.setEnade(questaoEntity.isEnade());
                 questaoDTO.setStatus(questaoEntity.isStatus());
                 questaoDTO.setDiscursiva(questaoEntity.isDiscursiva());
-                questaoDTO.setFonte(questaoEntity.getFonte());
                 questaoDTO.setAno(questaoEntity.getAno());
                 questaoDTO.setAlterCorreta(questaoEntity.getAlterCorreta());
                 questaoDTO.setImagem(questaoEntity.getImagem());
@@ -654,7 +653,6 @@ public class SimuladoController {
                 questaoDTO.setEnade(questaoEntity.isEnade());
                 questaoDTO.setStatus(questaoEntity.isStatus());
                 questaoDTO.setDiscursiva(questaoEntity.isDiscursiva());
-                questaoDTO.setFonte(questaoEntity.getFonte());
                 questaoDTO.setAno(questaoEntity.getAno());
                 questaoDTO.setImagem(questaoEntity.getImagem());
                 
@@ -794,7 +792,6 @@ public class SimuladoController {
                     questaoDTO.setEnade(questaoEntity.isEnade());
                     questaoDTO.setStatus(questaoEntity.isStatus());
                     questaoDTO.setDiscursiva(questaoEntity.isDiscursiva());
-                    questaoDTO.setFonte(questaoEntity.getFonte());
                     questaoDTO.setAno(questaoEntity.getAno());
                     questaoDTO.setAlterCorreta(questaoEntity.getAlterCorreta());
                     questaoDTO.setImagem(questaoEntity.getImagem());
