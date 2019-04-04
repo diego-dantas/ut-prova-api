@@ -37,12 +37,7 @@ public class FileController {
         Map<String, Object> map = new HashMap<String, Object>();
 
         try {
-            for(MultipartFile f : files){
-                System.out.println(f.getContentType());
-                System.out.println(System.getProperty("user.dir"));
-                System.out.println(getClass().getResource(""));
-                map.put(f.getOriginalFilename(), FileRepository.fileUpload(origin, f));
-            }
+            map = FileRepository.fileUpload(origin, files.get(0));
             return new ResponseEntity<>(map, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
@@ -59,7 +54,7 @@ public class FileController {
 
             HttpHeaders headers = new HttpHeaders();
 
-            File file = new File(FileRepository.getUPLOAD_DIR() + "/imgs/" +name);
+            File file = new File(FileRepository.getUPLOAD_DIR() + "/" +name);
 
             InputStream is = new BufferedInputStream(new FileInputStream(file));
 
