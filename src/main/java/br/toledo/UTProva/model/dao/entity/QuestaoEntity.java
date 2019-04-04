@@ -31,6 +31,7 @@ public class QuestaoEntity implements Serializable {
     private HabilidadeEntity habilidade;
     private ConteudoEntity conteudo;
     private TipoQuestaoEntity tipo;
+    private TipoRespostaEntity tipoResposta;
     private AreaConhecimentoEntity areaConhecimento;
     private FonteEntity fonte;
     private List<AlternativaEntity> alternativa;
@@ -41,6 +42,7 @@ public class QuestaoEntity implements Serializable {
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -164,6 +166,15 @@ public class QuestaoEntity implements Serializable {
 
     public void setFonte(FonteEntity fonte) {
         this.fonte = fonte;
+    }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    public TipoRespostaEntity getTipoResposta() {
+        return tipoResposta;
+    }
+
+    public void setTipoResposta(TipoRespostaEntity tipoResposta) {
+        this.tipoResposta = tipoResposta;
     }
 
 

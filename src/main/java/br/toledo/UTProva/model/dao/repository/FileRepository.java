@@ -1,5 +1,6 @@
 package br.toledo.UTProva.model.dao.repository;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,14 +26,17 @@ public class FileRepository {
 
         try {
             
+            File directory = new File(getUPLOAD_DIR());
+
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+
             Random random = new Random();
             String nome = FilenameUtils.getBaseName(file.getOriginalFilename());
             String extension = FilenameUtils.getExtension(file.getOriginalFilename());
             String newNome = nome + "_" + random.nextInt(1000) + "." + extension;
 
-            System.out.println("Extensão do arquivo " + newNome);
-
-           
 
             byte[] bytes = file.getBytes();
             String source = getUPLOAD_DIR() + "" + newNome;
