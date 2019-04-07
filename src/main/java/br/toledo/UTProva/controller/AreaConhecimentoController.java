@@ -26,6 +26,11 @@ public class AreaConhecimentoController {
     @Autowired
     private AreaConhecimentoRepository areaConhecimentoRepository;
 
+    /**
+     * Metodo para criação e atualização da Area de Conhecimento
+     * @param areaConhecimentoDTO
+     * @return Success: true or false
+     */
     @PostMapping(value = "/createUpdateAreaConhecimento")
     public ResponseEntity<Map> createUpdateAreaConhecimento(@RequestBody AreaConhecimentoDTO areaConhecimentoDTO){
         Map<String, Object> map = new HashMap<String, Object>();

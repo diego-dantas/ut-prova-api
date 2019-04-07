@@ -221,139 +221,139 @@ public class SimuladoController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "/getSimulados")
-    public ResponseEntity<List<Object>> getSimuladoAll(@RequestBody SimuladoDTO simuladoDTO) {
+    // @PostMapping(value = "/getSimulados")
+    // public ResponseEntity<List<Object>> getSimuladoAll(@RequestBody SimuladoDTO simuladoDTO) {
 
-        try {           
-            List<Object> retorno = new ArrayList<>();
-            if(simuladoDTO.getCursos() != null){
-                for (CursosDTO curso : simuladoDTO.getCursos()) {
+    //     try {           
+    //         List<Object> retorno = new ArrayList<>();
+    //         if(simuladoDTO.getCursos() != null){
+    //             for (CursosDTO curso : simuladoDTO.getCursos()) {
                     
-                    List<Long> idSimuladosCursos = new ArrayList<>();
+    //                 List<Long> idSimuladosCursos = new ArrayList<>();
                     
-                    CursoRetornoDTO cursoRetornoDTO = new CursoRetornoDTO();
+    //                 CursoRetornoDTO cursoRetornoDTO = new CursoRetornoDTO();
 
-                    List<SimuladoCursosEntity> simuladosCurso = simuladoCursosRepository.findSimuladoByCursoAndPeriodo(curso.getIdPeriodoLetivo(), curso.getId());
-                    simuladosCurso.forEach(n -> idSimuladosCursos.add(n.getSimulado().getId()));
-                    cursoRetornoDTO.setSimulados(getSimulados(idSimuladosCursos));
+    //                 List<SimuladoCursosEntity> simuladosCurso = simuladoCursosRepository.findSimuladoByCursoAndPeriodo(curso.getIdPeriodoLetivo(), curso.getId());
+    //                 simuladosCurso.forEach(n -> idSimuladosCursos.add(n.getSimulado().getId()));
+    //                 cursoRetornoDTO.setSimulados(getSimulados(idSimuladosCursos));
                     
-                    List<TurmaRetornoDTO> listTurma = new ArrayList<>();                     
-                    List<SimuladoTurmasEntity> getTurmas = simuladoFilterRepositoty.getIdTurmas(curso.getIdPeriodoLetivo(), curso.getId());
-                    for (SimuladoTurmasEntity turmas  : getTurmas) {
+    //                 List<TurmaRetornoDTO> listTurma = new ArrayList<>();                     
+    //                 List<SimuladoTurmasEntity> getTurmas = simuladoFilterRepositoty.getIdTurmas(curso.getIdPeriodoLetivo(), curso.getId());
+    //                 for (SimuladoTurmasEntity turmas  : getTurmas) {
                         
-                        List<Long> idSimuladosTurmas = new ArrayList<>();
-                        TurmaRetornoDTO turmaRetornoDTO = new TurmaRetornoDTO();
-                        turmaRetornoDTO.setId(turmas.getIdTurma());
-                        turmaRetornoDTO.setNome(turmas.getNome());
-                        turmaRetornoDTO.setIdPeriodoLetivo(turmas.getIdPeriodoLetivo());
-                        turmaRetornoDTO.setIdCurso(curso.getId());
-                        List<SimuladoTurmasEntity> simuladosTurma  = simuladoTurmasRepository.findByTurmasCursoAndPeriodo(curso.getIdPeriodoLetivo(), curso.getId(), turmas.getIdTurma());
-                        simuladosTurma.forEach(n -> idSimuladosTurmas.add(n.getSimulado().getId()));
+    //                     List<Long> idSimuladosTurmas = new ArrayList<>();
+    //                     TurmaRetornoDTO turmaRetornoDTO = new TurmaRetornoDTO();
+    //                     turmaRetornoDTO.setId(turmas.getIdTurma());
+    //                     turmaRetornoDTO.setNome(turmas.getNome());
+    //                     turmaRetornoDTO.setIdPeriodoLetivo(turmas.getIdPeriodoLetivo());
+    //                     turmaRetornoDTO.setIdCurso(curso.getId());
+    //                     List<SimuladoTurmasEntity> simuladosTurma  = simuladoTurmasRepository.findByTurmasCursoAndPeriodo(curso.getIdPeriodoLetivo(), curso.getId(), turmas.getIdTurma());
+    //                     simuladosTurma.forEach(n -> idSimuladosTurmas.add(n.getSimulado().getId()));
                         
-                        turmaRetornoDTO.setSimulados(getSimulados(idSimuladosCursos));
-                        listTurma.add(turmaRetornoDTO);
+    //                     turmaRetornoDTO.setSimulados(getSimulados(idSimuladosCursos));
+    //                     listTurma.add(turmaRetornoDTO);
 
-                        List<DisciplinasRetornoDTO> listDisciplinas = new ArrayList<>(); 
-                        List<SimuladoDisciplinasEntity> getDisciplina = simuladoFilterRepositoty.getIdDisciplinas(curso.getIdPeriodoLetivo(), turmas.getIdTurma());
-                        for (SimuladoDisciplinasEntity disciplina  : getDisciplina) {
+    //                     List<DisciplinasRetornoDTO> listDisciplinas = new ArrayList<>(); 
+    //                     List<SimuladoDisciplinasEntity> getDisciplina = simuladoFilterRepositoty.getIdDisciplinas(curso.getIdPeriodoLetivo(), turmas.getIdTurma());
+    //                     for (SimuladoDisciplinasEntity disciplina  : getDisciplina) {
 
-                            List<Long> idSimuladosDisciplina = new ArrayList<>();
-                            DisciplinasRetornoDTO disciplinasRetornoDTO = new DisciplinasRetornoDTO();
-                            disciplinasRetornoDTO.setId(disciplina.getIdTurma());
-                            disciplinasRetornoDTO.setNome(disciplina.getNome());
-                            disciplinasRetornoDTO.setIdPeriodoLetivo(turmas.getIdPeriodoLetivo());
-                            disciplinasRetornoDTO.setIdCurso(turmas.getIdCurso());
+    //                         List<Long> idSimuladosDisciplina = new ArrayList<>();
+    //                         DisciplinasRetornoDTO disciplinasRetornoDTO = new DisciplinasRetornoDTO();
+    //                         disciplinasRetornoDTO.setId(disciplina.getIdTurma());
+    //                         disciplinasRetornoDTO.setNome(disciplina.getNome());
+    //                         disciplinasRetornoDTO.setIdPeriodoLetivo(turmas.getIdPeriodoLetivo());
+    //                         disciplinasRetornoDTO.setIdCurso(turmas.getIdCurso());
                             
-                            List<SimuladoDisciplinasEntity> simuladosDisciplina  = simuladoDisciplinasRepository.findByTurmasAndPeriodo(curso.getIdPeriodoLetivo(), turmas.getIdTurma());
-                            simuladosDisciplina.forEach(n -> idSimuladosDisciplina.add(n.getSimulado().getId()));
+    //                         List<SimuladoDisciplinasEntity> simuladosDisciplina  = simuladoDisciplinasRepository.findByTurmasAndPeriodo(curso.getIdPeriodoLetivo(), turmas.getIdTurma());
+    //                         simuladosDisciplina.forEach(n -> idSimuladosDisciplina.add(n.getSimulado().getId()));
 
-                            disciplinasRetornoDTO.setSimulados(getSimulados(idSimuladosCursos));
-                            listDisciplinas.add(disciplinasRetornoDTO);
-                        }
-                        turmaRetornoDTO.setDisciplinas(listDisciplinas);
-                    }
+    //                         disciplinasRetornoDTO.setSimulados(getSimulados(idSimuladosCursos));
+    //                         listDisciplinas.add(disciplinasRetornoDTO);
+    //                     }
+    //                     turmaRetornoDTO.setDisciplinas(listDisciplinas);
+    //                 }
 
-                    cursoRetornoDTO.setTurmas(listTurma);
-                    cursoRetornoDTO.setId(curso.getId());
-                    cursoRetornoDTO.setNome(curso.getNome());
-                    cursoRetornoDTO.setIdPeriodoLetivo(curso.getIdPeriodoLetivo());
+    //                 cursoRetornoDTO.setTurmas(listTurma);
+    //                 cursoRetornoDTO.setId(curso.getId());
+    //                 cursoRetornoDTO.setNome(curso.getNome());
+    //                 cursoRetornoDTO.setIdPeriodoLetivo(curso.getIdPeriodoLetivo());
 
-                    retorno.add(cursoRetornoDTO);
-                }
-            }
+    //                 retorno.add(cursoRetornoDTO);
+    //             }
+    //         }
 
-            if(simuladoDTO.getTurmas() != null){
-                for (TurmasDTO turma : simuladoDTO.getTurmas()) {
+    //         if(simuladoDTO.getTurmas() != null){
+    //             for (TurmasDTO turma : simuladoDTO.getTurmas()) {
                         
-                    List<Long> idSimuladosTurmas = new ArrayList<>();
-                    TurmaRetornoDTO turmaRetornoDTO = new TurmaRetornoDTO();
-                    turmaRetornoDTO.setId(turma.getId());
-                    turmaRetornoDTO.setNome(turma.getNome());
-                    turmaRetornoDTO.setIdPeriodoLetivo(turma.getIdPeriodoLetivo());
-                    turmaRetornoDTO.setIdCurso(turma.getIdCurso());
+    //                 List<Long> idSimuladosTurmas = new ArrayList<>();
+    //                 TurmaRetornoDTO turmaRetornoDTO = new TurmaRetornoDTO();
+    //                 turmaRetornoDTO.setId(turma.getId());
+    //                 turmaRetornoDTO.setNome(turma.getNome());
+    //                 turmaRetornoDTO.setIdPeriodoLetivo(turma.getIdPeriodoLetivo());
+    //                 turmaRetornoDTO.setIdCurso(turma.getIdCurso());
 
-                    List<SimuladoTurmasEntity> simuladosTurma  = simuladoTurmasRepository.findByTurmaAndPeriodo(turma.getIdPeriodoLetivo(), turma.getId());
-                    simuladosTurma.forEach(n -> idSimuladosTurmas.add(n.getSimulado().getId()));
+    //                 List<SimuladoTurmasEntity> simuladosTurma  = simuladoTurmasRepository.findByTurmaAndPeriodo(turma.getIdPeriodoLetivo(), turma.getId());
+    //                 simuladosTurma.forEach(n -> idSimuladosTurmas.add(n.getSimulado().getId()));
                    
-                    turmaRetornoDTO.setSimulados(getSimulados(idSimuladosTurmas));
+    //                 turmaRetornoDTO.setSimulados(getSimulados(idSimuladosTurmas));
                     
 
-                    List<DisciplinasRetornoDTO> listDisciplinas = new ArrayList<>(); 
-                    List<SimuladoDisciplinasEntity> getDisciplina = simuladoFilterRepositoty.getIdDisciplinas(turma.getIdPeriodoLetivo(), turma.getId());
+    //                 List<DisciplinasRetornoDTO> listDisciplinas = new ArrayList<>(); 
+    //                 List<SimuladoDisciplinasEntity> getDisciplina = simuladoFilterRepositoty.getIdDisciplinas(turma.getIdPeriodoLetivo(), turma.getId());
                     
-                    for (SimuladoDisciplinasEntity disciplina  : getDisciplina) {
+    //                 for (SimuladoDisciplinasEntity disciplina  : getDisciplina) {
                         
-                        List<Long> idSimuladosDisciplina = new ArrayList<>();
-                        DisciplinasRetornoDTO disciplinasRetornoDTO = new DisciplinasRetornoDTO();
-                        disciplinasRetornoDTO.setId(disciplina.getIdDisciplina());
-                        disciplinasRetornoDTO.setIdTurma(disciplina.getIdTurma());
-                        disciplinasRetornoDTO.setNome(disciplina.getNome());
-                        disciplinasRetornoDTO.setIdPeriodoLetivo(turma.getIdPeriodoLetivo());
-                        disciplinasRetornoDTO.setIdCurso(turma.getIdCurso());
+    //                     List<Long> idSimuladosDisciplina = new ArrayList<>();
+    //                     DisciplinasRetornoDTO disciplinasRetornoDTO = new DisciplinasRetornoDTO();
+    //                     disciplinasRetornoDTO.setId(disciplina.getIdDisciplina());
+    //                     disciplinasRetornoDTO.setIdTurma(disciplina.getIdTurma());
+    //                     disciplinasRetornoDTO.setNome(disciplina.getNome());
+    //                     disciplinasRetornoDTO.setIdPeriodoLetivo(turma.getIdPeriodoLetivo());
+    //                     disciplinasRetornoDTO.setIdCurso(turma.getIdCurso());
                         
-                        List<SimuladoDisciplinasEntity> simuladosDisciplina  = simuladoDisciplinasRepository.findByTurmasAndPeriodo(turma.getIdPeriodoLetivo(), turma.getId());
-                        simuladosDisciplina.forEach(n -> idSimuladosDisciplina.add(n.getSimulado().getId()));
-                        disciplinasRetornoDTO.setSimulados(getSimulados(idSimuladosDisciplina));
-                        listDisciplinas.add(disciplinasRetornoDTO);
-                    }
-                    turmaRetornoDTO.setDisciplinas(listDisciplinas);
+    //                     List<SimuladoDisciplinasEntity> simuladosDisciplina  = simuladoDisciplinasRepository.findByTurmasAndPeriodo(turma.getIdPeriodoLetivo(), turma.getId());
+    //                     simuladosDisciplina.forEach(n -> idSimuladosDisciplina.add(n.getSimulado().getId()));
+    //                     disciplinasRetornoDTO.setSimulados(getSimulados(idSimuladosDisciplina));
+    //                     listDisciplinas.add(disciplinasRetornoDTO);
+    //                 }
+    //                 turmaRetornoDTO.setDisciplinas(listDisciplinas);
                     
 
 
-                    retorno.add(turmaRetornoDTO);
-                }
-            }
+    //                 retorno.add(turmaRetornoDTO);
+    //             }
+    //         }
 
-            if(simuladoDTO.getDisciplinas() != null){
+    //         if(simuladoDTO.getDisciplinas() != null){
 
-                List<DisciplinasRetornoDTO> listDisciplinas = new ArrayList<>(); 
-                for (DisciplinasDTO disciplina : simuladoDTO.getDisciplinas()) {
+    //             List<DisciplinasRetornoDTO> listDisciplinas = new ArrayList<>(); 
+    //             for (DisciplinasDTO disciplina : simuladoDTO.getDisciplinas()) {
 
-                    List<Long> idSimuladosDisciplina = new ArrayList<>();
-                    DisciplinasRetornoDTO disciplinasRetornoDTO = new DisciplinasRetornoDTO();
+    //                 List<Long> idSimuladosDisciplina = new ArrayList<>();
+    //                 DisciplinasRetornoDTO disciplinasRetornoDTO = new DisciplinasRetornoDTO();
 
-                    disciplinasRetornoDTO.setId(disciplina.getId());
-                    disciplinasRetornoDTO.setIdTurma(disciplina.getIdTurma());
-                    disciplinasRetornoDTO.setNome(disciplina.getNome());
-                    disciplinasRetornoDTO.setIdPeriodoLetivo(disciplina.getIdPeriodoLetivo());
+    //                 disciplinasRetornoDTO.setId(disciplina.getId());
+    //                 disciplinasRetornoDTO.setIdTurma(disciplina.getIdTurma());
+    //                 disciplinasRetornoDTO.setNome(disciplina.getNome());
+    //                 disciplinasRetornoDTO.setIdPeriodoLetivo(disciplina.getIdPeriodoLetivo());
                     
                     
-                    List<SimuladoDisciplinasEntity> simuladosDisciplina  = simuladoDisciplinasRepository.findByDisciplinaAndPeriodo(disciplina.getIdPeriodoLetivo(), disciplina.getId());
-                    simuladosDisciplina.forEach(n -> idSimuladosDisciplina.add(n.getSimulado().getId()));
-                    disciplinasRetornoDTO.setSimulados(getSimulados(idSimuladosDisciplina));
+    //                 List<SimuladoDisciplinasEntity> simuladosDisciplina  = simuladoDisciplinasRepository.findByDisciplinaAndPeriodo(disciplina.getIdPeriodoLetivo(), disciplina.getId());
+    //                 simuladosDisciplina.forEach(n -> idSimuladosDisciplina.add(n.getSimulado().getId()));
+    //                 disciplinasRetornoDTO.setSimulados(getSimulados(idSimuladosDisciplina));
                     
-                    retorno.add(disciplinasRetornoDTO);
-                }
-            }
+    //                 retorno.add(disciplinasRetornoDTO);
+    //             }
+    //         }
 
-            return new ResponseEntity<>(retorno, HttpStatus.OK);
+    //         return new ResponseEntity<>(retorno, HttpStatus.OK);
             
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro ao buscar o simulado por curso" + e);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         System.out.println("Erro ao buscar o simulado por curso" + e);
+    //     }
+    //     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    // }
 
     @PostMapping(value = "/getAllSimulado")
     public ResponseEntity<List<SimuladoDTO>> getAllSimulado(@RequestBody SimuladoDTO simuladoDTO) {
@@ -687,39 +687,61 @@ public class SimuladoController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(value = "/getSimuladoIdAlunoV2/{id}")
-    public ResponseEntity<SimuladoDTO> getSimuladoIdAlunoV2(@PathVariable("id") Long idSimulado) {
-        System.out.println("id do simulado " + idSimulado);
-        try {
-           
-            SimuladoEntity simuladoRetorno = simuladoRepository.getOne(idSimulado);
-            SimuladoDTO sDTO = new SimuladoDTO();
-            List<CursosDTO> cursosDTOs = new ArrayList<>();
-            List<TurmasDTO> turmasDTOs = new ArrayList<>();
-            List<DisciplinasDTO> disciplinasDTOs = new ArrayList<>();
-            
-            sDTO.setId(simuladoRetorno.getId());
-            sDTO.setNome(simuladoRetorno.getNome());
-            sDTO.setRascunho(simuladoRetorno.isRascunho());
-            sDTO.setStatus(simuladoRetorno.getStatus());
-            sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
-            sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
 
-            
-            //simuladoDTOs = simuladoJDBC.getSimuladoID(idSimulado);
-            
-            
-           
-            
-            return ResponseEntity.ok(sDTO);
-            
+    @GetMapping(value = "/finalizaSimulado/{id}/{aluno}")
+    public ResponseEntity<Map> finalizaSimulado(@PathVariable("id") Long idSimulado,
+                                                @PathVariable("aluno") String aluno) {
+            Map<String, Object> map = new HashMap<String, Object>();
+        try {
+
+            int retorno = simuladoJDBC.finalizaSimulado(idSimulado, aluno);
+            if(retorno > 0){
+                map.put("success", true);
+                map.put("message", "Simulado finalizado.");
+            }
+
+            return new ResponseEntity<>(map, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao buscar o simulado pelo id " + idSimulado+  " \n" + e);
+            map.put("success", false);
+            map.put("message", "Erro ao finalizar o simulado.");
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         } 
-        
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    // @GetMapping(value = "/getSimuladoIdAlunoV2/{id}")
+    // public ResponseEntity<SimuladoDTO> getSimuladoIdAlunoV2(@PathVariable("id") Long idSimulado) {
+    //     System.out.println("id do simulado " + idSimulado);
+    //     try {
+           
+    //         SimuladoEntity simuladoRetorno = simuladoRepository.getOne(idSimulado);
+    //         SimuladoDTO sDTO = new SimuladoDTO();
+    //         List<CursosDTO> cursosDTOs = new ArrayList<>();
+    //         List<TurmasDTO> turmasDTOs = new ArrayList<>();
+    //         List<DisciplinasDTO> disciplinasDTOs = new ArrayList<>();
+            
+    //         sDTO.setId(simuladoRetorno.getId());
+    //         sDTO.setNome(simuladoRetorno.getNome());
+    //         sDTO.setRascunho(simuladoRetorno.isRascunho());
+    //         sDTO.setStatus(simuladoRetorno.getStatus());
+    //         sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
+    //         sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
+
+            
+    //         //simuladoDTOs = simuladoJDBC.getSimuladoID(idSimulado);
+            
+            
+           
+            
+    //         return ResponseEntity.ok(sDTO);
+            
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         System.out.println("Erro ao buscar o simulado pelo id " + idSimulado+  " \n" + e);
+    //     } 
+        
+    //     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    // }
 
 
     @PostMapping(value = "/updateStatus")

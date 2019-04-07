@@ -48,7 +48,8 @@ public class QuestaoEntity implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "descricao", nullable = false, length = 3000)
+    @Lob
+    @Column(name = "descricao", nullable = false, columnDefinition="LONGTEXT")
     public String getDescricao() {
         return descricao;
     }

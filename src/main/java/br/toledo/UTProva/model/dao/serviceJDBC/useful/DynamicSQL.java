@@ -22,5 +22,24 @@ public class DynamicSQL {
             e.printStackTrace();
         }
         return in;
-     }
+    }
+
+    public static String createInLongs(List<Long> ids){
+        int size = 0;    
+        String in = "";
+        try {
+            in = " in(";
+        while( size < ids.size()){
+            in += ids.get(size).toString();
+            size++;
+            if(size < ids.size()){
+                in += ", ";
+            }
+        }
+        in += ")";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return in;
+    }
 }

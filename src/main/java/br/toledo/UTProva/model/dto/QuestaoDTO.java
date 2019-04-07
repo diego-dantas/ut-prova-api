@@ -18,6 +18,7 @@ public class QuestaoDTO {
     private HabilidadeDTO habilidade;
     private ConteudoDTO conteudo;
     private TipoQuestaoDTO tipo;
+    private TipoRespostaDTO tipoResposta;
     private AreaConhecimentoDTO areaConhecimento;
     private FonteDTO fonte;
     private List<AlternativaDTO> alternativas;
@@ -130,6 +131,15 @@ public class QuestaoDTO {
 
     public void setFonte(FonteDTO fonte) {
         this.fonte = fonte;
+    }
+
+
+    public TipoRespostaDTO getTipoResposta() {
+        return tipoResposta;
+    }
+
+    public void setTipoResposta(TipoRespostaDTO tipoResposta) {
+        this.tipoResposta = tipoResposta;
     }
 
     public List<AlternativaDTO> getAlternativas() {

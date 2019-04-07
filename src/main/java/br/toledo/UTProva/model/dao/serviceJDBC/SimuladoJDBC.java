@@ -142,25 +142,25 @@ public class SimuladoJDBC {
                                     " ) as status "+
                         " from 	simulados s "+
                         " left join simulado_status_aluno sa on sa.simulado_id = s.id and sa.id_aluno = " + idAluno + 
-                        " where s.id " + DynamicSQL.createInString(ids); 
+                        " where s.rascunho = false  and s.id " + DynamicSQL.createInString(ids); 
 
             
             List<SimuladoEntity> simulados = this.jdbcTemplate.query(sql,
             new Object[]{},
             new RowMapper<SimuladoEntity>() {
                 public SimuladoEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    System.out.println(rs.getDate("data_hora_inicial"));
+                    
                     SimuladoEntity simulado = new SimuladoEntity();
                     simulado.setId(rs.getLong("id"));
                     simulado.setNome(rs.getString("nome"));
                     simulado.setStatus(rs.getString("status"));
-                    simulado.setDataHoraInicial(rs.getDate("data_hora_inicial"));
-                    simulado.setDataHoraFinal(rs.getDate("data_hora_inicial"));
+                    simulado.setDataHoraInicial(rs.getTimestamp("data_hora_inicial"));
+                    simulado.setDataHoraFinal(rs.getTimestamp("data_hora_final"));
                     return simulado;
                 }
             });
 
-            simulados.forEach(n -> System.out.println("Data e Hora  " + n.getDataHoraInicial()));
+            
             return simulados;
         } catch (Exception e) {
             e.printStackTrace();
@@ -269,6 +269,22 @@ public class SimuladoJDBC {
             System.out.println("ERRO AO BUSCAR O SIMULADO POR ID E ALUNOS" + e);
         }
         return null;
+    }
+
+
+    public int finalizaSimulado(Long idSimulado, String idAluno){
+        try {
+
+            String sql = "update simulado_status_aluno set simulado_status_id = 3 where simulado_id = "+ idSimulado +" and id_aluno = '"+ idAluno +"'";
+            System.out.println(sql);
+            int retorno = this.jdbcTemplate.update(sql);
+           
+            return retorno;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("ERRO AO FINALIZAR O SIMULADO " + e);
+        }
+        return -1;
     }
    
 }

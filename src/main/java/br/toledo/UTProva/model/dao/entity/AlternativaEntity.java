@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -40,7 +41,8 @@ public class AlternativaEntity {
         this.correta = correta;
     }
 
-    @Column(name = "descricao", nullable = false, length = 1000)
+    @Lob
+    @Column(name = "descricao", nullable = false, columnDefinition="LONGTEXT")
     public String getDescricao() {
         return descricao;
     }

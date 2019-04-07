@@ -23,7 +23,9 @@ import br.toledo.UTProva.model.dao.entity.FonteEntity;
 import br.toledo.UTProva.model.dao.entity.HabilidadeEntity;
 import br.toledo.UTProva.model.dao.entity.QuestaoEntity;
 import br.toledo.UTProva.model.dao.entity.TipoQuestaoEntity;
+import br.toledo.UTProva.model.dao.entity.TipoRespostaEntity;
 import br.toledo.UTProva.model.dto.TipoQuestaoDTO;
+import br.toledo.UTProva.model.dto.TipoRespostaDTO;
 import br.toledo.UTProva.model.dao.repository.AlternativaRepository;
 import br.toledo.UTProva.model.dao.repository.AreaConhecimentoRepository;
 import br.toledo.UTProva.model.dao.repository.ConteudoRepository;
@@ -91,6 +93,7 @@ public class QuestaoController{
             ConteudoEntity         conteudo         = new ConteudoEntity();
             HabilidadeEntity       habilidade       = new HabilidadeEntity();
             TipoQuestaoEntity      tipo             = new TipoQuestaoEntity();
+            TipoRespostaEntity     tipoResposta     = new TipoRespostaEntity();
             AreaConhecimentoEntity areaConhecimento = new AreaConhecimentoEntity();
 
             
@@ -98,31 +101,33 @@ public class QuestaoController{
             habilidade.setId(questaoDTO.getHabilidade().getId());
             areaConhecimento.setId(questaoDTO.getAreaConhecimento().getId());
             tipo.setId(questaoDTO.getTipo().getId());
+            tipoResposta.setId(questaoDTO.getTipoResposta().getId());
             fonte.setId(questaoDTO.getFonte().getId());
 
             questaoEntity.setConteudo(conteudo);
             questaoEntity.setHabilidade(habilidade);
             questaoEntity.setAreaConhecimento(areaConhecimento);
             questaoEntity.setTipo(tipo);
+            questaoEntity.setTipoResposta(tipoResposta);
             questaoEntity.setFonte(fonte);
             
             questaoEntity.setId(questaoDTO.getId());
             questaoEntity.setDescricao(questaoDTO.getDescricao());
             questaoEntity.setEnade(questaoDTO.isEnade());
             questaoEntity.setStatus(questaoDTO.isStatus());
-            questaoEntity.setDiscursiva(questaoDTO.isDiscursiva());
+            questaoEntity.setDiscursiva(true);
             questaoEntity.setDificuldade(questaoDTO.getDificuldade());
             questaoEntity.setAno(questaoDTO.getAno());
             questaoEntity.setAlterCorreta(questaoDTO.getAlterCorreta());
             questaoEntity.setImagem(questaoDTO.getImagem());
             questaoEntity = questaoRepository.save(questaoEntity);
 
-            if(questaoEntity.getId() != null && questaoEntity.isDiscursiva() == true){
+            if(questaoEntity.getId() != null && questaoDTO.getTipoResposta().getId() == 2){
                 alternativaJDBC.deleteAlternativa(questaoEntity.getId());
                 System.out.println("Alternativas excliodas !");
             }
             
-            if(questaoEntity.getId() != null && questaoEntity.isDiscursiva() == false){
+            if(questaoEntity.getId() != null && questaoDTO.getTipoResposta().getId() != 2){
                 for(AlternativaDTO alternativaDTO : questaoDTO.getAlternativas()){
                     AlternativaEntity alternativaEntity = new AlternativaEntity();
     
@@ -144,177 +149,6 @@ public class QuestaoController{
             map.put("success", false);
             map.put("message", "Erro ao salvar a Questão !");         
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /**
-     * Metodo para retornar todas as questões que estiverem no banco.
-     */
-    @GetMapping(value = "/getQuestoes") 
-    public ResponseEntity<List<QuestaoDTO>> getQuestoes(){
-
-        try {
-            List<QuestaoDTO> questaoDTOs = new ArrayList<>();
-            List<QuestaoEntity> questaoEntities = new ArrayList<>();
-            
-            questaoEntities = questaoRepository.findAll();
-            
-            
-            for(QuestaoEntity qEntity : questaoEntities){
-                FonteDTO            fonte            = new FonteDTO();
-                QuestaoDTO          questaoDTO       = new QuestaoDTO();
-                ConteudoDTO         conteudo         = new ConteudoDTO();
-                HabilidadeDTO       habilidade       = new HabilidadeDTO();                
-                AreaConhecimentoDTO areaConhecimento = new AreaConhecimentoDTO();
-                TipoQuestaoDTO      tipo             = new TipoQuestaoDTO();
-                List<AlternativaDTO> alternativas    = new ArrayList<>();
-
-
-                HabilidadeEntity habilidadeEntity = habilidadeRepository.getOne(qEntity.getHabilidade().getId());
-                habilidade.setId(habilidadeEntity.getId());
-                habilidade.setDescription(habilidadeEntity.getDescription());
-                habilidade.setStatus(habilidadeEntity.isStatus());
-
-                ConteudoEntity conteudoEntity = conteudoRepository.getOne(qEntity.getConteudo().getId());
-                conteudo.setId(conteudoEntity.getId());
-                conteudo.setDescription(conteudoEntity.getDescription());
-                conteudo.setStatus(conteudoEntity.isStatus());
-                
-                AreaConhecimentoEntity areaConhecimentoEntity = areaConhecimentoRepository.getOne(qEntity.getAreaConhecimento().getId());
-                areaConhecimento.setId(areaConhecimentoEntity.getId());
-                areaConhecimento.setDescription(areaConhecimentoEntity.getDescription());
-                areaConhecimento.setStatus(areaConhecimentoEntity.isStatus());
-
-                FonteEntity fonteEntity = fonteRepository.getOne(qEntity.getFonte().getId());
-                fonte.setId(fonteEntity.getId());
-                fonte.setDescription(fonteEntity.getDescription());
-                fonte.setStatus(fonteEntity.isStatus());
-
-                TipoQuestaoEntity tipoQuestaoEntity = tipoQuestaoRepository.getOne(qEntity.getTipo().getId());
-                tipo.setId(tipoQuestaoEntity.getId());
-                tipo.setDescricao(tipoQuestaoEntity.getDescricao());
-
-                if(qEntity.isDiscursiva() == false){
-
-                    List<AlternativaEntity> alternativaEntities = alternativaRepository.findByQuestao(qEntity);
-
-                    for(AlternativaEntity alter : alternativaEntities){
-                        AlternativaDTO alternativaDTO = new AlternativaDTO();
-    
-                        alternativaDTO.setId(alter.getId());
-                        alternativaDTO.setCorreta(alter.isCorreta());
-                        alternativaDTO.setDescricao(alter.getDescricao());
-
-                        alternativas.add(alternativaDTO);
-                    }
-                }
-
-
-                questaoDTO.setId(qEntity.getId());
-                questaoDTO.setDescricao(qEntity.getDescricao());
-                questaoDTO.setEnade(qEntity.isEnade());
-                questaoDTO.setStatus(qEntity.isStatus());
-                questaoDTO.setDiscursiva(qEntity.isDiscursiva());
-                questaoDTO.setDificuldade(qEntity.getDificuldade());
-                questaoDTO.setAno(qEntity.getAno());
-                questaoDTO.setAlterCorreta(qEntity.getAlterCorreta());
-                questaoDTO.setImagem(qEntity.getImagem());
-
-                questaoDTO.setHabilidade(habilidade);
-                questaoDTO.setConteudo(conteudo);
-                questaoDTO.setAreaConhecimento(areaConhecimento);
-                questaoDTO.setTipo(tipo);
-                questaoDTO.setFonte(fonte);
-                questaoDTO.setAlternativas(alternativas);
-
-                questaoDTOs.add(questaoDTO);
-            }
-
-            return ResponseEntity.ok(questaoDTOs);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro ao buscar as questões");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-
-    /** 
-     * Meto para retorna questão por ID 
-    */
-    @GetMapping(value = "/getQuestao") 
-    public ResponseEntity<QuestaoDTO> getQuestoesID(@RequestBody QuestaoDTO  questaoDTO){
-
-        try {
-            ConteudoDTO         conteudo         = new ConteudoDTO();
-            HabilidadeDTO       habilidade       = new HabilidadeDTO();                
-            AreaConhecimentoDTO areaConhecimento = new AreaConhecimentoDTO();
-            FonteDTO            fonte            = new FonteDTO();
-            TipoQuestaoDTO      tipo             = new TipoQuestaoDTO();
-            List<AlternativaDTO> alternativas    = new ArrayList<>();
-
-            QuestaoEntity questao = questaoRepository.getOne(questaoDTO.getId());
-
-            HabilidadeEntity habilidadeEntity = habilidadeRepository.getOne(questao.getHabilidade().getId());
-            habilidade.setId(habilidadeEntity.getId());
-            habilidade.setDescription(habilidadeEntity.getDescription());
-            habilidade.setStatus(habilidadeEntity.isStatus());
-
-            ConteudoEntity conteudoEntity = conteudoRepository.getOne(questao.getConteudo().getId());
-            conteudo.setId(conteudoEntity.getId());
-            conteudo.setDescription(conteudoEntity.getDescription());
-            conteudo.setStatus(conteudoEntity.isStatus());
-                
-            AreaConhecimentoEntity areaConhecimentoEntity = areaConhecimentoRepository.getOne(questao.getAreaConhecimento().getId());
-            areaConhecimento.setId(areaConhecimentoEntity.getId());
-            areaConhecimento.setDescription(areaConhecimentoEntity.getDescription());
-            areaConhecimento.setStatus(areaConhecimentoEntity.isStatus());
-
-            FonteEntity fonteEntity = fonteRepository.getOne(questao.getFonte().getId());
-            fonte.setId(fonteEntity.getId());
-            fonte.setDescription(fonteEntity.getDescription());
-            fonte.setStatus(fonteEntity.isStatus());
-
-            TipoQuestaoEntity tipoQuestaoEntity = tipoQuestaoRepository.getOne(questao.getTipo().getId());
-            tipo.setId(tipoQuestaoEntity.getId());
-            tipo.setDescricao(tipoQuestaoEntity.getDescricao());
-
-            if(questao.isDiscursiva() == false){
-
-                List<AlternativaEntity> alternativaEntities = alternativaRepository.findByQuestao(questao);
-                for(AlternativaEntity alter : alternativaEntities){
-                    AlternativaDTO alternativaDTO = new AlternativaDTO();
-
-                    alternativaDTO.setId(alter.getId());
-                    alternativaDTO.setCorreta(alter.isCorreta());
-                    alternativaDTO.setDescricao(alter.getDescricao());
-                    alternativas.add(alternativaDTO);
-                }
-            }
-            questaoDTO.setId(questao.getId());
-            questaoDTO.setDescricao(questao.getDescricao());
-            questaoDTO.setEnade(questao.isEnade());
-            questaoDTO.setStatus(questao.isStatus());
-            questaoDTO.setDiscursiva(questao.isDiscursiva());
-            questaoDTO.setDificuldade(questao.getDificuldade());
-            questaoDTO.setAno(questao.getAno());
-            questaoDTO.setAlterCorreta(questao.getAlterCorreta());
-            questaoDTO.setImagem(questao.getImagem());
-
-            questaoDTO.setHabilidade(habilidade);
-            questaoDTO.setConteudo(conteudo);
-            questaoDTO.setAreaConhecimento(areaConhecimento);
-            questaoDTO.setTipo(tipo);
-            questaoDTO.setFonte(fonte);
-            questaoDTO.setAlternativas(alternativas);
-            
-            return ResponseEntity.ok(questaoDTO);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro ao buscar as questões");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -358,7 +192,6 @@ public class QuestaoController{
         try {
             int qtdFilter = 0;
         
-            // String sql = "select * from questoes ";
             String sql = " ";
             List<Long>   idsLongs               = new ArrayList<>();
             List<Long>   fonteLongs             = new ArrayList<>();
@@ -528,5 +361,180 @@ public class QuestaoController{
         }
         return in;
      }
+
+
+
+
+     /**
+     * Metodo para retornar todas as questões que estiverem no banco.
+     */
+    // @GetMapping(value = "/getQuestoes") 
+    // public ResponseEntity<List<QuestaoDTO>> getQuestoes(){
+
+    //     try {
+    //         List<QuestaoDTO> questaoDTOs = new ArrayList<>();
+    //         List<QuestaoEntity> questaoEntities = new ArrayList<>();
+            
+    //         questaoEntities = questaoRepository.findAll();
+            
+            
+    //         for(QuestaoEntity qEntity : questaoEntities){
+    //             FonteDTO            fonte            = new FonteDTO();
+    //             QuestaoDTO          questaoDTO       = new QuestaoDTO();
+    //             ConteudoDTO         conteudo         = new ConteudoDTO();
+    //             HabilidadeDTO       habilidade       = new HabilidadeDTO();                
+    //             AreaConhecimentoDTO areaConhecimento = new AreaConhecimentoDTO();
+    //             TipoQuestaoDTO      tipo             = new TipoQuestaoDTO();
+    //             TipoRespostaDTO     tipoResposta     = new TipoRespostaDTO();
+    //             List<AlternativaDTO> alternativas    = new ArrayList<>();
+
+
+    //             HabilidadeEntity habilidadeEntity = habilidadeRepository.getOne(qEntity.getHabilidade().getId());
+    //             habilidade.setId(habilidadeEntity.getId());
+    //             habilidade.setDescription(habilidadeEntity.getDescription());
+    //             habilidade.setStatus(habilidadeEntity.isStatus());
+
+    //             ConteudoEntity conteudoEntity = conteudoRepository.getOne(qEntity.getConteudo().getId());
+    //             conteudo.setId(conteudoEntity.getId());
+    //             conteudo.setDescription(conteudoEntity.getDescription());
+    //             conteudo.setStatus(conteudoEntity.isStatus());
+                
+    //             AreaConhecimentoEntity areaConhecimentoEntity = areaConhecimentoRepository.getOne(qEntity.getAreaConhecimento().getId());
+    //             areaConhecimento.setId(areaConhecimentoEntity.getId());
+    //             areaConhecimento.setDescription(areaConhecimentoEntity.getDescription());
+    //             areaConhecimento.setStatus(areaConhecimentoEntity.isStatus());
+
+    //             FonteEntity fonteEntity = fonteRepository.getOne(qEntity.getFonte().getId());
+    //             fonte.setId(fonteEntity.getId());
+    //             fonte.setDescription(fonteEntity.getDescription());
+    //             fonte.setStatus(fonteEntity.isStatus());
+
+    //             TipoQuestaoEntity tipoQuestaoEntity = tipoQuestaoRepository.getOne(qEntity.getTipo().getId());
+    //             tipo.setId(tipoQuestaoEntity.getId());
+    //             tipo.setDescricao(tipoQuestaoEntity.getDescricao());
+
+    //             if(qEntity.isDiscursiva() == false){
+
+    //                 List<AlternativaEntity> alternativaEntities = alternativaRepository.findByQuestao(qEntity);
+
+    //                 for(AlternativaEntity alter : alternativaEntities){
+    //                     AlternativaDTO alternativaDTO = new AlternativaDTO();
+    
+    //                     alternativaDTO.setId(alter.getId());
+    //                     alternativaDTO.setCorreta(alter.isCorreta());
+    //                     alternativaDTO.setDescricao(alter.getDescricao());
+
+    //                     alternativas.add(alternativaDTO);
+    //                 }
+    //             }
+
+
+    //             questaoDTO.setId(qEntity.getId());
+    //             questaoDTO.setDescricao(qEntity.getDescricao());
+    //             questaoDTO.setEnade(qEntity.isEnade());
+    //             questaoDTO.setStatus(qEntity.isStatus());
+    //             questaoDTO.setDiscursiva(qEntity.isDiscursiva());
+    //             questaoDTO.setDificuldade(qEntity.getDificuldade());
+    //             questaoDTO.setAno(qEntity.getAno());
+    //             questaoDTO.setAlterCorreta(qEntity.getAlterCorreta());
+    //             questaoDTO.setImagem(qEntity.getImagem());
+
+    //             questaoDTO.setHabilidade(habilidade);
+    //             questaoDTO.setConteudo(conteudo);
+    //             questaoDTO.setAreaConhecimento(areaConhecimento);
+    //             questaoDTO.setTipo(tipo);
+    //             questaoDTO.setFonte(fonte);
+    //             questaoDTO.setAlternativas(alternativas);
+
+    //             questaoDTOs.add(questaoDTO);
+    //         }
+
+    //         return ResponseEntity.ok(questaoDTOs);
+
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         System.out.println("Erro ao buscar as questões");
+    //         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    //     }
+    // }
+
+
+    /** 
+     * Meto para retorna questão por ID 
+    */
+    // @GetMapping(value = "/getQuestao") 
+    // public ResponseEntity<QuestaoDTO> getQuestoesID(@RequestBody QuestaoDTO  questaoDTO){
+
+    //     try {
+    //         ConteudoDTO         conteudo         = new ConteudoDTO();
+    //         HabilidadeDTO       habilidade       = new HabilidadeDTO();                
+    //         AreaConhecimentoDTO areaConhecimento = new AreaConhecimentoDTO();
+    //         FonteDTO            fonte            = new FonteDTO();
+    //         TipoQuestaoDTO      tipo             = new TipoQuestaoDTO();
+    //         List<AlternativaDTO> alternativas    = new ArrayList<>();
+
+    //         QuestaoEntity questao = questaoRepository.getOne(questaoDTO.getId());
+
+    //         HabilidadeEntity habilidadeEntity = habilidadeRepository.getOne(questao.getHabilidade().getId());
+    //         habilidade.setId(habilidadeEntity.getId());
+    //         habilidade.setDescription(habilidadeEntity.getDescription());
+    //         habilidade.setStatus(habilidadeEntity.isStatus());
+
+    //         ConteudoEntity conteudoEntity = conteudoRepository.getOne(questao.getConteudo().getId());
+    //         conteudo.setId(conteudoEntity.getId());
+    //         conteudo.setDescription(conteudoEntity.getDescription());
+    //         conteudo.setStatus(conteudoEntity.isStatus());
+                
+    //         AreaConhecimentoEntity areaConhecimentoEntity = areaConhecimentoRepository.getOne(questao.getAreaConhecimento().getId());
+    //         areaConhecimento.setId(areaConhecimentoEntity.getId());
+    //         areaConhecimento.setDescription(areaConhecimentoEntity.getDescription());
+    //         areaConhecimento.setStatus(areaConhecimentoEntity.isStatus());
+
+    //         FonteEntity fonteEntity = fonteRepository.getOne(questao.getFonte().getId());
+    //         fonte.setId(fonteEntity.getId());
+    //         fonte.setDescription(fonteEntity.getDescription());
+    //         fonte.setStatus(fonteEntity.isStatus());
+
+    //         TipoQuestaoEntity tipoQuestaoEntity = tipoQuestaoRepository.getOne(questao.getTipo().getId());
+    //         tipo.setId(tipoQuestaoEntity.getId());
+    //         tipo.setDescricao(tipoQuestaoEntity.getDescricao());
+
+    //         if(questao.isDiscursiva() == false){
+
+    //             List<AlternativaEntity> alternativaEntities = alternativaRepository.findByQuestao(questao);
+    //             for(AlternativaEntity alter : alternativaEntities){
+    //                 AlternativaDTO alternativaDTO = new AlternativaDTO();
+
+    //                 alternativaDTO.setId(alter.getId());
+    //                 alternativaDTO.setCorreta(alter.isCorreta());
+    //                 alternativaDTO.setDescricao(alter.getDescricao());
+    //                 alternativas.add(alternativaDTO);
+    //             }
+    //         }
+    //         questaoDTO.setId(questao.getId());
+    //         questaoDTO.setDescricao(questao.getDescricao());
+    //         questaoDTO.setEnade(questao.isEnade());
+    //         questaoDTO.setStatus(questao.isStatus());
+    //         questaoDTO.setDiscursiva(questao.isDiscursiva());
+    //         questaoDTO.setDificuldade(questao.getDificuldade());
+    //         questaoDTO.setAno(questao.getAno());
+    //         questaoDTO.setAlterCorreta(questao.getAlterCorreta());
+    //         questaoDTO.setImagem(questao.getImagem());
+
+    //         questaoDTO.setHabilidade(habilidade);
+    //         questaoDTO.setConteudo(conteudo);
+    //         questaoDTO.setAreaConhecimento(areaConhecimento);
+    //         questaoDTO.setTipo(tipo);
+    //         questaoDTO.setFonte(fonte);
+    //         questaoDTO.setAlternativas(alternativas);
+            
+    //         return ResponseEntity.ok(questaoDTO);
+
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         System.out.println("Erro ao buscar as questões");
+    //         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    //     }
+    // }
    
 }

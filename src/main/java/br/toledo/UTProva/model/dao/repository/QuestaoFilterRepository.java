@@ -31,6 +31,7 @@ import br.toledo.UTProva.model.dto.HabilidadeDTO;
 import br.toledo.UTProva.model.dto.QuestaoDTO;
 import br.toledo.UTProva.model.dto.QuestaoRetornoDTO;
 import br.toledo.UTProva.model.dto.TipoQuestaoDTO;
+import br.toledo.UTProva.model.dto.TipoRespostaDTO;
 
 
 
@@ -88,12 +89,15 @@ public class QuestaoFilterRepository {
             "tq.id as id_tipo, "+
             "tq.descricao as descricao_tipo, "+
             "f.id as id_fonte, " + 
-            "f.description as descricao_fonte " +
+            "f.description as descricao_fonte, " +
+            "tr.id as id_tipo_resposta, " +
+            "tr.descricao as descricao_tipo_resposta " +
         "from questoes q "+
         "join habilidades h on h.id = q.habilidade_id "+
         "join conteudos c on c.id = q.conteudo_id "+
         "join areas_conhecimento ac on ac.id = q.area_conhecimento_id "+
         "join tipo_questao tq on tq.id = q.tipo_id " + 
+        "join tipo_resposta tr on tr.id = q.tipo_resposta_id " +
         "join fonte f on f.id = q.fonte_id \n" + sql;
 
         try {
@@ -107,6 +111,7 @@ public class QuestaoFilterRepository {
                 HabilidadeDTO       habilidade       = new HabilidadeDTO();
                 FonteDTO            fonte            = new FonteDTO(); 
                 TipoQuestaoDTO      tipo             = new TipoQuestaoDTO();
+                TipoRespostaDTO     tipoResposta     = new TipoRespostaDTO();
                 AreaConhecimentoDTO areaConhecimento = new AreaConhecimentoDTO();
                 
                 questaoDTO.setId(rs.getLong("id_questao"));
@@ -141,12 +146,17 @@ public class QuestaoFilterRepository {
                 
                 tipo.setId(rs.getLong("id_tipo"));
                 tipo.setDescricao(rs.getString("descricao_tipo"));
+
+                tipoResposta.setId(rs.getLong("id_tipo_resposta"));
+                tipoResposta.setDescricao(rs.getString("descricao_tipo_resposta"));
                 
                 questaoDTO.setTipo(tipo);
                 questaoDTO.setFonte(fonte);
                 questaoDTO.setConteudo(conteudo);
                 questaoDTO.setHabilidade(habilidade);
+                questaoDTO.setTipoResposta(tipoResposta);
                 questaoDTO.setAreaConhecimento(areaConhecimento);
+                
                 
                 
                 return questaoDTO;
@@ -204,7 +214,8 @@ public class QuestaoFilterRepository {
                 
                 SimuladoEntity simulado = new SimuladoEntity();
                 simulado.setId(idSimulado);
-
+                
+                // inicia o status do simulado 
                 SimuladoStatusEntity status = new SimuladoStatusEntity();
                 status.setId(2l);
 

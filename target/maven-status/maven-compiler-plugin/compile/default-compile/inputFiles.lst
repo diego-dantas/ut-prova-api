@@ -29,6 +29,7 @@
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/UTProvaApplication.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/UsuarioEntity.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/serviceJDBC/AlternativaJDBC.java
+/Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/serviceJDBC/AlunoJDBC.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/TipoQuestaoRepository.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/QuestaoRepository.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/TurmasDTO.java
@@ -51,6 +52,7 @@
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/TipoRespostaEntity.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/ConteudoDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/controller/ConteudoController.java
+/Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/TipoRespostaDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/UsuarioDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/SimuladoFilterRepositoty.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/FonteRepository.java
@@ -59,6 +61,7 @@
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/TipoQuestaoEntity.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/AlternativaEntity.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/QuestaoFilterRepository.java
+/Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/SimuladoDashAluno.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/DisciplinasDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/SimuladoRepository.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/ConteudoEntity.java

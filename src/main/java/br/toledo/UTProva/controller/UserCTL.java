@@ -26,6 +26,7 @@ import br.toledo.UTProva.model.dao.repository.SimuladoRepository;
 import br.toledo.UTProva.model.dao.repository.SimuladoStatusRepository;
 import br.toledo.UTProva.model.dao.repository.SimuladoTurmasRepository;
 import br.toledo.UTProva.model.dao.repository.UsuarioRepository;
+import br.toledo.UTProva.model.dao.serviceJDBC.AlunoJDBC;
 import br.toledo.UTProva.model.dao.serviceJDBC.SimuladoJDBC;
 import br.toledo.UTProva.model.dto.ContextoDTO;
 import br.toledo.UTProva.model.dto.CursosDTO;
@@ -61,6 +62,8 @@ public class UserCTL {
     private SimuladoStatusRepository simuladoStatusRepository;
     @Autowired
     private SimuladoJDBC simuladoJDBC;
+    @Autowired
+    private AlunoJDBC alunoJDBC;
 
     /**
      * Serviço de login do usuario consumindo o servido da toledo 
@@ -155,12 +158,14 @@ public class UserCTL {
 
                 AlunoService alunoService = new AlunoService();
                 
-                ArrayList<String> Simulados = new ArrayList<>();
+                List<Long> simulados = new ArrayList<>();
+                simulados.addAll(getAllSimuladoAluno(gateway.getToken(), contextoDTO.getIdUtilizador()));
                 
-                if(getAllSimuladoAluno(gateway.getToken(), contextoDTO.getIdUtilizador()).size() > 0){
-                    map.put("simulados", getAllSimuladoAluno(gateway.getToken(), contextoDTO.getIdUtilizador()));
+                if(simulados.size() > 0){
+                    map.put("simulados", getSimuladosAlunos(contextoDTO.getIdUtilizador(), simulados));
+                    map.put("dash_aluno", alunoJDBC.getDashAluno(simulados, contextoDTO.getIdUtilizador()));
                 }else{
-                    map.put("simulados", Simulados);
+                    map.put("simulados", simulados);
                 }
                 
             }
@@ -177,7 +182,7 @@ public class UserCTL {
     /**
      * Busca todos so simulados do aluno do contexto 
      */
-    public List<SimuladoDTO> getAllSimuladoAluno(String token, String idAluno){
+    public List<Long> getAllSimuladoAluno(String token, String idAluno){
 
         try {
             List<SimuladoDTO>               simuladoDTOs        = new ArrayList<>();
@@ -188,6 +193,8 @@ public class UserCTL {
             List<String> idsTurmas      = new ArrayList<>();
             List<String> idsCursos      = new ArrayList<>();
             List<Long>   idsSimulados   = new ArrayList<>();
+
+            
             
 
             AlunoService alunoService = new AlunoService();
@@ -209,26 +216,11 @@ public class UserCTL {
             simuladoCursos = simuladoCursosRepository.findByCursoAndPeriodo(disciplinasDTO.get(0).getIdPeriodoLetivo(), idsCursos);
             simuladoCursos.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
 
-            
-            if(idsSimulados.size() > 0){                
-                List<SimuladoEntity> simulado =  simuladoRepository.findSimuladosAlunos(idAluno, idsSimulados);
-                
-                for(SimuladoEntity simuladosEntity : simulado){
-                    SimuladoDTO simuladoDTO = new SimuladoDTO();
-                    simuladoDTO.setId(simuladosEntity.getId());
-                    simuladoDTO.setNome(simuladosEntity.getNome());
-                    simuladoDTO.setStatus(simuladosEntity.getStatus());
-                    simuladoDTO.setDataHoraInicial(simuladosEntity.getDataHoraInicial());
-                    simuladoDTO.setDataHoraFinal(simuladosEntity.getDataHoraFinal());
-                    simuladoDTO.setRascunho(simuladosEntity.isRascunho());
-                    
-                    simuladoDTOs.add(simuladoDTO);
+        
 
-                }
-            }
             
             
-            return simuladoDTOs;
+            return idsSimulados;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -237,6 +229,27 @@ public class UserCTL {
         return null;
     }
 
+    public List<SimuladoDTO> getSimuladosAlunos(String idAluno, List<Long> idsSimulados){
+        
+        List<SimuladoDTO>               simuladoDTOs        = new ArrayList<>();
+
+        List<SimuladoEntity> simulado =  simuladoJDBC.getSimuladosID(idsSimulados, idAluno);
+                
+        for(SimuladoEntity simuladosEntity : simulado){
+            SimuladoDTO simuladoDTO = new SimuladoDTO();
+            simuladoDTO.setId(simuladosEntity.getId());
+            simuladoDTO.setNome(simuladosEntity.getNome());
+            simuladoDTO.setStatus(simuladosEntity.getStatus());
+            simuladoDTO.setDataHoraInicial(simuladosEntity.getDataHoraInicial());
+            simuladoDTO.setDataHoraFinal(simuladosEntity.getDataHoraFinal());
+            simuladoDTO.setRascunho(simuladosEntity.isRascunho());
+            
+            simuladoDTOs.add(simuladoDTO);
+
+        }
+
+        return simuladoDTOs;
+    }
 
     public List<SimuladoDTO> getQuestoes(List<Long> ids) {
         

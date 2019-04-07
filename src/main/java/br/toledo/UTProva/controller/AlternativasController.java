@@ -23,12 +23,14 @@ public class AlternativasController {
     @Autowired
     private AlternativaRepository alternativaRepository;
 
-
+    /**
+     * 
+     * @param idQuestao
+     * @return Lista das alternativas por ID da qestão
+     */
     @RequestMapping(value = "/getAlternativas/{idQuestao}")
     public ResponseEntity<List<AlternativaDTO>> getAlternativas(@PathVariable("idQuestao") Long idQuestao){
         try {
-            
-           
             List<AlternativaDTO> alternativas = new ArrayList<>();
             List<AlternativaEntity> alternativaEntity = alternativaRepository.findAlternativasByQuestao(idQuestao);
             for(AlternativaEntity alter : alternativaEntity){
@@ -38,8 +40,6 @@ public class AlternativasController {
                 alternativaDTO.setDescricao(alter.getDescricao());
                 alternativas.add(alternativaDTO);
             }
-            
-            
             return ResponseEntity.ok(alternativas);
         } catch (Exception e) {
             e.printStackTrace();

@@ -75,30 +75,7 @@ public class FileController {
 
 
     
-    public static ResponseEntity<byte[]> filesTes(String imagem) {
-
-        try {
-
-            HttpHeaders headers = new HttpHeaders();
-
-            File file = new File(imagem);
-
-            InputStream is = new BufferedInputStream(new FileInputStream(file));
-
-            String mimeType = URLConnection.guessContentTypeFromStream(is);
-
-            headers.setContentType(MediaType.valueOf(mimeType));
-
-            return new ResponseEntity<byte[]>(IOUtils.toByteArray(is), headers, HttpStatus.OK);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
-    }
+   
 
 
 
