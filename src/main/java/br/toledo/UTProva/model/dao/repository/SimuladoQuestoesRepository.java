@@ -20,5 +20,7 @@ public interface SimuladoQuestoesRepository extends JpaRepository<SimuladoQuesto
     @Query(value = "select count(simulado_id) from simulado_questoes where questao_id =:id ", nativeQuery = true)
     int countSimuladoByQuestao(@Param("id") Long id);
     
+    @Query(value = "select count(id) from simulado_resolucao where id_questao =:id", nativeQuery = true)
+    int countSimuladoAluno(@Param("id") Long id);
    
 }

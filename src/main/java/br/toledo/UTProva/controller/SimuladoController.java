@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.toledo.UTProva.model.dao.entity.AlternativaEntity;
+import br.toledo.UTProva.model.dao.entity.FonteEntity;
 import br.toledo.UTProva.model.dao.entity.QuestaoEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoCursosEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoDisciplinasEntity;
@@ -13,7 +14,9 @@ import br.toledo.UTProva.model.dao.entity.SimuladoQuestoesEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoResolucaoEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoStatusEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoTurmasEntity;
+import br.toledo.UTProva.model.dao.entity.TipoRespostaEntity;
 import br.toledo.UTProva.model.dao.repository.AlternativaRepository;
+import br.toledo.UTProva.model.dao.repository.FonteRepository;
 import br.toledo.UTProva.model.dao.repository.QuestaoRepository;
 import br.toledo.UTProva.model.dao.repository.SimuladoCursosRepository;
 import br.toledo.UTProva.model.dao.repository.SimuladoDisciplinasRepository;
@@ -24,6 +27,7 @@ import br.toledo.UTProva.model.dao.repository.SimuladoRepository;
 import br.toledo.UTProva.model.dao.repository.SimuladoResolucaoRepository;
 import br.toledo.UTProva.model.dao.repository.SimuladoStatusRepository;
 import br.toledo.UTProva.model.dao.repository.SimuladoTurmasRepository;
+import br.toledo.UTProva.model.dao.repository.TipoRespostaRepository;
 import br.toledo.UTProva.model.dao.serviceJDBC.SimuladoJDBC;
 import br.toledo.UTProva.model.dao.serviceJDBC.useful.DynamicSQL;
 import br.toledo.UTProva.model.dto.AlternativaDTO;
@@ -31,12 +35,14 @@ import br.toledo.UTProva.model.dto.CursoRetornoDTO;
 import br.toledo.UTProva.model.dto.CursosDTO;
 import br.toledo.UTProva.model.dto.DisciplinasDTO;
 import br.toledo.UTProva.model.dto.DisciplinasRetornoDTO;
+import br.toledo.UTProva.model.dto.FonteDTO;
 import br.toledo.UTProva.model.dto.QuestaoDTO;
 import br.toledo.UTProva.model.dto.QuestaoRetornoDTO;
 import br.toledo.UTProva.model.dto.SimuladoDTO;
 import br.toledo.UTProva.model.dto.SimuladoResolucaoDTO;
 import br.toledo.UTProva.model.dto.SimuladoRetornoDTO;
 import br.toledo.UTProva.model.dto.SimuladoStatusDTO;
+import br.toledo.UTProva.model.dto.TipoRespostaDTO;
 import br.toledo.UTProva.model.dto.TurmaRetornoDTO;
 import br.toledo.UTProva.model.dto.TurmasDTO;
 
@@ -85,6 +91,10 @@ public class SimuladoController {
     private SimuladoJDBC simuladoJDBC;
     @Autowired
     private SimuladoStatusRepository simuladoStatusRepository;
+    @Autowired
+    private FonteRepository fonteRepository;
+    @Autowired
+    private TipoRespostaRepository tipoRespostaRepository;
 
 
     @PostMapping(value = "/createUpdateSimulado")
@@ -221,140 +231,7 @@ public class SimuladoController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    // @PostMapping(value = "/getSimulados")
-    // public ResponseEntity<List<Object>> getSimuladoAll(@RequestBody SimuladoDTO simuladoDTO) {
-
-    //     try {           
-    //         List<Object> retorno = new ArrayList<>();
-    //         if(simuladoDTO.getCursos() != null){
-    //             for (CursosDTO curso : simuladoDTO.getCursos()) {
-                    
-    //                 List<Long> idSimuladosCursos = new ArrayList<>();
-                    
-    //                 CursoRetornoDTO cursoRetornoDTO = new CursoRetornoDTO();
-
-    //                 List<SimuladoCursosEntity> simuladosCurso = simuladoCursosRepository.findSimuladoByCursoAndPeriodo(curso.getIdPeriodoLetivo(), curso.getId());
-    //                 simuladosCurso.forEach(n -> idSimuladosCursos.add(n.getSimulado().getId()));
-    //                 cursoRetornoDTO.setSimulados(getSimulados(idSimuladosCursos));
-                    
-    //                 List<TurmaRetornoDTO> listTurma = new ArrayList<>();                     
-    //                 List<SimuladoTurmasEntity> getTurmas = simuladoFilterRepositoty.getIdTurmas(curso.getIdPeriodoLetivo(), curso.getId());
-    //                 for (SimuladoTurmasEntity turmas  : getTurmas) {
-                        
-    //                     List<Long> idSimuladosTurmas = new ArrayList<>();
-    //                     TurmaRetornoDTO turmaRetornoDTO = new TurmaRetornoDTO();
-    //                     turmaRetornoDTO.setId(turmas.getIdTurma());
-    //                     turmaRetornoDTO.setNome(turmas.getNome());
-    //                     turmaRetornoDTO.setIdPeriodoLetivo(turmas.getIdPeriodoLetivo());
-    //                     turmaRetornoDTO.setIdCurso(curso.getId());
-    //                     List<SimuladoTurmasEntity> simuladosTurma  = simuladoTurmasRepository.findByTurmasCursoAndPeriodo(curso.getIdPeriodoLetivo(), curso.getId(), turmas.getIdTurma());
-    //                     simuladosTurma.forEach(n -> idSimuladosTurmas.add(n.getSimulado().getId()));
-                        
-    //                     turmaRetornoDTO.setSimulados(getSimulados(idSimuladosCursos));
-    //                     listTurma.add(turmaRetornoDTO);
-
-    //                     List<DisciplinasRetornoDTO> listDisciplinas = new ArrayList<>(); 
-    //                     List<SimuladoDisciplinasEntity> getDisciplina = simuladoFilterRepositoty.getIdDisciplinas(curso.getIdPeriodoLetivo(), turmas.getIdTurma());
-    //                     for (SimuladoDisciplinasEntity disciplina  : getDisciplina) {
-
-    //                         List<Long> idSimuladosDisciplina = new ArrayList<>();
-    //                         DisciplinasRetornoDTO disciplinasRetornoDTO = new DisciplinasRetornoDTO();
-    //                         disciplinasRetornoDTO.setId(disciplina.getIdTurma());
-    //                         disciplinasRetornoDTO.setNome(disciplina.getNome());
-    //                         disciplinasRetornoDTO.setIdPeriodoLetivo(turmas.getIdPeriodoLetivo());
-    //                         disciplinasRetornoDTO.setIdCurso(turmas.getIdCurso());
-                            
-    //                         List<SimuladoDisciplinasEntity> simuladosDisciplina  = simuladoDisciplinasRepository.findByTurmasAndPeriodo(curso.getIdPeriodoLetivo(), turmas.getIdTurma());
-    //                         simuladosDisciplina.forEach(n -> idSimuladosDisciplina.add(n.getSimulado().getId()));
-
-    //                         disciplinasRetornoDTO.setSimulados(getSimulados(idSimuladosCursos));
-    //                         listDisciplinas.add(disciplinasRetornoDTO);
-    //                     }
-    //                     turmaRetornoDTO.setDisciplinas(listDisciplinas);
-    //                 }
-
-    //                 cursoRetornoDTO.setTurmas(listTurma);
-    //                 cursoRetornoDTO.setId(curso.getId());
-    //                 cursoRetornoDTO.setNome(curso.getNome());
-    //                 cursoRetornoDTO.setIdPeriodoLetivo(curso.getIdPeriodoLetivo());
-
-    //                 retorno.add(cursoRetornoDTO);
-    //             }
-    //         }
-
-    //         if(simuladoDTO.getTurmas() != null){
-    //             for (TurmasDTO turma : simuladoDTO.getTurmas()) {
-                        
-    //                 List<Long> idSimuladosTurmas = new ArrayList<>();
-    //                 TurmaRetornoDTO turmaRetornoDTO = new TurmaRetornoDTO();
-    //                 turmaRetornoDTO.setId(turma.getId());
-    //                 turmaRetornoDTO.setNome(turma.getNome());
-    //                 turmaRetornoDTO.setIdPeriodoLetivo(turma.getIdPeriodoLetivo());
-    //                 turmaRetornoDTO.setIdCurso(turma.getIdCurso());
-
-    //                 List<SimuladoTurmasEntity> simuladosTurma  = simuladoTurmasRepository.findByTurmaAndPeriodo(turma.getIdPeriodoLetivo(), turma.getId());
-    //                 simuladosTurma.forEach(n -> idSimuladosTurmas.add(n.getSimulado().getId()));
-                   
-    //                 turmaRetornoDTO.setSimulados(getSimulados(idSimuladosTurmas));
-                    
-
-    //                 List<DisciplinasRetornoDTO> listDisciplinas = new ArrayList<>(); 
-    //                 List<SimuladoDisciplinasEntity> getDisciplina = simuladoFilterRepositoty.getIdDisciplinas(turma.getIdPeriodoLetivo(), turma.getId());
-                    
-    //                 for (SimuladoDisciplinasEntity disciplina  : getDisciplina) {
-                        
-    //                     List<Long> idSimuladosDisciplina = new ArrayList<>();
-    //                     DisciplinasRetornoDTO disciplinasRetornoDTO = new DisciplinasRetornoDTO();
-    //                     disciplinasRetornoDTO.setId(disciplina.getIdDisciplina());
-    //                     disciplinasRetornoDTO.setIdTurma(disciplina.getIdTurma());
-    //                     disciplinasRetornoDTO.setNome(disciplina.getNome());
-    //                     disciplinasRetornoDTO.setIdPeriodoLetivo(turma.getIdPeriodoLetivo());
-    //                     disciplinasRetornoDTO.setIdCurso(turma.getIdCurso());
-                        
-    //                     List<SimuladoDisciplinasEntity> simuladosDisciplina  = simuladoDisciplinasRepository.findByTurmasAndPeriodo(turma.getIdPeriodoLetivo(), turma.getId());
-    //                     simuladosDisciplina.forEach(n -> idSimuladosDisciplina.add(n.getSimulado().getId()));
-    //                     disciplinasRetornoDTO.setSimulados(getSimulados(idSimuladosDisciplina));
-    //                     listDisciplinas.add(disciplinasRetornoDTO);
-    //                 }
-    //                 turmaRetornoDTO.setDisciplinas(listDisciplinas);
-                    
-
-
-    //                 retorno.add(turmaRetornoDTO);
-    //             }
-    //         }
-
-    //         if(simuladoDTO.getDisciplinas() != null){
-
-    //             List<DisciplinasRetornoDTO> listDisciplinas = new ArrayList<>(); 
-    //             for (DisciplinasDTO disciplina : simuladoDTO.getDisciplinas()) {
-
-    //                 List<Long> idSimuladosDisciplina = new ArrayList<>();
-    //                 DisciplinasRetornoDTO disciplinasRetornoDTO = new DisciplinasRetornoDTO();
-
-    //                 disciplinasRetornoDTO.setId(disciplina.getId());
-    //                 disciplinasRetornoDTO.setIdTurma(disciplina.getIdTurma());
-    //                 disciplinasRetornoDTO.setNome(disciplina.getNome());
-    //                 disciplinasRetornoDTO.setIdPeriodoLetivo(disciplina.getIdPeriodoLetivo());
-                    
-                    
-    //                 List<SimuladoDisciplinasEntity> simuladosDisciplina  = simuladoDisciplinasRepository.findByDisciplinaAndPeriodo(disciplina.getIdPeriodoLetivo(), disciplina.getId());
-    //                 simuladosDisciplina.forEach(n -> idSimuladosDisciplina.add(n.getSimulado().getId()));
-    //                 disciplinasRetornoDTO.setSimulados(getSimulados(idSimuladosDisciplina));
-                    
-    //                 retorno.add(disciplinasRetornoDTO);
-    //             }
-    //         }
-
-    //         return new ResponseEntity<>(retorno, HttpStatus.OK);
-            
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         System.out.println("Erro ao buscar o simulado por curso" + e);
-    //     }
-    //     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    // }
-
+   
     @PostMapping(value = "/getAllSimulado")
     public ResponseEntity<List<SimuladoDTO>> getAllSimulado(@RequestBody SimuladoDTO simuladoDTO) {
 
@@ -532,17 +409,31 @@ public class SimuladoController {
             List<SimuladoQuestoesEntity> sq = simuladoQuestoesRepository.findByQuestoes(idSimulado);
             for(SimuladoQuestoesEntity sim : sq){
                 QuestaoEntity questaoEntity = questaoRepository.getOne(sim.getQuestao().getId());
+                FonteEntity fonteEntity = fonteRepository.getOne(questaoEntity.getFonte().getId());
+                TipoRespostaEntity tipoRespostaEntity = tipoRespostaRepository.getOne(questaoEntity.getTipoResposta().getId());
+
                 QuestaoDTO questaoDTO = new QuestaoDTO();
+
+                TipoRespostaDTO tipoResposta = new TipoRespostaDTO();
+                tipoResposta.setId(tipoRespostaEntity.getId());
+                tipoResposta.setDescricao(tipoRespostaEntity.getDescricao());
+                questaoDTO.setTipoResposta(tipoResposta);
+                
+                FonteDTO fonte = new FonteDTO();
+                fonte.setId(fonteEntity.getId());
+                fonte.setDescription(fonteEntity.getDescription());
+                fonte.setStatus(fonteEntity.isStatus());
+                questaoDTO.setFonte(fonte);
+
                 questaoDTO.setId(questaoEntity.getId());
                 questaoDTO.setDescricao(questaoEntity.getDescricao());
-                questaoDTO.setEnade(questaoEntity.isEnade());
                 questaoDTO.setStatus(questaoEntity.isStatus());
-                questaoDTO.setDiscursiva(questaoEntity.isDiscursiva());
                 questaoDTO.setAno(questaoEntity.getAno());
                 questaoDTO.setAlterCorreta(questaoEntity.getAlterCorreta());
                 questaoDTO.setImagem(questaoEntity.getImagem());
                 
-                if(questaoEntity.isDiscursiva() == false){
+                
+                if(questaoEntity.getTipoResposta().getId() != 2){
                     List<AlternativaEntity> alternativaEntities = alternativaRepository.findByQuestao(questaoEntity);
                     List<AlternativaDTO> alternativas    = new ArrayList<>();
                     for(AlternativaEntity alter : alternativaEntities){
@@ -646,15 +537,29 @@ public class SimuladoController {
             List<SimuladoQuestoesEntity> sq = simuladoQuestoesRepository.findByQuestoes(idSimulado);
             for(SimuladoQuestoesEntity sim : sq){
                 QuestaoEntity questaoEntity = questaoRepository.getOne(sim.getQuestao().getId());
-                
+
+                FonteEntity fonteEntity = fonteRepository.getOne(questaoEntity.getFonte().getId());
+                TipoRespostaEntity tipoRespostaEntity = tipoRespostaRepository.getOne(questaoEntity.getTipoResposta().getId());
+
                 QuestaoDTO questaoDTO = new QuestaoDTO();
+
+                TipoRespostaDTO tipoResposta = new TipoRespostaDTO();
+                tipoResposta.setId(tipoRespostaEntity.getId());
+                tipoResposta.setDescricao(tipoRespostaEntity.getDescricao());
+                questaoDTO.setTipoResposta(tipoResposta);
+                
+                FonteDTO fonte = new FonteDTO();
+                fonte.setId(fonteEntity.getId());
+                fonte.setDescription(fonteEntity.getDescription());
+                fonte.setStatus(fonteEntity.isStatus());
+                questaoDTO.setFonte(fonte);
+
                 questaoDTO.setId(questaoEntity.getId());
                 questaoDTO.setDescricao(questaoEntity.getDescricao());
-                questaoDTO.setEnade(questaoEntity.isEnade());
                 questaoDTO.setStatus(questaoEntity.isStatus());
-                questaoDTO.setDiscursiva(questaoEntity.isDiscursiva());
                 questaoDTO.setAno(questaoEntity.getAno());
                 questaoDTO.setImagem(questaoEntity.getImagem());
+                
                 
                 
                 if(questaoEntity.isDiscursiva() == false){
@@ -708,40 +613,6 @@ public class SimuladoController {
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         } 
     }
-
-    // @GetMapping(value = "/getSimuladoIdAlunoV2/{id}")
-    // public ResponseEntity<SimuladoDTO> getSimuladoIdAlunoV2(@PathVariable("id") Long idSimulado) {
-    //     System.out.println("id do simulado " + idSimulado);
-    //     try {
-           
-    //         SimuladoEntity simuladoRetorno = simuladoRepository.getOne(idSimulado);
-    //         SimuladoDTO sDTO = new SimuladoDTO();
-    //         List<CursosDTO> cursosDTOs = new ArrayList<>();
-    //         List<TurmasDTO> turmasDTOs = new ArrayList<>();
-    //         List<DisciplinasDTO> disciplinasDTOs = new ArrayList<>();
-            
-    //         sDTO.setId(simuladoRetorno.getId());
-    //         sDTO.setNome(simuladoRetorno.getNome());
-    //         sDTO.setRascunho(simuladoRetorno.isRascunho());
-    //         sDTO.setStatus(simuladoRetorno.getStatus());
-    //         sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
-    //         sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
-
-            
-    //         //simuladoDTOs = simuladoJDBC.getSimuladoID(idSimulado);
-            
-            
-           
-            
-    //         return ResponseEntity.ok(sDTO);
-            
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         System.out.println("Erro ao buscar o simulado pelo id " + idSimulado+  " \n" + e);
-    //     } 
-        
-    //     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    // }
 
 
     @PostMapping(value = "/updateStatus")
@@ -807,13 +678,25 @@ public class SimuladoController {
 
                 for(SimuladoQuestoesEntity sim : sq){
                     QuestaoEntity questaoEntity = questaoRepository.getOne(sim.getQuestao().getId());
+                    FonteEntity fonteEntity = fonteRepository.getOne(questaoEntity.getFonte().getId());
+                    TipoRespostaEntity tipoRespostaEntity = tipoRespostaRepository.getOne(questaoEntity.getTipoResposta().getId());
+
                     QuestaoDTO questaoDTO = new QuestaoDTO();
+
+                    TipoRespostaDTO tipoResposta = new TipoRespostaDTO();
+                    tipoResposta.setId(tipoRespostaEntity.getId());
+                    tipoResposta.setDescricao(tipoRespostaEntity.getDescricao());
+                    questaoDTO.setTipoResposta(tipoResposta);
+                    
+                    FonteDTO fonte = new FonteDTO();
+                    fonte.setId(fonteEntity.getId());
+                    fonte.setDescription(fonteEntity.getDescription());
+                    fonte.setStatus(fonteEntity.isStatus());
+                    questaoDTO.setFonte(fonte);
 
                     questaoDTO.setId(questaoEntity.getId());
                     questaoDTO.setDescricao(questaoEntity.getDescricao());
-                    questaoDTO.setEnade(questaoEntity.isEnade());
                     questaoDTO.setStatus(questaoEntity.isStatus());
-                    questaoDTO.setDiscursiva(questaoEntity.isDiscursiva());
                     questaoDTO.setAno(questaoEntity.getAno());
                     questaoDTO.setAlterCorreta(questaoEntity.getAlterCorreta());
                     questaoDTO.setImagem(questaoEntity.getImagem());

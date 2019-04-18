@@ -275,7 +275,7 @@ public class SimuladoJDBC {
     public int finalizaSimulado(Long idSimulado, String idAluno){
         try {
 
-            String sql = "update simulado_status_aluno set simulado_status_id = 3 where simulado_id = "+ idSimulado +" and id_aluno = '"+ idAluno +"'";
+            String sql = "update simulado_status_aluno set simulado_status_id = 3, data_final = now() where simulado_id = "+ idSimulado +" and id_aluno = '"+ idAluno +"'";
             System.out.println(sql);
             int retorno = this.jdbcTemplate.update(sql);
            

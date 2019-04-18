@@ -50,6 +50,7 @@
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/service/sistema/Contexto.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/ConteudoRepository.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/TipoRespostaEntity.java
+/Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/TipoRespostaRepository.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/ConteudoDTO.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/controller/ConteudoController.java
 /Users/dantas/Documents/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/TipoRespostaDTO.java

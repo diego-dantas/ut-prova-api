@@ -23,7 +23,7 @@ public class AlunoJDBC{
     private JdbcTemplate jdbcTemplate;
 
 
-    public List<SimuladoDashAluno> getDashAluno(List<Long> idsSimulados, String idAluno){
+    public Map getDashAluno(List<Long> idsSimulados, String idAluno){
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             
@@ -31,11 +31,17 @@ public class AlunoJDBC{
             " select 	 id_simulado as id_simulado, " +
             "            count(distinct(sr.id_simulado)) as simulados_finalizados, " +
             "            count(distinct(sr.id_questao))   as questoes_respondidas, " +
-            "            (select count(distinct(ate.id)) " +
-            "                from alternativa ate " +
-            "                where 	questao_id = sr.id_questao " +
-            "                and ate.correta = true) " +
-            "            as questooes_certas " +
+            "            ( " +
+			"            	select count(*) " +
+			"            	from simulado_resolucao sr " +
+			"            	join 	alternativa a on a.questao_id = sr.id_questao and sr.id_alternativa = a.id " +
+			"            	where sr.id_aluno = ssa.id_aluno " +
+			"            	and sr.id_simulado = ssa.simulado_id " + 
+			"            	and correta = true " +
+			"            ) " +
+            "            as questoes_certas, " +
+            "            ssa.data_inicio as data_inicio,  " +
+			"            ssa.data_final as data_final " +
             " from 	    simulado_status_aluno ssa " +
             " join 		simulado_resolucao sr on sr.id_simulado = ssa.simulado_id and sr.id_aluno = ssa.id_aluno " +
             " join 		alternativa a on a.id = sr.id_alternativa " +
@@ -52,13 +58,29 @@ public class AlunoJDBC{
                         simulado.setIdSimulado(rs.getLong("id_simulado"));
                         simulado.setSimuladosFinalizados(rs.getInt("simulados_finalizados"));
                         simulado.setQuestoesRespondidas(rs.getInt("questoes_respondidas"));
-                        simulado.setQuestooesCertas(rs.getInt("questooes_certas"));
+                        simulado.setQuestoesCertas(rs.getInt("questoes_certas"));
+                        simulado.setDataInicio(rs.getDate("data_inicio"));
+                        simulado.setDataFinal(rs.getDate("data_final"));
                         return simulado;
                     }
                 }
             );
-            
-            return simuladoDashAluno;
+            int qtdsimulado = 0;
+            int qtdQuestaoRespondida = 0;
+            int qtdQuestaoRespondidaCerta = 0;
+            for( SimuladoDashAluno sis : simuladoDashAluno){
+                qtdsimulado += sis.getSimuladosFinalizados();
+                qtdQuestaoRespondida += sis.getQuestoesRespondidas();
+                qtdQuestaoRespondidaCerta += sis.getQuestoesCertas();
+            }
+            Map<String, Object> mapTotal = new HashMap<String, Object>();
+            mapTotal.put("totalSimulado", qtdsimulado);
+            mapTotal.put("totalQuestoesCertas", qtdQuestaoRespondidaCerta);
+            mapTotal.put("totalQuestoesRespondidas", qtdQuestaoRespondida);
+
+            map.put("total", mapTotal);
+            map.put("list", simuladoDashAluno);
+            return map;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -1,6 +1,7 @@
 package br.toledo.UTProva.model.dao.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,8 @@ public class SimuladoStatusAlunoEntity implements Serializable{
     private String idAluno;
     private SimuladoEntity simulado;
     private SimuladoStatusEntity simuladoStatus;
+    private Date dataInicio;
+    private Date dataFinal;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +59,24 @@ public class SimuladoStatusAlunoEntity implements Serializable{
 
     public void setSimuladoStatus(SimuladoStatusEntity simuladoStatus) {
         this.simuladoStatus = simuladoStatus;
+    }
+
+    @Column(name = "dataInicio", nullable = false)
+    public Date getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    @Column(name = "dataFinal", nullable = true)
+    public Date getDataFinal() {
+        return dataFinal;
+    }
+
+    public void setDataFinal(Date dataFinal) {
+        this.dataFinal = dataFinal;
     }
 
 }

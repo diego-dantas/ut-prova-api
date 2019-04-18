@@ -13,7 +13,7 @@ public interface AlternativaRepository extends JpaRepository<AlternativaEntity, 
 
     List<AlternativaEntity> findByQuestao(QuestaoEntity questaoEntity);
 
-    @Query(value = "select * from alternativa where questao_id =:id ", nativeQuery = true)
+    @Query(value = "select * from alternativa where questao_id =:id order by id asc ", nativeQuery = true)
     List<AlternativaEntity> findAlternativasByQuestao(@Param("id") Long id);
 
 }

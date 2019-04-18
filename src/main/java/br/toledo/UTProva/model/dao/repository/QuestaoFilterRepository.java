@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,9 +76,7 @@ public class QuestaoFilterRepository {
             "q.descricao as descricao_questao, "+
             "q.alternativa_correta, "+
             "q.ano, "+
-            "q.discursiva, "+
-            "q.dificuldade, "+
-            "q.enade, "+            
+            "q.dificuldade, "+   
             "q.imagem , "+
             "q.status as status_questao, "+
             "h.id as id_habilidade, "+
@@ -116,9 +115,7 @@ public class QuestaoFilterRepository {
                 
                 questaoDTO.setId(rs.getLong("id_questao"));
                 questaoDTO.setDescricao(rs.getString("descricao_questao"));
-                questaoDTO.setEnade(rs.getBoolean("enade"));
                 questaoDTO.setStatus(rs.getBoolean("status_questao"));
-                questaoDTO.setDiscursiva(rs.getBoolean("discursiva"));
                 questaoDTO.setDificuldade(rs.getString("dificuldade"));
                 questaoDTO.setAno(rs.getString("ano"));                
                 questaoDTO.setAlterCorreta(rs.getString("alternativa_correta").charAt(0));
@@ -219,12 +216,7 @@ public class QuestaoFilterRepository {
                 SimuladoStatusEntity status = new SimuladoStatusEntity();
                 status.setId(2l);
 
-                SimuladoStatusAlunoEntity simuAlunoEntity = new SimuladoStatusAlunoEntity();
-                simuAlunoEntity.setIdAluno(idAluno);
-                simuAlunoEntity.setSimulado(simulado);
-                simuAlunoEntity.setSimuladoStatus(status);
-
-                simuladoStatusAlunoRepository.save(simuAlunoEntity);
+                
                 
                 String sqlQ = "select questao_id from simulado_questoes where simulado_id = " + idSimulado;
                 List<Long> idsSimulados = this.jdbcTemplate.queryForList(sqlQ, Long.class);
@@ -248,6 +240,15 @@ public class QuestaoFilterRepository {
                 }
 
                 simuladoResolucaoRepository.saveAll(sis);
+
+                Date data_atual = new Date();
+                SimuladoStatusAlunoEntity simuAlunoEntity = new SimuladoStatusAlunoEntity();
+                simuAlunoEntity.setIdAluno(idAluno);
+                simuAlunoEntity.setSimulado(simulado);
+                simuAlunoEntity.setSimuladoStatus(status);
+                simuAlunoEntity.setDataInicio(data_atual);
+
+                simuladoStatusAlunoRepository.save(simuAlunoEntity);
             }
 
             

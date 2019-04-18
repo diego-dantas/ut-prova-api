@@ -9,8 +9,6 @@ public class QuestaoDTO {
     private Long id;
     private String descricao;
     private boolean status;
-    private boolean enade;
-    private boolean discursiva;
     private String dificuldade;
     private String ano;
     private char alterCorreta;
@@ -46,21 +44,7 @@ public class QuestaoDTO {
     public void setStatus(boolean status) {
         this.status = status;
     }
-    public boolean isEnade() {
-        return enade;
-    }
-
-    public void setEnade(boolean enade) {
-        this.enade = enade;
-    }
-    public boolean isDiscursiva() {
-        return discursiva;
-    }
-
-    public void setDiscursiva(boolean discursiva) {
-        this.discursiva = discursiva;
-    }
-
+   
     public String getDificuldade() {
         return dificuldade;
     }

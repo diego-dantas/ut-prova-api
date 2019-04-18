@@ -79,6 +79,15 @@ public class QuestaoController{
         
         try {
 
+            if(questaoDTO.getId() != null){
+                int qtd = simuladoQuestoesRepository.countSimuladoAluno(questaoDTO.getId());
+                if(qtd > 0){
+                    map.put("success", false);
+                    map.put("message", "Não foi possível efetuar a alteração. Motivo: A Questão possui vínculo com Simulado iniciado.");
+                    return new ResponseEntity<>(map, HttpStatus.OK);
+                }
+            }
+
             if(questaoDTO.getId() != null && questaoDTO.isStatus() == false){
                 int qtd = simuladoQuestoesRepository.countSimuladoByQuestao(questaoDTO.getId());
                 if(qtd > 0){
@@ -87,6 +96,8 @@ public class QuestaoController{
                     return new ResponseEntity<>(map, HttpStatus.OK);
                 }
             }
+
+        
 
             FonteEntity            fonte            = new FonteEntity();
             QuestaoEntity          questaoEntity    = new QuestaoEntity();
@@ -113,7 +124,6 @@ public class QuestaoController{
             
             questaoEntity.setId(questaoDTO.getId());
             questaoEntity.setDescricao(questaoDTO.getDescricao());
-            questaoEntity.setEnade(questaoDTO.isEnade());
             questaoEntity.setStatus(questaoDTO.isStatus());
             questaoEntity.setDiscursiva(true);
             questaoEntity.setDificuldade(questaoDTO.getDificuldade());
@@ -122,9 +132,9 @@ public class QuestaoController{
             questaoEntity.setImagem(questaoDTO.getImagem());
             questaoEntity = questaoRepository.save(questaoEntity);
 
-            if(questaoEntity.getId() != null && questaoDTO.getTipoResposta().getId() == 2){
+            if(questaoEntity.getId() != null){
                 alternativaJDBC.deleteAlternativa(questaoEntity.getId());
-                System.out.println("Alternativas excliodas !");
+                System.out.println("Alternativas excluidas !");
             }
             
             if(questaoEntity.getId() != null && questaoDTO.getTipoResposta().getId() != 2){

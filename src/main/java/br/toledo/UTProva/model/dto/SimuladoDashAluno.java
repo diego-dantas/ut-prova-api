@@ -1,11 +1,15 @@
 package br.toledo.UTProva.model.dto;
 
+import java.util.Date;
+
 public class SimuladoDashAluno {
 
     private Long idSimulado;
     private int simuladosFinalizados;
     private int questoesRespondidas;
-    private int questooesCertas;
+    private int questoesCertas;
+    private Date dataInicio;
+    private Date dataFinal;
 
     public Long getIdSimulado() {
         return idSimulado;
@@ -23,12 +27,12 @@ public class SimuladoDashAluno {
         this.simuladosFinalizados = simuladosFinalizados;
     }
 
-    public int getQuestooesCertas() {
-        return questooesCertas;
+    public int getQuestoesCertas() {
+        return questoesCertas;
     }
     
-    public void setQuestooesCertas(int questooesCertas) {
-        this.questooesCertas = questooesCertas;
+    public void setQuestoesCertas(int questoesCertas) {
+        this.questoesCertas = questoesCertas;
     }
 
     public int getQuestoesRespondidas() {
@@ -38,5 +42,21 @@ public class SimuladoDashAluno {
 
     public void setQuestoesRespondidas(int questoesRespondidas) {
         this.questoesRespondidas = questoesRespondidas;
+    }
+
+    public Date getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public Date getDataFinal() {
+        return dataFinal;
+    }
+
+    public void setDataFinal(Date dataFinal) {
+        this.dataFinal = dataFinal;
     }
 }
