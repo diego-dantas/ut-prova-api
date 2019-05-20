@@ -10,6 +10,7 @@ public class SimuladoDTO {
     private Date dataHoraInicial;
     private Date dataHoraFinal;
     private boolean rascunho;
+    private boolean enade;
     private String status;
     private List<QuestaoDTO> questoes;
     private List<CursosDTO> cursos;
@@ -102,5 +103,12 @@ public class SimuladoDTO {
         this.dataHoraFinal = dataHoraFinal;
     }
 
+    public boolean isEnade() {
+        return enade;
+    }
+
+    public void setEnade(boolean enade) {
+        this.enade = enade;
+    }
    
 }

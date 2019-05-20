@@ -23,7 +23,6 @@ public class CoordenadoresService {
 
     public List<PeriodoLetivoDTO> getPeriodosLetivos(String token){
         List<PeriodoLetivoDTO> retorno = new ArrayList<>();
-        System.out.println("RECUPERANDO OS PERIODOS LETIVOS");
         try {
 
             HttpHeaders headers = Gateway.createHeaders(token);
@@ -52,7 +51,6 @@ public class CoordenadoresService {
 
     public List<CursosDTO> getCurso(String token, int periodo){
         List<CursosDTO> retorno = new ArrayList<>();
-        System.out.println("RECUPERANDO OS CURSOS");
         try {
 
             HttpHeaders headers = Gateway.createHeaders(token);
@@ -82,7 +80,6 @@ public class CoordenadoresService {
 
     public List<TurmasDTO> getTurmas(String token, int periodo){
         List<TurmasDTO> retorno = new ArrayList<>();
-        System.out.println("RECUPERANDO AS TURMAS");
         try {
 
             HttpHeaders headers = Gateway.createHeaders(token);
@@ -112,7 +109,6 @@ public class CoordenadoresService {
 
     public List<DisciplinasDTO> getDisciplinas(String token, int periodo){
         List<DisciplinasDTO> retorno = new ArrayList<>();
-        System.out.println("RECUPERANDO AS DISCIPLINAS");
         try {
 
             HttpHeaders headers = Gateway.createHeaders(token);

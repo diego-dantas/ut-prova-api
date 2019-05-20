@@ -1,6 +1,7 @@
 package br.toledo.UTProva.model.dao.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,6 +20,7 @@ public class SimuladoStatusAlunoEntity implements Serializable{
     private static final long serialVersionUID = 1L;
     private Long id;
     private String idAluno;
+    private String nomeAluno;
     private SimuladoEntity simulado;
     private SimuladoStatusEntity simuladoStatus;
     private Date dataInicio;
@@ -29,6 +31,7 @@ public class SimuladoStatusAlunoEntity implements Serializable{
     public Long getId() {
         return id;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -41,6 +44,15 @@ public class SimuladoStatusAlunoEntity implements Serializable{
 
     public void setIdAluno(String idAluno) {
         this.idAluno = idAluno;
+    }
+
+    @Column(name = "nome_aluno", nullable = false, length = 300)
+    public String getNomeAluno() {
+        return nomeAluno;
+    }
+
+    public void setNomeAluno(String nomeAluno) {
+        this.nomeAluno = nomeAluno;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)

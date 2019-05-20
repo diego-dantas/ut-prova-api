@@ -71,7 +71,6 @@ public class UserCTL {
     @PostMapping(value = "/login/user")
     public ResponseEntity loginUser(@RequestBody UsuarioDTO usuarioDTO) {
         try {
-            System.out.println("USUARIO " + usuarioDTO.getUsuario() + "\n SENHA " + usuarioDTO.getSenha());
             return Login.login(usuarioDTO.getUsuario(), usuarioDTO.getSenha());
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,7 +84,6 @@ public class UserCTL {
     @GetMapping(value = "/getUser")
     public ResponseEntity getUser(@RequestHeader(value = "Authorization") String acessToken, @RequestParam String user) {
         try {
-            System.out.println("token que estou recebendo " + acessToken);
             return ServiceGet.getUser(acessToken, user);
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,9 +97,7 @@ public class UserCTL {
     @PostMapping(value = "/contexto")
     public ResponseEntity getContexto(@RequestHeader(value = "Authorization") String acessToken, @RequestBody UsuarioDTO usuarioDTO) {
         try {
-
             return Contexto.getContexto(acessToken, usuarioDTO.getId().toString());
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,9 +110,7 @@ public class UserCTL {
     @PostMapping(value = "/logout")
     public ResponseEntity logout(@RequestHeader(value = "Authorization") String acessToken) {
         try {
-
             return ResponseEntity.ok(LogoutService.logout(acessToken));
-
         } catch (Exception e) {
             e.printStackTrace();
         }

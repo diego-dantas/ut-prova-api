@@ -9,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.toledo.UTProva.model.dao.entity.AreaConhecimentoEntity;
 import br.toledo.UTProva.model.dao.entity.HabilidadeEntity;
+import br.toledo.UTProva.model.dao.repository.AreaConhecimentoRepository;
 import br.toledo.UTProva.model.dao.repository.HabilidadeRepository;
+import br.toledo.UTProva.model.dto.AreaConhecimentoDTO;
 import br.toledo.UTProva.model.dto.HabilidadeDTO;
 
 @RestController
@@ -24,6 +28,9 @@ public class HabilidadeController {
 
     @Autowired
     private HabilidadeRepository habilidadeRepository;
+    @Autowired
+    private AreaConhecimentoRepository areaConhecimentoRepository;
+
 
     @PostMapping(value = "/createUpdateHabilidade")
     public ResponseEntity<Map> createUpdateHabilidade(@RequestBody HabilidadeDTO habilidadeDTO){
@@ -38,10 +45,15 @@ public class HabilidadeController {
                     return new ResponseEntity<>(map, HttpStatus.OK);
                 }
             }
+            AreaConhecimentoEntity areaConhecimento = new AreaConhecimentoEntity();
+            areaConhecimento.setId(habilidadeDTO.getAreaConhecimento().getId());
+
             HabilidadeEntity habilidadeEntity = new HabilidadeEntity();
             habilidadeEntity.setId(habilidadeDTO.getId());
             habilidadeEntity.setDescription(habilidadeDTO.getDescription());
             habilidadeEntity.setStatus(habilidadeDTO.isStatus());
+            habilidadeEntity.setAreaConhecimento(areaConhecimento);
+
             habilidadeEntity = habilidadeRepository.save(habilidadeEntity);
 
             map.put("success", true);
@@ -63,17 +75,8 @@ public class HabilidadeController {
     public ResponseEntity<List<HabilidadeDTO>> getHabilidades(){
 
         try {
-            List<HabilidadeDTO> habilidadeDTOs = new ArrayList<>();
             List<HabilidadeEntity> entities = habilidadeRepository.findAll();
-            
-            for(HabilidadeEntity habilidadeEntity : entities){
-                HabilidadeDTO habilidadeDTO = new HabilidadeDTO();
-                habilidadeDTO.setId(habilidadeEntity.getId());
-                habilidadeDTO.setDescription(habilidadeEntity.getDescription());
-                habilidadeDTO.setStatus(habilidadeEntity.isStatus());
-                habilidadeDTOs.add(habilidadeDTO);
-            }
-            return ResponseEntity.ok(habilidadeDTOs);
+            return getHabilidadesAll(entities);
         } catch (Exception e) {
             e.printStackTrace();        
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -87,17 +90,43 @@ public class HabilidadeController {
     public ResponseEntity<List<HabilidadeDTO>> getHabilidadesAtivo(){
 
         try {
-            List<HabilidadeDTO> habilidadeDTOs = new ArrayList<>();
             List<HabilidadeEntity> entities = habilidadeRepository.findAtivas();
-            
-            for(HabilidadeEntity habilidadeEntity : entities){
-                HabilidadeDTO habilidadeDTO = new HabilidadeDTO();
-                habilidadeDTO.setId(habilidadeEntity.getId());
-                habilidadeDTO.setDescription(habilidadeEntity.getDescription());
-                habilidadeDTO.setStatus(habilidadeEntity.isStatus());
-                habilidadeDTOs.add(habilidadeDTO);
-            }
-            return ResponseEntity.ok(habilidadeDTOs);
+            return getHabilidadesAll(entities);
+        } catch (Exception e) {
+            e.printStackTrace();        
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Metodo para buscar todas as habilidades no banco
+     */
+    @PostMapping(value = "/getHabilidades/areas")
+    public ResponseEntity<List<HabilidadeDTO>> getHabilidades(@RequestBody List<AreaConhecimentoDTO> areaConhecimentoDTOs){
+
+        try {
+            List<Long> idAreas = new ArrayList<>();
+            areaConhecimentoDTOs.forEach(n -> idAreas.add(n.getId()));
+            List<HabilidadeEntity> entities = habilidadeRepository.findAtivasByAreaCenhecimento(idAreas);
+            return getHabilidadesAll(entities);
+        } catch (Exception e) {
+            e.printStackTrace();        
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    /**
+     * Metodo para buscar todas as habilidades no banco
+     */
+    @GetMapping(value = "/getHabilidades/{idArea}")
+    public ResponseEntity<List<HabilidadeDTO>> getHabilidades(@PathVariable("idArea") Long idArea){
+
+        try {
+            List<Long> idAreas = new ArrayList<>();
+            idAreas.add(idArea);
+            List<HabilidadeEntity> entities = habilidadeRepository.findAtivasByAreaCenhecimento(idAreas);
+            return getHabilidadesAll(entities);
         } catch (Exception e) {
             e.printStackTrace();        
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -125,6 +154,33 @@ public class HabilidadeController {
             map.put("success", false);
             map.put("message", "Erro ao excluir a Habilidade.");
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    
+    public ResponseEntity<List<HabilidadeDTO>> getHabilidadesAll(List<HabilidadeEntity> entities){
+
+        try {
+            List<HabilidadeDTO> habilidadeDTOs = new ArrayList<>();
+            for(HabilidadeEntity habilidadeEntity : entities){
+                HabilidadeDTO habilidadeDTO = new HabilidadeDTO();
+
+                AreaConhecimentoDTO areaConhecimentoDTO = new AreaConhecimentoDTO();
+                AreaConhecimentoEntity areaConhecimentoEntity = areaConhecimentoRepository.getOne(habilidadeEntity.getAreaConhecimento().getId());
+                areaConhecimentoDTO.setId(areaConhecimentoEntity.getId());
+                areaConhecimentoDTO.setDescription(areaConhecimentoEntity.getDescription());
+                areaConhecimentoDTO.setStatus(areaConhecimentoEntity.isStatus());
+
+                habilidadeDTO.setAreaConhecimento(areaConhecimentoDTO);
+                habilidadeDTO.setId(habilidadeEntity.getId());
+                habilidadeDTO.setDescription(habilidadeEntity.getDescription());
+                habilidadeDTO.setStatus(habilidadeEntity.isStatus());
+                habilidadeDTOs.add(habilidadeDTO);
+            }
+            return ResponseEntity.ok(habilidadeDTOs);
+        } catch (Exception e) {
+            e.printStackTrace();        
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

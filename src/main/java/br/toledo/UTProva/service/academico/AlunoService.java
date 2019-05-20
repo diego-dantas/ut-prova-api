@@ -55,7 +55,6 @@ public class AlunoService {
 
     public List<DisciplinasDTO> getDisciplinas(String token){
         List<DisciplinasDTO> retorno = new ArrayList<>();
-        System.out.println("RECUPERANDO AS DISCIPLICAS DE ALUNO");
         try {
 
             HttpHeaders headers = Gateway.createHeaders(token);
@@ -85,7 +84,6 @@ public class AlunoService {
 
     public CursosDTO getCursos(String token){
         CursosDTO retorno = new CursosDTO();
-        System.out.println("RECUPERANDO OS CURSOS DE ALUNO");
         try {
 
             HttpHeaders headers = Gateway.createHeaders(token);

@@ -111,6 +111,7 @@ public class SimuladoController {
             simulado.setId(simuladoDTO.getId());
             simulado.setNome(simuladoDTO.getNome());
             simulado.setRascunho(simuladoDTO.isRascunho());
+            simulado.setEnade(simuladoDTO.isEnade());
             simulado.setStatus(simuladoDTO.getStatus());
             simulado.setDataHoraInicial(simuladoDTO.getDataHoraInicial());
             simulado.setDataHoraFinal(simuladoDTO.getDataHoraFinal());
@@ -217,18 +218,11 @@ public class SimuladoController {
                   }            
                   simuladoDisciplinasRepository.saveAll(simuladoDisciplinas);   
                }
-               
-
-            System.out.println(simuladoDTO.getDataHoraInicial());
-            System.out.println(simuladoDTO.getDataHoraFinal());
             return ResponseEntity.ok(simuladoDTO);
-            
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao salvar ou atualizar o simulado " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
    
@@ -303,6 +297,7 @@ public class SimuladoController {
                     sDTO.setId(simuladoRetorno.getId());
                     sDTO.setNome(simuladoRetorno.getNome());
                     sDTO.setRascunho(simuladoRetorno.isRascunho());
+                    sDTO.setEnade(simuladoRetorno.isEnade());
                     sDTO.setStatus(simuladoRetorno.getStatus());
                     sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
                     sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
@@ -344,10 +339,8 @@ public class SimuladoController {
             
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao buscar todos os simulado " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
   
@@ -370,6 +363,7 @@ public class SimuladoController {
             sDTO.setId(simuladoRetorno.getId());
             sDTO.setNome(simuladoRetorno.getNome());
             sDTO.setRascunho(simuladoRetorno.isRascunho());
+            sDTO.setEnade(simuladoRetorno.isEnade());
             sDTO.setStatus(simuladoRetorno.getStatus());
             sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
             sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
@@ -456,10 +450,8 @@ public class SimuladoController {
             
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao buscar o simulado pelo id " + idSimulado+  " \n" + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } 
-        
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 
@@ -497,6 +489,7 @@ public class SimuladoController {
             sDTO.setId(simuladoRetorno.getId());
             sDTO.setNome(simuladoRetorno.getNome());
             sDTO.setRascunho(simuladoRetorno.isRascunho());
+            sDTO.setEnade(simuladoRetorno.isEnade());
             sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
             sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
 
@@ -586,10 +579,8 @@ public class SimuladoController {
             
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao buscar o simulado pelo id " + idSimulado+  " \n" + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } 
-        
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 
@@ -625,9 +616,8 @@ public class SimuladoController {
             return new ResponseEntity<>(map, HttpStatus.OK);
         }catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao alterar o status do simulado " + e);
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
-       return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
     }
 
 
@@ -646,17 +636,16 @@ public class SimuladoController {
             map.put("success", true);
             map.put("message", "Status alterado com sucesso.");
 
-        return new ResponseEntity<>(map, HttpStatus.OK);
+            return new ResponseEntity<>(map, HttpStatus.OK);
         }catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao alterar o status do simulado " + e);
             map.put("success", false);
             map.put("message", "Erro ao alterar o status");
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
-       return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
     }
     
-    public List<SimuladoRetornoDTO> getSimulados(List<Long> idsSimulados ){
+    public ResponseEntity<List<SimuladoRetornoDTO>> getSimulados(List<Long> idsSimulados ){
         
         try {
             List<QuestaoDTO> questaoDTOs = new ArrayList<>();
@@ -664,13 +653,11 @@ public class SimuladoController {
             for(Long s : idsSimulados){
                 SimuladoEntity simuladoRetorno = simuladoRepository.getOne(s);
                 SimuladoRetornoDTO sDTO = new SimuladoRetornoDTO();
-
-                
                 
                 sDTO.setId(simuladoRetorno.getId());
                 sDTO.setNome(simuladoRetorno.getNome());
                 sDTO.setRascunho(simuladoRetorno.isRascunho());
-                //sDTO.setStatus();
+                sDTO.setEnade(simuladoRetorno.isEnade());
                 sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
                 sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
                 
@@ -721,12 +708,11 @@ public class SimuladoController {
                 simuladoDTOs.add(sDTO);
             }
 
-            return simuladoDTOs;
+            return new ResponseEntity<>(simuladoDTOs, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao buscar os simulados " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return null;
     }
 
 
@@ -744,17 +730,12 @@ public class SimuladoController {
             
             
             int delete = simuladoFilterRepositoty.simuladoResponse(simulado.getIdSimulado(), simulado.getIdQuestao(), simulado.getIdUltilizador(), simulado.getIdAlternativa());
-            //simuladoResolucaoEntity = simuladoResolucaoRepository.save(simuladoResolucaoEntity);
-            //simulado.setId(simuladoResolucaoEntity.getId());
-
-            System.out.println("retorno do update "+ delete);
+            
             return ResponseEntity.ok(simulado);
             
         } catch (Exception e) {
-           System.out.println("Erro ao salvar a alternativa respondida " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     
 
@@ -778,8 +759,8 @@ public class SimuladoController {
             e.printStackTrace();
             map.put("success", false);
             map.put("message", "Erro ao tentar Excluir o simulado");
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
     }
 
 }

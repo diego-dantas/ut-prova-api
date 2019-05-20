@@ -24,6 +24,7 @@ public class SimuladoEntity implements Serializable {
     private Date dataHoraInicial;
     private Date dataHoraFinal;
     private boolean rascunho;
+    private boolean enade;
     private String status;
     private List<SimuladoQuestoesEntity> simuladoQuestao;
     private List<SimuladoCursosEntity> simuladoCursos;
@@ -37,8 +38,8 @@ public class SimuladoEntity implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public boolean isEnade() {
+        return enade;
     }
 
     @Column(name = "nome", nullable = false, length = 1000)
@@ -57,6 +58,15 @@ public class SimuladoEntity implements Serializable {
 
     public void setRascunho(boolean rascunho) {
         this.rascunho = rascunho;
+    }
+
+    @Column(name = "enade", nullable = false)
+    public void setEnade(boolean enade) {
+        this.enade = enade;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Column(name = "dataHoraInicial", nullable = false)

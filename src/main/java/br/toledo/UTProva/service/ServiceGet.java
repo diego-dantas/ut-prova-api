@@ -31,7 +31,6 @@ public class ServiceGet {
             
             //recupera o codigo de retorno da requisição e valida, caso success, chama o metodo getResponse()
             int responseCode = con.getResponseCode();
-            System.out.println("Codigo de retorno " + responseCode);
             if (responseCode == HttpURLConnection.HTTP_OK) { // success
                 retorno = Useful.getResponse(con);
             } else {
@@ -59,11 +58,11 @@ public class ServiceGet {
             con.setRequestProperty("Authorization", "Bearer " + token);
             
             int responseCode = con.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) { // success
-                System.out.println(Useful.getResponse(con));
-            } else {
-                System.out.println("ERROR NA HORA DE PEGA O PERIODO LETIVO " + responseCode);
-            }
+            // if (responseCode == HttpURLConnection.HTTP_OK) { // success
+            //     System.out.println(Useful.getResponse(con));
+            // } else {
+            //     System.out.println("ERROR NA HORA DE PEGA O PERIODO LETIVO " + responseCode);
+            // }
         }catch(MalformedURLException e){
             e.printStackTrace();
         }catch(IOException io){
@@ -81,7 +80,6 @@ public class ServiceGet {
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Authorization", "Bearer " + token);
-            System.out.println("token 1 " + token);
             
             int responseCode = con.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) { // success
@@ -95,7 +93,6 @@ public class ServiceGet {
                 responseHeaders.setAccessControlExposeHeaders(exposeHeaders);
                 responseHeaders.set("Access-Token", "Bearer " + con.getHeaderField("Access-Token"));
                   
-  
                 return new ResponseEntity<String>(retono, responseHeaders, HttpStatus.OK);
             } else {
                 System.out.println("GET request not worked 2");

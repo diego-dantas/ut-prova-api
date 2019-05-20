@@ -195,11 +195,14 @@ public class QuestaoFilterRepository {
 
 
     public List<QuestaoRetornoDTO> getQuestao(Long idSimulado, String idAluno){
+        
         String sql2 = "select q.id, q.descricao, q.imagem, sr.id_alternativa "+
-        "from questoes q "+
-        "join simulado_questoes sq on sq.questao_id = q.id "+
-        "left join simulado_resolucao sr on sr.id_questao = q.id and sr.id_aluno = '" + idAluno + "' and sq.simulado_id = sr.id_simulado "+
-        "where sq.simulado_id = " + idSimulado;
+                      "from questoes q "+
+                      "join simulado_questoes sq on sq.questao_id = q.id "+
+                      "left join simulado_resolucao sr on sr.id_questao = q.id and sr.id_aluno = '" + idAluno + "' and sq.simulado_id = sr.id_simulado "+
+                      "where q.tipo_resposta_id = 1 " +
+                      "and sq.simulado_id = " + idSimulado;
+                      System.out.println("SQL 2 " + sql2);
  
          try {
             String sqlStatus = "select count(id) from simulado_status_aluno where id_aluno = '" + idAluno + "' and simulado_id = " + idSimulado;
@@ -222,9 +225,8 @@ public class QuestaoFilterRepository {
                 List<Long> idsSimulados = this.jdbcTemplate.queryForList(sqlQ, Long.class);
 
               
-                idsSimulados.forEach(n -> System.out.println("************************* Ordem do banco *************************" + n));
+                // Randomiza os ids das questoes
                 Collections.shuffle(idsSimulados);
-                idsSimulados.forEach(n -> System.out.println("************************* Ordem do randomicom *************************" + n));
 
                 List<SimuladoResolucaoEntity> sis = new ArrayList<>();
                 for(Long idQuestao : idsSimulados){
@@ -244,6 +246,7 @@ public class QuestaoFilterRepository {
                 Date data_atual = new Date();
                 SimuladoStatusAlunoEntity simuAlunoEntity = new SimuladoStatusAlunoEntity();
                 simuAlunoEntity.setIdAluno(idAluno);
+                simuAlunoEntity.setNomeAluno("TESTE NOME");
                 simuAlunoEntity.setSimulado(simulado);
                 simuAlunoEntity.setSimuladoStatus(status);
                 simuAlunoEntity.setDataInicio(data_atual);

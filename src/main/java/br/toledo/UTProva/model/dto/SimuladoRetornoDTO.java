@@ -10,13 +10,13 @@ public class SimuladoRetornoDTO {
     private Date dataHoraInicial;
     private Date dataHoraFinal;
     private boolean rascunho;
+    private boolean enade;
     private String status;
     private List<QuestaoDTO> questoes;
 
     public String getNome() {
         return nome;
     }
-
 
     public List<QuestaoDTO> getQuestoes() {
         return questoes;
@@ -73,6 +73,14 @@ public class SimuladoRetornoDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public boolean isEnade() {
+        return enade;
+    }
+
+    public void setEnade(boolean enade) {
+        this.enade = enade;
     }
 
 }

@@ -9,7 +9,6 @@ public class AreaConhecimentoDTO{
     public Long getId() {
         return id;
     }
-
   
     public boolean isStatus() {
         return status;

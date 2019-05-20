@@ -55,10 +55,12 @@ public class AlunoJDBC{
                 new RowMapper<SimuladoDashAluno>(){
                     public SimuladoDashAluno mapRow(ResultSet rs, int numRow) throws SQLException{
                         SimuladoDashAluno simulado = new SimuladoDashAluno();
+                        double percentual = (((double) rs.getInt("questoes_certas")) / ((double) rs.getInt("questoes_respondidas")))  * 100;
                         simulado.setIdSimulado(rs.getLong("id_simulado"));
                         simulado.setSimuladosFinalizados(rs.getInt("simulados_finalizados"));
                         simulado.setQuestoesRespondidas(rs.getInt("questoes_respondidas"));
                         simulado.setQuestoesCertas(rs.getInt("questoes_certas"));
+                        simulado.setPercentual(percentual);
                         simulado.setDataInicio(rs.getDate("data_inicio"));
                         simulado.setDataFinal(rs.getDate("data_final"));
                         return simulado;
@@ -68,15 +70,24 @@ public class AlunoJDBC{
             int qtdsimulado = 0;
             int qtdQuestaoRespondida = 0;
             int qtdQuestaoRespondidaCerta = 0;
+            double percentualTotal = 0;
             for( SimuladoDashAluno sis : simuladoDashAluno){
                 qtdsimulado += sis.getSimuladosFinalizados();
                 qtdQuestaoRespondida += sis.getQuestoesRespondidas();
                 qtdQuestaoRespondidaCerta += sis.getQuestoesCertas();
             }
+            percentualTotal = ( ((double) qtdQuestaoRespondidaCerta) / ((double) qtdQuestaoRespondida) ) * 100; 
+                
+            System.out.println("totalSimulado " + qtdsimulado + "\n" + 
+                               "totalQuestoesCertas " + qtdQuestaoRespondidaCerta + "\n" + 
+                               "totalQuestoesRespondidas " + qtdQuestaoRespondida + "\n" + 
+                               "totalPercentual " + percentualTotal);
+
             Map<String, Object> mapTotal = new HashMap<String, Object>();
             mapTotal.put("totalSimulado", qtdsimulado);
             mapTotal.put("totalQuestoesCertas", qtdQuestaoRespondidaCerta);
             mapTotal.put("totalQuestoesRespondidas", qtdQuestaoRespondida);
+            mapTotal.put("totalPercentual", percentualTotal);
 
             map.put("total", mapTotal);
             map.put("list", simuladoDashAluno);

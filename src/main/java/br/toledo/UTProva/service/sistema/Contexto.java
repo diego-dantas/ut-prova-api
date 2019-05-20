@@ -23,7 +23,6 @@ import br.toledo.UTProva.service.Gateway;
 public class Contexto {
 
     public static ResponseEntity getContexto(String token, String idUser) {
-        System.out.println("TO no contexto ");
         try {
             HttpHeaders headers = Gateway.createHeaders(token);
             

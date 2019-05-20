@@ -5,7 +5,7 @@ public class ConteudoDTO{
     private Long id;
     private String description;
     private boolean status;
-
+    private AreaConhecimentoDTO areaConhecimento;
 
     public Long getId() {
         return id;
@@ -29,5 +29,13 @@ public class ConteudoDTO{
    
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public AreaConhecimentoDTO getAreaConhecimento() {
+        return areaConhecimento;
+    }
+
+    public void setAreaConhecimento(AreaConhecimentoDTO areaConhecimento) {
+        this.areaConhecimento = areaConhecimento;
     }
 }

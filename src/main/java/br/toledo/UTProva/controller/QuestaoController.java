@@ -262,9 +262,9 @@ public class QuestaoController{
             if(!questoesFilterDTO.getHabilidades().isEmpty()){
                 questoesFilterDTO.getHabilidades().forEach(n -> habilidadeLongs.add(n.getId()));
                 if(qtdFilter == 0) 
-                    sql += " where habilidade_id " + createIn(habilidadeLongs);
+                    sql += " where q.habilidade_id " + createIn(habilidadeLongs);
                 else
-                    sql +=" and habilidade_id " + createIn(habilidadeLongs);
+                    sql +=" and q.habilidade_id " + createIn(habilidadeLongs);
                 
                 qtdFilter++ ;
             }
@@ -272,9 +272,9 @@ public class QuestaoController{
             if(!questoesFilterDTO.getConteudos().isEmpty()){
                 questoesFilterDTO.getConteudos().forEach(n -> conteudosLongs.add(n.getId()));
                 if(qtdFilter == 0) 
-                    sql += " where conteudo_id " + createIn(conteudosLongs);
+                    sql += " where q.conteudo_id " + createIn(conteudosLongs);
                 else
-                    sql += " and conteudo_id " + createIn(conteudosLongs);
+                    sql += " and q.conteudo_id " + createIn(conteudosLongs);
                 
                 qtdFilter++ ;
             }
@@ -282,9 +282,9 @@ public class QuestaoController{
             if(!questoesFilterDTO.getAreaConhecimentos().isEmpty()){
                 questoesFilterDTO.getAreaConhecimentos().forEach(n -> areConhecimentosLongs.add(n.getId()));
                 if(qtdFilter == 0) 
-                    sql += " where area_conhecimento_id " + createIn(areConhecimentosLongs);
+                    sql += " where q.area_conhecimento_id " + createIn(areConhecimentosLongs);
                 else
-                    sql += " and area_conhecimento_id " + createIn(areConhecimentosLongs);
+                    sql += " and q.area_conhecimento_id " + createIn(areConhecimentosLongs);
             
                 qtdFilter++ ;
             }
@@ -292,9 +292,9 @@ public class QuestaoController{
             if(!questoesFilterDTO.getFonte().isEmpty()){
                 questoesFilterDTO.getFonte().forEach(n -> fonteLongs.add(n.getId()));
                 if(qtdFilter == 0){
-                    sql += " where fonte_id " + createIn(fonteLongs);
+                    sql += " where q.fonte_id " + createIn(fonteLongs);
                 }else{
-                    sql += " and fonte_id " + createIn(fonteLongs);
+                    sql += " and q.fonte_id " + createIn(fonteLongs);
                 }
                 qtdFilter++ ;
             }

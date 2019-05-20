@@ -51,7 +51,6 @@ public class ServicePost {
             con.setRequestProperty ("Authorization", "Bearer " + token);
             
             int responseCode = con.getResponseCode();
-            System.out.println("GET Response Code Contexto :: " + responseCode);
             if (responseCode == HttpURLConnection.HTTP_OK) { // success
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String inputLine;
@@ -107,7 +106,6 @@ public class ServicePost {
     }
 
     public static void teste(String token, ContextoDTO contextoDTO) throws IOException {
-        System.out.println("VAMOS TESTAR ISSO AQUI");
         try {
             allowMethods("PATCH");
 			String url = Endpoint.SERVICE_TOLEDO+"/sistema/rest/comum/contextos";
@@ -140,7 +138,6 @@ public class ServicePost {
     }
     
     public static Gateway revalidToken(String token, ContextoDTO contextoDTO) {
-        System.out.println("Token que recebi " + token);
         Gateway gateway = new Gateway();
         try {
             String url = Endpoint.SERVICE_TOLEDO+"/sistema/rest/comum/contextos"; 
@@ -157,8 +154,6 @@ public class ServicePost {
             RestTemplate restTemplate = new RestTemplate(requestFactory);
             ResponseEntity response = restTemplate.exchange(url, HttpMethod.PATCH, requestEntity, String.class);
             String auto1 = response.getHeaders().getFirst("Access-Token");
-
-            System.out.println("Token de acesso 1 = " + auto1);
             
             gateway.setToken(auto1);
             

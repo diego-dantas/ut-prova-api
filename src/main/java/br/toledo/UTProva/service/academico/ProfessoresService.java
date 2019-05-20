@@ -21,7 +21,6 @@ public class ProfessoresService {
 
     public List<CursosDTO> getCurso(String token){
         List<CursosDTO> retorno = new ArrayList<>();
-        System.out.println("RECUPERANDO OS CURSOS DE PROFESSOR");
         try {
 
             HttpHeaders headers = Gateway.createHeaders(token);
@@ -51,7 +50,6 @@ public class ProfessoresService {
 
     public List<TurmasDTO> getTurmas(String token){
         List<TurmasDTO> retorno = new ArrayList<>();
-        System.out.println("RECUPERANDO AS TURMAS DE PROFESSOR");
         try {
 
             HttpHeaders headers = Gateway.createHeaders(token);
@@ -81,7 +79,6 @@ public class ProfessoresService {
 
     public List<DisciplinasDTO> getDisciplinas(String token){
         List<DisciplinasDTO> retorno = new ArrayList<>();
-        System.out.println("RECUPERANDO AS DISCIPLICAS DE PROFESSOR");
         try {
 
             HttpHeaders headers = Gateway.createHeaders(token);

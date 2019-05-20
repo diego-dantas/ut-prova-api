@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -23,6 +24,7 @@ public class ConteudoEntity extends DateAudit{
     private String description;
     private boolean status;
     private List<QuestaoEntity> questao;
+    private AreaConhecimentoEntity areaConhecimento;
 
 
     @Id
@@ -61,5 +63,14 @@ public class ConteudoEntity extends DateAudit{
 
     public void setQuestao(List<QuestaoEntity> questao) {
         this.questao = questao;
+    }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    public AreaConhecimentoEntity getAreaConhecimento() {
+        return areaConhecimento;
+    }
+
+    public void setAreaConhecimento(AreaConhecimentoEntity areaConhecimento) {
+        this.areaConhecimento = areaConhecimento;
     }
 }

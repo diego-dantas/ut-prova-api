@@ -23,6 +23,8 @@ public class AreaConhecimentoEntity extends DateAudit{
     private String description;
     private boolean status;
     private List<QuestaoEntity> questao;
+    private List<ConteudoEntity> conteudo;
+    private List<HabilidadeEntity> habilidade;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +35,6 @@ public class AreaConhecimentoEntity extends DateAudit{
     public boolean isStatus() {
         return status;
     }
-
 
     @NotBlank
     @Size(max = 250)
@@ -61,4 +62,23 @@ public class AreaConhecimentoEntity extends DateAudit{
     public void setQuestao(List<QuestaoEntity> questao) {
         this.questao = questao;
     }
+
+    @OneToMany(mappedBy = "areaConhecimento", fetch = FetchType.LAZY)
+    public List<ConteudoEntity> getConteudo() {
+        return conteudo;
+    }
+
+    public void setConteudo(List<ConteudoEntity> conteudo) {
+        this.conteudo = conteudo;
+    }
+
+    @OneToMany(mappedBy = "areaConhecimento", fetch = FetchType.LAZY)
+    public List<HabilidadeEntity> getHabilidade() {
+        return habilidade;
+    }
+
+    public void setHabilidade(List<HabilidadeEntity> habilidade) {
+        this.habilidade = habilidade;
+    }
+    
 }

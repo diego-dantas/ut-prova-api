@@ -8,6 +8,7 @@ public class SimuladoDashAluno {
     private int simuladosFinalizados;
     private int questoesRespondidas;
     private int questoesCertas;
+    private double percentual;
     private Date dataInicio;
     private Date dataFinal;
 
@@ -42,6 +43,14 @@ public class SimuladoDashAluno {
 
     public void setQuestoesRespondidas(int questoesRespondidas) {
         this.questoesRespondidas = questoesRespondidas;
+    }
+
+    public double getPercentual() {
+        return percentual;
+    }
+
+    public void setPercentual(double percentual) {
+        this.percentual = percentual;
     }
 
     public Date getDataInicio() {
