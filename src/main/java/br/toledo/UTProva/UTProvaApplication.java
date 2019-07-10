@@ -33,7 +33,7 @@ public class UTProvaApplication {
 
 	@GetMapping(value = "/")
 	public String home() throws IOException{
-		return "API Rodando  | Teste de Upload";
+		return "API On ";
 	}
 
 }

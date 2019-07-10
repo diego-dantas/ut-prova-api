@@ -239,12 +239,12 @@ public class QuestaoController{
             } 
     
             if(questoesFilterDTO.getDiscursiva().equalsIgnoreCase("S") || questoesFilterDTO.getDiscursiva().equalsIgnoreCase("N")) {
-                boolean discursiva = false;
-                if(questoesFilterDTO.getDiscursiva().equalsIgnoreCase("S")) discursiva = true;
-                if(qtdFilter == 0) {
-                    sql += " where discursiva = " + discursiva;
+                Long discursiva = 1l;
+                if(questoesFilterDTO.getDiscursiva().equalsIgnoreCase("S")) discursiva = 2l;
+if(qtdFilter == 0) {
+                    sql += " where tipo_resposta_id = " + discursiva;
                 }else {
-                    sql +=" and discursiva = " + discursiva;
+                    sql +=" and tipo_resposta_id = " + discursiva;
                 }
                 qtdFilter++;
             }
@@ -325,6 +325,7 @@ public class QuestaoController{
             
 
             List<QuestaoDTO> questaoDTO = questaoFilterRepository.joinQuestao(sql);
+            // List<QuestaoDTO> questaoDTO = new ArrayList<>();
             return ResponseEntity.ok(questaoDTO);
 
         } catch (Exception e) {

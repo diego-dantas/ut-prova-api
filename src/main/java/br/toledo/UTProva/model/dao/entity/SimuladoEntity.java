@@ -31,6 +31,7 @@ public class SimuladoEntity implements Serializable {
     private List<SimuladoTurmasEntity> simuladoTurmas;
     private List<SimuladoDisciplinasEntity> simuladoDisciplinas;
     private List<SimuladoStatusAlunoEntity> simuladoStatusAluno;
+    private List<AlunoQuestaoDiscursiva> alunoQuestaoDiscursiva;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -140,6 +141,15 @@ public class SimuladoEntity implements Serializable {
 
     public void setSimuladoStatusAluno(List<SimuladoStatusAlunoEntity> simuladoStatusAluno) {
         this.simuladoStatusAluno = simuladoStatusAluno;
+    }
+
+    @OneToMany(mappedBy = "simulado", fetch = FetchType.LAZY)
+    public List<AlunoQuestaoDiscursiva> getAlunoQuestaoDiscursiva() {
+        return alunoQuestaoDiscursiva;
+    }
+
+    public void setAlunoQuestaoDiscursiva(List<AlunoQuestaoDiscursiva> alunoQuestaoDiscursiva) {
+        this.alunoQuestaoDiscursiva = alunoQuestaoDiscursiva;
     }
 
 }

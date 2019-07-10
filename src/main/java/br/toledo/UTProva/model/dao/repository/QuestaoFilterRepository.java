@@ -19,10 +19,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import br.toledo.UTProva.model.dao.entity.AlunoQuestaoDiscursiva;
 import br.toledo.UTProva.model.dao.entity.SimuladoEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoResolucaoEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoStatusAlunoEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoStatusEntity;
+import br.toledo.UTProva.model.dao.entity.TipoQuestaoEntity;
 import br.toledo.UTProva.model.dto.AlternativaDTO;
 import br.toledo.UTProva.model.dto.AlternativaRetornoDTO;
 import br.toledo.UTProva.model.dto.AreaConhecimentoDTO;
@@ -45,6 +47,8 @@ public class QuestaoFilterRepository {
     private SimuladoResolucaoRepository simuladoResolucaoRepository;
     @Autowired
     private SimuladoStatusAlunoRepository simuladoStatusAlunoRepository;
+    @Autowired
+    private AlunoQuestaoDiscursivaRepository alunoQuestaoDiscursivaRepository;
     
     public List<Long> questaoFilter(String sql){
        
@@ -194,7 +198,7 @@ public class QuestaoFilterRepository {
     }
 
 
-    public List<QuestaoRetornoDTO> getQuestao(Long idSimulado, String idAluno){
+    public List<QuestaoRetornoDTO> getQuestao(Long idSimulado, String idAluno, String nomeAluno){
         
         String sql2 = "select q.id, q.descricao, q.imagem, sr.id_alternativa "+
                       "from questoes q "+
@@ -202,7 +206,8 @@ public class QuestaoFilterRepository {
                       "left join simulado_resolucao sr on sr.id_questao = q.id and sr.id_aluno = '" + idAluno + "' and sq.simulado_id = sr.id_simulado "+
                       "where q.tipo_resposta_id = 1 " +
                       "and sq.simulado_id = " + idSimulado;
-                      System.out.println("SQL 2 " + sql2);
+                      
+                    //   System.out.println("SQL 2 " + sql2);
  
          try {
             String sqlStatus = "select count(id) from simulado_status_aluno where id_aluno = '" + idAluno + "' and simulado_id = " + idSimulado;
@@ -221,7 +226,11 @@ public class QuestaoFilterRepository {
 
                 
                 
-                String sqlQ = "select questao_id from simulado_questoes where simulado_id = " + idSimulado;
+                String sqlQ = 
+                        " select distinct(questao_id) from simulado_questoes sq " +
+                        " inner join questoes q on q.id = sq.questao_id " +
+                        " where tipo_resposta_id = 1 " + 
+                        " and sq.simulado_id = " + idSimulado;
                 List<Long> idsSimulados = this.jdbcTemplate.queryForList(sqlQ, Long.class);
 
               
@@ -246,12 +255,41 @@ public class QuestaoFilterRepository {
                 Date data_atual = new Date();
                 SimuladoStatusAlunoEntity simuAlunoEntity = new SimuladoStatusAlunoEntity();
                 simuAlunoEntity.setIdAluno(idAluno);
-                simuAlunoEntity.setNomeAluno("TESTE NOME");
+                simuAlunoEntity.setNomeAluno(nomeAluno);
                 simuAlunoEntity.setSimulado(simulado);
                 simuAlunoEntity.setSimuladoStatus(status);
                 simuAlunoEntity.setDataInicio(data_atual);
 
                 simuladoStatusAlunoRepository.save(simuAlunoEntity);
+
+
+                String sqlDiscursivas = 
+                        "select  " + 
+                        "     distinct(tq.id) as id " + 
+                        " from simulado_questoes sq " + 
+                        " inner join questoes q on q.id = sq.questao_id and q.tipo_resposta_id = 2 " + 
+                        " inner join tipo_questao tq on tq.id  = q.tipo_id " + 
+                        " where sq.simulado_id = " + idSimulado +  
+                        " order by tq.id "; 
+                List<Long> tipoQuestaoEntities = this.jdbcTemplate.queryForList(sqlDiscursivas, Long.class);
+                if (tipoQuestaoEntities.size() > 0) {
+                    AlunoQuestaoDiscursiva alunoQuestaoDiscursiva = new AlunoQuestaoDiscursiva();
+                   
+                    System.out.println("to aqui mano vamos fazer funcionar ");
+                    
+                
+                    alunoQuestaoDiscursiva.setIdAluno(idAluno);
+                    alunoQuestaoDiscursiva.setNomeAluno(nomeAluno);
+                    alunoQuestaoDiscursiva.setSimulado(simulado); 
+                    tipoQuestaoEntities.forEach(n -> {
+                        if(n == 1) alunoQuestaoDiscursiva.setNotaFormacaoGeral("0");                    
+                    });
+                    tipoQuestaoEntities.forEach(n -> {
+                        if(n == 2) alunoQuestaoDiscursiva.setNotaConhecimentoEspecifico("0");                    
+                    });
+                    alunoQuestaoDiscursivaRepository.save(alunoQuestaoDiscursiva);
+                }
+                    
             }
 
             

@@ -5,6 +5,7 @@ import java.util.Date;
 public class SimuladoDashAluno {
 
     private Long idSimulado;
+    private String nome;
     private int simuladosFinalizados;
     private int questoesRespondidas;
     private int questoesCertas;
@@ -14,6 +15,14 @@ public class SimuladoDashAluno {
 
     public Long getIdSimulado() {
         return idSimulado;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public void setIdSimulado(Long idSimulado) {

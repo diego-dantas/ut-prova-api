@@ -34,7 +34,7 @@ public class ServiceGet {
             if (responseCode == HttpURLConnection.HTTP_OK) { // success
                 retorno = Useful.getResponse(con);
             } else {
-                System.out.println("GET request not worked 1");
+                System.out.println("GET request not worked User Info");
             }
 
         }catch(MalformedURLException e){
@@ -45,6 +45,63 @@ public class ServiceGet {
         return retorno;
     }
 
+    public static String userContexto(String token) {
+        String retorno = "";
+        try {
+            //URL da requisição
+            URL url = new URL(Endpoint.SERVICE_TOLEDO+Endpoint.SISTEMA_CONTEXTO);
+            
+            //Header da requisição
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent",     Endpoint.USER_AGENT);
+            con.setRequestProperty("Content-Type",   Endpoint.CONTENT_TYPE);
+            con.setRequestProperty ("Authorization", "Bearer " + token);
+            
+            //recupera o codigo de retorno da requisição e valida, caso success, chama o metodo getResponse()
+            int responseCode = con.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) { // success
+                retorno = Useful.getResponse(con);
+            } else {
+                System.out.println("GET request not worked Contexto");
+            }
+
+        }catch(MalformedURLException e){
+            e.printStackTrace();
+        }catch(IOException io){
+            io.printStackTrace();
+        }
+        return retorno;
+    }
+
+    public static String userInfoGeral(String token) {
+        String retorno = "";
+        try {
+            //URL da requisição
+            URL url = new URL(Endpoint.SERVICE_TOLEDO+Endpoint.SISTEMA_USER_INFO);
+            
+            //Header da requisição
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent",     Endpoint.USER_AGENT);
+            con.setRequestProperty("Content-Type",   Endpoint.CONTENT_TYPE);
+            con.setRequestProperty ("Authorization", "Bearer " + token);
+            
+            //recupera o codigo de retorno da requisição e valida, caso success, chama o metodo getResponse()
+            int responseCode = con.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) { // success
+                retorno = Useful.getResponse(con);
+            } else {
+                System.out.println("GET request not worked Contexto");
+            }
+
+        }catch(MalformedURLException e){
+            e.printStackTrace();
+        }catch(IOException io){
+            io.printStackTrace();
+        }
+        return retorno;
+    }
 
     public static void getPeriodoCoordenador(String token) {
 

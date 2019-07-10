@@ -43,7 +43,7 @@ public class AlternativasController {
             return ResponseEntity.ok(alternativas);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao buscar as alternativas " + e);
+            System.err.println("Erro ao buscar as alternativas " + e);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

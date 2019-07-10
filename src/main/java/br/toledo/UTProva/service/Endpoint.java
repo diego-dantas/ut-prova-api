@@ -3,13 +3,14 @@ package br.toledo.UTProva.service;
 
 public class Endpoint {
 
-    public static final String SERVICE_TOLEDO    = "https://servicos.toledo.br";
+    public static final String SERVICE_TOLEDO    = "https://servicos.unitoledo.br";
     public static final String USER_AGENT        = "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:27.0) Gecko/20100101 Firefox/27.0.2 Waterfox/27.0";
     public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
     public static final String CONTENT_TYPE_JSON = "application/json";
 
     public static final String SISTEMA_LOGIN = "/sistema/login";
     public static final String SISTEMA_CONTEXTO = "/sistema/rest/comum/contextos/";
+    public static final String SISTEMA_USER_INFO = "/sistema/rest/comum/pessoas/info";
     public static final String ACADEMICO_PERIODOS_LETIVOS = "/academico/rest/coordenadores/periodosLetivos/";
     public static final String ACADEMICO_COORDENADOR_CURSO = "/academico/rest/coordenadores/cursos/";
     public static final String ACADEMICO_COORDENADOR_TURMAS = "/academico/rest/coordenadores/turmas/";

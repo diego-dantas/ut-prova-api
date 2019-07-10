@@ -21,7 +21,6 @@ public class TipoQuestaoEntity implements Serializable {
     private String descricao;
     private List<QuestaoEntity> questao;
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -41,12 +40,12 @@ public class TipoQuestaoEntity implements Serializable {
         this.descricao = descricao;
     }
 
-    @OneToMany(mappedBy = "conteudo", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tipo", fetch = FetchType.LAZY)
     public List<QuestaoEntity> getQuestao() {
         return questao;
     }
 
     public void setQuestao(List<QuestaoEntity> questao) {
         this.questao = questao;
-    }
+}
 }

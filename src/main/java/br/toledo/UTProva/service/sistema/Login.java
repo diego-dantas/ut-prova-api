@@ -16,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 
@@ -32,6 +33,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import br.toledo.UTProva.model.dto.ContextoDTO;
+import br.toledo.UTProva.model.dto.GrupoDTO;
+import br.toledo.UTProva.model.dto.GruposDTO;
+import br.toledo.UTProva.model.dto.PrivilegiosDTO;
+import br.toledo.UTProva.model.dto.RetornoCustom;
+import br.toledo.UTProva.model.dto.UserDTO;
+import br.toledo.UTProva.model.dto.UserInfo;
 import br.toledo.UTProva.model.dto.UsuarioDTO;
 import br.toledo.UTProva.service.Endpoint;
 import br.toledo.UTProva.service.Gateway;
@@ -49,7 +56,7 @@ public class Login {
      * @return
      */
     public static ResponseEntity<String> login(String username, String password) {
-
+        Map<String, String> map = new HashMap<>();
         try {
             //Header da requisição
             HttpURLConnection con = Gateway.createHttpConnect("POST", Endpoint.SISTEMA_LOGIN, null);
@@ -69,8 +76,51 @@ public class Login {
             int responseCode = con.getResponseCode();
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                System.out.println("Login http ok " + con.getHeaderField("Access-Token"));
-                String retono = ServiceGet.userInfo(con.getHeaderField("Access-Token"));
+                
+                String retonro = ServiceGet.userInfo(con.getHeaderField("Access-Token"));
+
+                UserDTO userDTO = new UserDTO();
+                Gson gson = new Gson();
+                userDTO =  gson.fromJson(retonro, UserDTO.class);
+
+                boolean isContexto = false;
+                List<String> privilegios = new ArrayList<>();
+
+                for (String n : userDTO.getPrivilegios()) {
+                    if(n.equals("aluno") || n.equals("professor") || n.equals("coordenador")){
+                        isContexto = true;
+                    }
+                    if(n.startsWith("appprova")) privilegios.add(n);
+                }
+
+                
+                            
+                
+                RetornoCustom retornoCustom = new RetornoCustom();
+                retornoCustom.setPrivilegios(privilegios);
+
+               
+
+                if(isContexto){
+                    String info = ServiceGet.userInfoGeral(con.getHeaderField("Access-Token"));
+                
+                    UserInfo userInfo = new UserInfo();
+                    userInfo = gson.fromJson(info, UserInfo.class);
+                    retornoCustom.setUserInfo(userInfo);
+
+
+                    String contexto = ServiceGet.userContexto(con.getHeaderField("Access-Token"));
+                    
+                    GruposDTO gruposDTO = new GruposDTO();
+                    gruposDTO = gson.fromJson(contexto, GruposDTO.class);
+                    
+                    retornoCustom.setGruposDTO(gruposDTO);
+                    
+                }
+
+                retonro = gson.toJson(retornoCustom);
+                
+    
 
                 //Prepara o Header para retorno do json
                 HttpHeaders responseHeaders = new HttpHeaders();
@@ -79,7 +129,7 @@ public class Login {
                 responseHeaders.setAccessControlExposeHeaders(exposeHeaders);
                 responseHeaders.set("Access-Token", con.getHeaderField("Access-Token"));
                 
-                return new ResponseEntity<String>(retono, responseHeaders, HttpStatus.OK);
+                return new ResponseEntity<>(retonro, responseHeaders, HttpStatus.OK);
             }
 			
         }catch(MalformedURLException e){

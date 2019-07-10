@@ -45,7 +45,7 @@ public class Contexto {
 
                 responseHeaders.setAccessControlExposeHeaders(exposeHeaders); 
                 responseHeaders.set("Access-Token", "Bearer " + token);
-                System.out.println("TO no contexto 200");
+                // System.out.println("TO no contexto 200");
                 return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
                 
             } else {

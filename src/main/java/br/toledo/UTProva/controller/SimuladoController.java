@@ -1,7 +1,6 @@
 package br.toledo.UTProva.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.toledo.UTProva.model.dao.entity.AlternativaEntity;
@@ -12,7 +11,6 @@ import br.toledo.UTProva.model.dao.entity.SimuladoDisciplinasEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoQuestoesEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoResolucaoEntity;
-import br.toledo.UTProva.model.dao.entity.SimuladoStatusEntity;
 import br.toledo.UTProva.model.dao.entity.SimuladoTurmasEntity;
 import br.toledo.UTProva.model.dao.entity.TipoRespostaEntity;
 import br.toledo.UTProva.model.dao.repository.AlternativaRepository;
@@ -24,17 +22,14 @@ import br.toledo.UTProva.model.dao.repository.SimuladoFilterRepositoty;
 import br.toledo.UTProva.model.dao.repository.QuestaoFilterRepository;
 import br.toledo.UTProva.model.dao.repository.SimuladoQuestoesRepository;
 import br.toledo.UTProva.model.dao.repository.SimuladoRepository;
-import br.toledo.UTProva.model.dao.repository.SimuladoResolucaoRepository;
-import br.toledo.UTProva.model.dao.repository.SimuladoStatusRepository;
 import br.toledo.UTProva.model.dao.repository.SimuladoTurmasRepository;
 import br.toledo.UTProva.model.dao.repository.TipoRespostaRepository;
+import br.toledo.UTProva.model.dao.serviceJDBC.AlunoJDBC;
 import br.toledo.UTProva.model.dao.serviceJDBC.SimuladoJDBC;
 import br.toledo.UTProva.model.dao.serviceJDBC.useful.DynamicSQL;
 import br.toledo.UTProva.model.dto.AlternativaDTO;
-import br.toledo.UTProva.model.dto.CursoRetornoDTO;
 import br.toledo.UTProva.model.dto.CursosDTO;
 import br.toledo.UTProva.model.dto.DisciplinasDTO;
-import br.toledo.UTProva.model.dto.DisciplinasRetornoDTO;
 import br.toledo.UTProva.model.dto.FonteDTO;
 import br.toledo.UTProva.model.dto.QuestaoDTO;
 import br.toledo.UTProva.model.dto.QuestaoRetornoDTO;
@@ -43,17 +38,14 @@ import br.toledo.UTProva.model.dto.SimuladoResolucaoDTO;
 import br.toledo.UTProva.model.dto.SimuladoRetornoDTO;
 import br.toledo.UTProva.model.dto.SimuladoStatusDTO;
 import br.toledo.UTProva.model.dto.TipoRespostaDTO;
-import br.toledo.UTProva.model.dto.TurmaRetornoDTO;
 import br.toledo.UTProva.model.dto.TurmasDTO;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -84,17 +76,15 @@ public class SimuladoController {
     @Autowired
     private SimuladoFilterRepositoty simuladoFilterRepositoty;
     @Autowired
-    private SimuladoResolucaoRepository simuladoResolucaoRepository;
-    @Autowired
     private QuestaoFilterRepository questaoFilterRepository;
     @Autowired
     private SimuladoJDBC simuladoJDBC;
     @Autowired
-    private SimuladoStatusRepository simuladoStatusRepository;
-    @Autowired
     private FonteRepository fonteRepository;
     @Autowired
     private TipoRespostaRepository tipoRespostaRepository;
+    @Autowired
+    private AlunoJDBC alunoJDBC;
 
 
     @PostMapping(value = "/createUpdateSimulado")
@@ -116,9 +106,6 @@ public class SimuladoController {
             simulado.setDataHoraInicial(simuladoDTO.getDataHoraInicial());
             simulado.setDataHoraFinal(simuladoDTO.getDataHoraFinal());
 
-
-            
-            
 
             simulado = simuladoRepository.save(simulado);
             simuladoDTO.setId(simulado.getId());
@@ -283,6 +270,7 @@ public class SimuladoController {
                     simuladoDisciplinas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
                 }
             }   
+
             
             if(idsSimulados.size() > 0){
                 List<SimuladoEntity> simuladosRetorno = simuladoJDBC.findSimuladosAdmin(idsSimulados);
@@ -455,11 +443,12 @@ public class SimuladoController {
     }
 
 
-    @GetMapping(value = "/getSimuladoIdAlunoQuestao/{id}/{aluno}")
+    @GetMapping(value = "/getSimuladoIdAlunoQuestao/{id}/{aluno}/{nomeAluno}")
     public ResponseEntity<List<QuestaoRetornoDTO>> getSimuladoIdAlunoQuestao(@PathVariable("id") Long idSimulado,
-                                                                             @PathVariable("aluno") String aluno) {
+                                                                             @PathVariable("aluno") String aluno,
+                                                                             @PathVariable("nomeAluno") String nomeAluno) {
         try {
-            List<QuestaoRetornoDTO> questaoRetornoDTOs = questaoFilterRepository.getQuestao(idSimulado, aluno);
+            List<QuestaoRetornoDTO> questaoRetornoDTOs = questaoFilterRepository.getQuestao(idSimulado, aluno, nomeAluno);
 
             return ResponseEntity.ok(questaoRetornoDTOs);
         } catch (Exception e) {
@@ -473,7 +462,7 @@ public class SimuladoController {
 
     @GetMapping(value = "/getSimuladoIdAluno/{id}")
     public ResponseEntity<List<SimuladoDTO>> getSimuladoIdAluno(@PathVariable("id") Long idSimulado) {
-        System.out.println("id do simulado " + idSimulado);
+        
         try {
            
             List<QuestaoDTO> questaoDTOs = new ArrayList<>();
@@ -592,6 +581,7 @@ public class SimuladoController {
 
             int retorno = simuladoJDBC.finalizaSimulado(idSimulado, aluno);
             if(retorno > 0){
+
                 map.put("success", true);
                 map.put("message", "Simulado finalizado.");
             }
@@ -605,7 +595,24 @@ public class SimuladoController {
         } 
     }
 
+    @GetMapping(value = "/getResult/{id}/{aluno}")
+    public ResponseEntity<Map> getResult(@PathVariable("id") Long idSimulado,
+                                                @PathVariable("aluno") String aluno) {
+            Map<String, Object> map = new HashMap<String, Object>();
+        try {
+        
+            return new ResponseEntity<>(alunoJDBC.getResultAluno(idSimulado, aluno), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("success", false);
+            map.put("message", "Erro ao buscar o resultado do simulado.");
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        } 
+    }
 
+    /**
+     * Metodo para realizar a alteração do status de rascunho para true ou false
+     */
     @PostMapping(value = "/updateStatus")
     public ResponseEntity<Map> alterStatus(@RequestBody SimuladoDTO simuladoDTO) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -760,6 +767,114 @@ public class SimuladoController {
             map.put("success", false);
             map.put("message", "Erro ao tentar Excluir o simulado");
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+    @PostMapping(value = "/getSimuladosQuestoesDiscursivas")
+    public ResponseEntity<List<Map<String, Object>>> getSimuladosQuestoesDiscursivas(@RequestBody SimuladoDTO simuladoDTO){
+        try {
+            List<String> idsDisciplinas = new ArrayList<>();
+            List<String> idsTurmas      = new ArrayList<>();
+            List<String> idsCursos      = new ArrayList<>();
+            List<Long>   idsSimulados   = new ArrayList<>();
+            int peridoLetivo = 0;
+            
+            
+            
+            if(simuladoDTO.getCursos() != null && simuladoDTO.getCursos().size() > 0){
+                simuladoDTO.getCursos().forEach(n -> idsCursos.add(n.getId()));
+                peridoLetivo = simuladoDTO.getCursos().get(0).getIdPeriodoLetivo();
+            }
+                
+            if(simuladoDTO.getTurmas() != null && simuladoDTO.getTurmas().size() > 0){
+                simuladoDTO.getTurmas().forEach(n -> idsTurmas.add(n.getId()));
+                peridoLetivo = simuladoDTO.getTurmas().get(0).getIdPeriodoLetivo();  
+            }
+                 
+            if(simuladoDTO.getDisciplinas() != null && simuladoDTO.getDisciplinas().size() > 0){
+                simuladoDTO.getDisciplinas().forEach(n -> idsDisciplinas.add(n.getId()));
+                peridoLetivo = simuladoDTO.getDisciplinas().get(0).getIdPeriodoLetivo();  
+            }
+                  
+            // List<SimuladoDTO> simuladosDTOs = simuladoJDBC.getSimuladosQuestoesDiscursivas();
+            List<Map<String, Object>> simuladosDTOs = simuladoJDBC.getSimuladosQuestoesDiscursivas(peridoLetivo, idsCursos, idsTurmas, idsDisciplinas);
+            return new ResponseEntity<>(simuladosDTOs, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/getDashAdmin")
+    public ResponseEntity<Map<String, Object>> getAllSigetDashAdminmulado(@RequestBody SimuladoDTO simuladoDTO) {
+        
+        try {
+            List<SimuladoDisciplinasEntity> simuladoDisciplinas = new ArrayList<>();
+            List<SimuladoCursosEntity>      simuladoCursos      = new ArrayList<>();
+            List<SimuladoTurmasEntity>      simuladoTurmas      = new ArrayList<>();
+            List<SimuladoDTO>               simuladoDTOs        = new ArrayList<>();
+            List<String> idsDisciplinas = new ArrayList<>();
+            List<String> idsTurmas      = new ArrayList<>();
+            List<String> idsCursos      = new ArrayList<>();
+            List<Long>   idsSimulados   = new ArrayList<>();
+            
+            simuladoDTO.getCursos().forEach(n -> idsCursos.add(n.getId()));
+            simuladoDTO.getTurmas().forEach(n -> idsTurmas.add(n.getId()));
+            simuladoDTO.getDisciplinas().forEach(n -> idsDisciplinas.add(n.getId()));
+
+            if(simuladoDTO.getCursos() != null && simuladoDTO.getCursos().size() > 0){
+                simuladoDTO.getCursos().forEach(n -> idsCursos.add(n.getId()));
+                simuladoCursos = simuladoCursosRepository.findByCursoAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsCursos);
+                if(!simuladoCursos.isEmpty()){
+                    simuladoCursos.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }
+
+                simuladoTurmas = simuladoTurmasRepository.findTurmasByCursosAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsCursos);
+                if(!simuladoTurmas.isEmpty()){
+                    simuladoTurmas.forEach(n -> idsTurmas.add(n.getIdTurma())); 
+                    simuladoTurmas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                    simuladoDisciplinas = simuladoDisciplinasRepository.findByInTurmasAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsTurmas);
+                }
+                    
+                if(!simuladoDisciplinas.isEmpty()){
+                    simuladoDisciplinas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }
+                    
+            }
+
+            if(simuladoDTO.getTurmas() != null && simuladoDTO.getTurmas().size() > 0){
+                simuladoDTO.getTurmas().forEach(n -> idsTurmas.add(n.getId()));
+                simuladoTurmas = simuladoTurmasRepository.findByTurmasAndPeriodo(simuladoDTO.getTurmas().get(0).getIdPeriodoLetivo(), idsTurmas);
+                if(!simuladoTurmas.isEmpty()){
+                    simuladoTurmas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                    simuladoDisciplinas  = simuladoDisciplinasRepository.findByInTurmasAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsTurmas);
+                }
+                    
+                if(!simuladoDisciplinas.isEmpty()){
+                    simuladoDisciplinas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }       
+            }
+            
+            if(simuladoDTO.getDisciplinas() != null && simuladoDTO.getDisciplinas().size() > 0){
+                simuladoDTO.getDisciplinas().forEach(n -> idsDisciplinas.add(n.getId()));
+                simuladoDisciplinas = simuladoDisciplinasRepository.findByDisciplinasAndPeriodo(simuladoDTO.getDisciplinas().get(0).getIdPeriodoLetivo(), idsDisciplinas);
+                if(!simuladoDisciplinas.isEmpty()){
+                    simuladoDisciplinas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }
+            }   
+
+            
+            if(idsSimulados.size() > 0){
+               return new ResponseEntity<>(simuladoJDBC.getDashAdmin(idsSimulados), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
