@@ -878,4 +878,87 @@ public class SimuladoController {
         }
     }
 
+
+    @PostMapping(value = "/getGestor")
+    public ResponseEntity<List<SimuladoDTO>> getGestor(@RequestBody SimuladoDTO simuladoDTO) {
+        
+        try {
+            List<SimuladoDisciplinasEntity> simuladoDisciplinas = new ArrayList<>();
+            List<SimuladoCursosEntity>      simuladoCursos      = new ArrayList<>();
+            List<SimuladoTurmasEntity>      simuladoTurmas      = new ArrayList<>();
+            List<SimuladoDTO>               simuladoDTOs        = new ArrayList<>();
+            List<String> idsDisciplinas = new ArrayList<>();
+            List<String> idsTurmas      = new ArrayList<>();
+            List<String> idsCursos      = new ArrayList<>();
+            List<Long>   idsSimulados   = new ArrayList<>();
+            
+            simuladoDTO.getCursos().forEach(n -> idsCursos.add(n.getId()));
+            simuladoDTO.getTurmas().forEach(n -> idsTurmas.add(n.getId()));
+            simuladoDTO.getDisciplinas().forEach(n -> idsDisciplinas.add(n.getId()));
+
+            if(simuladoDTO.getCursos() != null && simuladoDTO.getCursos().size() > 0){
+                simuladoDTO.getCursos().forEach(n -> idsCursos.add(n.getId()));
+                simuladoCursos = simuladoCursosRepository.findByCursoAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsCursos);
+                if(!simuladoCursos.isEmpty()){
+                    simuladoCursos.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }
+
+                simuladoTurmas = simuladoTurmasRepository.findTurmasByCursosAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsCursos);
+                if(!simuladoTurmas.isEmpty()){
+                    simuladoTurmas.forEach(n -> idsTurmas.add(n.getIdTurma())); 
+                    simuladoTurmas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                    simuladoDisciplinas = simuladoDisciplinasRepository.findByInTurmasAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsTurmas);
+                }
+                    
+                if(!simuladoDisciplinas.isEmpty()){
+                    simuladoDisciplinas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }
+                    
+            }
+
+            if(simuladoDTO.getTurmas() != null && simuladoDTO.getTurmas().size() > 0){
+                simuladoDTO.getTurmas().forEach(n -> idsTurmas.add(n.getId()));
+                simuladoTurmas = simuladoTurmasRepository.findByTurmasAndPeriodo(simuladoDTO.getTurmas().get(0).getIdPeriodoLetivo(), idsTurmas);
+                if(!simuladoTurmas.isEmpty()){
+                    simuladoTurmas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                    simuladoDisciplinas  = simuladoDisciplinasRepository.findByInTurmasAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsTurmas);
+                }
+                    
+                if(!simuladoDisciplinas.isEmpty()){
+                    simuladoDisciplinas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }       
+            }
+            
+            if(simuladoDTO.getDisciplinas() != null && simuladoDTO.getDisciplinas().size() > 0){
+                simuladoDTO.getDisciplinas().forEach(n -> idsDisciplinas.add(n.getId()));
+                simuladoDisciplinas = simuladoDisciplinasRepository.findByDisciplinasAndPeriodo(simuladoDTO.getDisciplinas().get(0).getIdPeriodoLetivo(), idsDisciplinas);
+                if(!simuladoDisciplinas.isEmpty()){
+                    simuladoDisciplinas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }
+            }   
+
+            
+            if(idsSimulados.size() > 0){
+               return new ResponseEntity<>(simuladoJDBC.getGestor(idsSimulados), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @GetMapping(value = "/acompanhamentoSimulado/{idSimulado}")
+    public ResponseEntity<Map<String, Object>> reports1(@PathVariable("idSimulado") Long idSimulado){
+        try {
+            return new ResponseEntity<>(simuladoJDBC.acompanhamentoSimulado(idSimulado), HttpStatus.OK);    
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        
+    }
+
 }

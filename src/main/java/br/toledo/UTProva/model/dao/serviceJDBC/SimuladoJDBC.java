@@ -448,4 +448,112 @@ public class SimuladoJDBC {
             return null;
         }
     }
+
+
+    public List<SimuladoDTO> getGestor(List<Long> idsSimulados){
+        try {
+            
+            String sql = 
+            " select * from  simulados s " + 
+            " where 1=1 and  " + 
+            "     s.id " + DynamicSQL.createInLongs(idsSimulados) +  " and " + 
+            "     s.rascunho = false and  " + 
+            "     s.data_hora_inicial < date_format((now() + time('03:00:00')), '%Y-%m-%d %H:%i:%s') and  " + 
+            "     s.data_hora_final   > date_format((now() + time('03:00:00')), '%Y-%m-%d %H:%i:%s') " + 
+			" order by s.id desc " ;
+            
+            List<SimuladoDTO> simulados = this.jdbcTemplate.query(sql,
+                new Object[]{},
+                new RowMapper<SimuladoDTO>(){
+                    public SimuladoDTO mapRow(ResultSet rs, int numRow) throws SQLException{
+                        SimuladoDTO simulado = new SimuladoDTO();
+                        simulado.setId(rs.getLong("id"));
+                        simulado.setNome(rs.getString("nome"));
+                        simulado.setRascunho(rs.getBoolean("rascunho"));
+                        simulado.setDataHoraInicial(rs.getTimestamp("data_hora_inicial"));
+                        simulado.setDataHoraFinal(rs.getTimestamp("data_hora_final"));
+                        return simulado;
+                    }
+                }
+            );
+        
+            return simulados;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public Map acompanhamentoSimulado(Long idsSimulado){
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            
+            String sql = 
+            " select 	 	ssa.id_aluno as id_aluno, " + 
+	        " 			ssa.nome_aluno as nome_aluno, " + 
+            "            count(distinct(sr.id_questao))   as questoes_respondidas,  " + 
+            "            (  " + 
+	        "            	select count(*)  " + 
+	        "            	from simulado_resolucao sr  " + 
+	        "            	join 	alternativa a on a.questao_id = sr.id_questao and sr.id_alternativa = a.id  " + 
+	        "            	where sr.id_aluno = ssa.id_aluno  " + 
+	        "            	and sr.id_simulado = ssa.simulado_id  " + 
+	        "            	and correta = true  " + 
+	        "            )  " + 
+            "            as questoes_certas,  " + 
+            "            ssa.data_inicio as data_inicio,   " + 
+	        "            ssa.data_final as data_final  " + 
+            " from 	    simulado_status_aluno ssa  " + 
+            " join 		simulado_resolucao sr on sr.id_simulado = ssa.simulado_id and sr.id_aluno = ssa.id_aluno  " + 
+	        " join 	alternativa a on a.id = sr.id_alternativa  " + 
+            " where 	1=1  " + 
+            " and 		ssa.simulado_id = " + idsSimulado +
+            " group by ssa.id_aluno order by ssa.nome_aluno desc ";
+            
+            List<SimuladoDashAluno> dashAdmin = this.jdbcTemplate.query(sql,
+                new Object[]{},
+                new RowMapper<SimuladoDashAluno>(){
+                    public SimuladoDashAluno mapRow(ResultSet rs, int numRow) throws SQLException{
+                        SimuladoDashAluno simulado = new SimuladoDashAluno();
+                        double percentual = (((double) rs.getInt("questoes_certas")) / ((double) rs.getInt("questoes_respondidas")))  * 100;
+
+                        simulado.setIdSimulado(rs.getLong("id_aluno"));
+                        simulado.setQuestoesRespondidas(rs.getInt("questoes_respondidas"));
+                        simulado.setQuestoesCertas(rs.getInt("questoes_certas"));
+                        simulado.setPercentual(FormatDecimal.formatDecimal(percentual));
+                        simulado.setDataInicio(rs.getDate("data_inicio"));
+                        simulado.setDataFinal(rs.getDate("data_final"));
+                        simulado.setNome(rs.getString("nome_aluno"));
+                        return simulado;
+                    }
+                }
+            );
+            int qtdQuestaoRespondida = 0;
+            int qtdQuestaoRespondidaCerta = 0;
+            double percentualTotal = 0;
+            for( SimuladoDashAluno sis : dashAdmin){
+                qtdQuestaoRespondida += sis.getQuestoesRespondidas();
+                qtdQuestaoRespondidaCerta += sis.getQuestoesCertas();
+            }
+            percentualTotal = ( ((double) qtdQuestaoRespondidaCerta) / ((double) qtdQuestaoRespondida) ) * 100; 
+                
+            // System.out.println("totalSimulado " + qtdsimulado + "\n" + 
+            //                    "totalQuestoesCertas " + qtdQuestaoRespondidaCerta + "\n" + 
+            //                    "totalQuestoesRespondidas " + qtdQuestaoRespondida + "\n" + 
+            //                    "totalPercentual " + percentualTotal);
+
+            Map<String, Object> mapTotal = new HashMap<String, Object>();
+            mapTotal.put("totalQuestoesCertas", qtdQuestaoRespondidaCerta);
+            mapTotal.put("totalQuestoesRespondidas", qtdQuestaoRespondida);
+            mapTotal.put("totalPercentual", FormatDecimal.formatDecimal(percentualTotal));
+
+            map.put("total", mapTotal);
+            map.put("list", dashAdmin);
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

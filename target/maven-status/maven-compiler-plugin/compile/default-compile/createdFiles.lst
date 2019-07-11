@@ -1,10 +1,12 @@
 br/toledo/UTProva/model/dto/GruposDTO.class
 br/toledo/UTProva/model/dao/repository/QuestaoFilterRepository.class
+br/toledo/UTProva/model/dao/serviceJDBC/SimuladoJDBC$9.class
 br/toledo/UTProva/controller/AlunosController.class
 br/toledo/UTProva/service/academico/ProfessoresService.class
 br/toledo/UTProva/model/dto/QuestaoRetornoDTO.class
 br/toledo/UTProva/reports/dto/AreaConhecimentoReports.class
 br/toledo/UTProva/model/dao/serviceJDBC/AlunoJDBC$2.class
+br/toledo/UTProva/model/dao/serviceJDBC/SimuladoJDBC$10.class
 br/toledo/UTProva/useful/configuration/CorsConfiguration$1.class
 br/toledo/UTProva/ServletInitializer.class
 br/toledo/UTProva/service/academico/AlunoService.class
