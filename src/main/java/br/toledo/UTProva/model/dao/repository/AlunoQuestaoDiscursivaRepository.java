@@ -10,6 +10,6 @@ import br.toledo.UTProva.model.dao.entity.AlunoQuestaoDiscursiva;
 
 public interface AlunoQuestaoDiscursivaRepository extends JpaRepository<AlunoQuestaoDiscursiva, Long>{
 
-    @Query(value = "select * from aluno_questao_discursiva where simulado_id =:idSimulado", nativeQuery = true)
+    @Query(value = "select * from aluno_questao_discursiva where simulado_id =:idSimulado order by nome_aluno ", nativeQuery = true)
     List<AlunoQuestaoDiscursiva> findByIdSimulado(@Param("idSimulado") Long idSimulado);
 }

@@ -1,8 +1,11 @@
 package br.toledo.UTProva.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +15,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
@@ -52,67 +67,82 @@ public class RelatorioController {
     @Autowired
     private GrupoCadastroRepository grupoCadastroRepository;
     @Autowired
-    private ReportsDetalhadoRepository reportsDetalhadoRepository; 
+    private ReportsDetalhadoRepository reportsDetalhadoRepository;
 
-
-
-	@PostMapping(value = "/01")
-	public void teste01(@RequestBody String channel){
-		System.out.println("chanel  " + channel);
-	}
-
+    @PostMapping(value = "/01")
+    public void teste01(@RequestBody String channel) {
+        System.out.println("chanel  " + channel);
+    }
 
     @GetMapping(value = "/percentualDeAcerto/{idSimulado}/{tipo}")
-    public ResponseEntity<PercentualDeAcertoCSV> reports(@PathVariable("idSimulado") Long idSimulado, @PathVariable("tipo") Long tipo) {
-        
-        try{
+    public ResponseEntity<PercentualDeAcertoCSV> reports(@PathVariable("idSimulado") Long idSimulado,
+            @PathVariable("tipo") Long tipo) {
+
+        try {
             return new ResponseEntity<>(percentualDeAcertoRepository.reportsCSV(idSimulado, tipo), HttpStatus.OK);
-        }catch(Exception e ){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
-        
+
     }
 
     @GetMapping(value = "/percentualDeAcertoDownload/{idSimulado}/{tipo}")
-    public void percentualDeAcertoDownload(HttpServletResponse response, @PathVariable("idSimulado") Long idSimulado, @PathVariable("tipo") Long tipo) throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
-        
+    public void percentualDeAcertoDownload(HttpServletResponse response, @PathVariable("idSimulado") Long idSimulado,
+            @PathVariable("tipo") Long tipo)
+            throws IOException, CsvDataTypeMismatchException, CsvRequiredFieldEmptyException {
+
         String name = "";
-        if(tipo == 1){
-            name = "Percentual-acerto-FORMAÇÃO-GERAL" + LocalDateTime.now() +  ".csv";
-        }else if(tipo == 2){
-            name = "Percentual-acerto-CONHECIMENTO-ESPECÍFICO" + LocalDateTime.now() +  ".csv";
-        }else{
-            name = "Percentual-acerto-GERAL" + LocalDateTime.now() +  ".csv";
+        if (tipo == 1) {
+            name = "Percentual-acerto-FORMAÇÃO-GERAL" + LocalDateTime.now() + ".csv";
+        } else if (tipo == 2) {
+            name = "Percentual-acerto-CONHECIMENTO-ESPECÍFICO" + LocalDateTime.now() + ".csv";
+        } else {
+            name = "Percentual-acerto-GERAL" + LocalDateTime.now() + ".csv";
         }
 
         response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition","attachment; filename=\"" + name + "\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\"");
 
-        // StatefulBeanToCsv<PercentualDeAcerto> writer = new StatefulBeanToCsvBuilder<PercentualDeAcerto>(response.getWriter())
-        //                     .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
-        //                     .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
-        //                     .build();
-        StatefulBeanToCsv<PercentualDeAcertoCSV> writer = new StatefulBeanToCsvBuilder<PercentualDeAcertoCSV>(response.getWriter())
-                                                .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
-                                                .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
-                                                .build();
-        
+        // StatefulBeanToCsv<PercentualDeAcerto> writer = new
+        // StatefulBeanToCsvBuilder<PercentualDeAcerto>(response.getWriter())
+        // .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+        // .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
+        // .build();
+        StatefulBeanToCsv<PercentualDeAcertoCSV> writer = new StatefulBeanToCsvBuilder<PercentualDeAcertoCSV>(
+                response.getWriter()).withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+                        .withSeparator(CSVWriter.DEFAULT_SEPARATOR).build();
+
         writer.write(percentualDeAcertoRepository.reportsCSV(idSimulado, tipo));
     }
 
     @GetMapping(value = "/relatorioHabilidadeEConteudo/{idSimulado}")
-    public ResponseEntity<GrupoCadastro> reports1(@PathVariable("idSimulado") Long idSimulado){
+    public ResponseEntity<GrupoCadastro> reports1(@PathVariable("idSimulado") Long idSimulado) {
         try {
-            return new ResponseEntity<>(grupoCadastroRepository.repoGrupoCadastro(idSimulado), HttpStatus.OK);    
+            return new ResponseEntity<>(grupoCadastroRepository.repoGrupoCadastro(idSimulado), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        
+
     }
 
     @GetMapping(value = "/relatorioDetalhado/{idSimulado}")
-    public ResponseEntity<List<DetalhadoReports>> reports2(@PathVariable("idSimulado") Long idSimulado){
+    public ResponseEntity<List<DetalhadoReports>> reportsJSON(@PathVariable("idSimulado") Long idSimulado){
+       
+        try{
+            return new ResponseEntity<>(reportsDetalhadoRepository.getDetalhado(idSimulado), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+        
+    }
+
+
+    @GetMapping(value = "/relatorioDetalhadoPDF/{idSimulado}")
+    public String reports2(@PathVariable("idSimulado") Long idSimulado)
+            throws DocumentException, MalformedURLException, IOException {
         List<DetalhadoReports> detalhadoReports = new ArrayList<>();
 
         DetalhadoReports dReports = new DetalhadoReports();
@@ -148,7 +178,155 @@ public class RelatorioController {
         detalhadoReports.add(dReports);
         detalhadoReports.add(dReports2);
         
-        return new ResponseEntity<>(reportsDetalhadoRepository.getDetalhado(idSimulado), HttpStatus.OK);
+        String dest = "/Users/dantas/Projetos/detalhado.pdf";
+        Document document = new Document(PageSize.A4.rotate());
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(dest));
+            document.open();
+            PdfPTable table = new PdfPTable(14);
+            Image imgSoc = Image.getInstance("/Users/dantas/Projetos/logo_toledo.png");
+            imgSoc.scaleToFit(110,110);
+            // define font for table header row
+            Font font = FontFactory.getFont(FontFactory.COURIER, 8, BaseColor.BLACK); 
+            
+            PdfPCell cell = new PdfPCell(imgSoc, true);
+            cell.setBackgroundColor(BaseColor.ORANGE);
+            cell.setPadding(1);
+            cell.setBorder(1);
+
+
+            // write table header
+            cell.setPhrase(new Phrase("Matrícula", font));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+            
+            cell.setPhrase(new Phrase("Nome do Aluno", font));
+            cell.setColspan(2);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+    
+            cell.setPhrase(new Phrase("Qtd de acertos em FG", font));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+            
+            cell.setPhrase(new Phrase("Nota FG Objetivas(%)", font));
+            // cell.setColspan(2);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+            
+            cell.setPhrase(new Phrase("Qtd de acertos em CE", font));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+            
+            cell.setPhrase(new Phrase("Nota CE Objetivas(%)", font));
+            // cell.setColspan(2);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase("Total de acertos objetivas", font));
+            // cell.setColspan(2);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase("Taxa de acertos total objetivas", font));
+            // cell.setColspan(2);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase("Nota FG discursivas(%)", font));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase("Nota CE discursivas(%)", font));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase("Nota Final FG", font));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase("Nota Final CE", font));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase("Nota Final Total", font));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            Font font2 = FontFactory.getFont(FontFactory.COURIER, 8); 
+            
+            PdfPCell cell2 = new PdfPCell(imgSoc, true);
+            cell2.setPadding(2);
+            cell2.setBorder(1);
+            
+
+            reportsDetalhadoRepository.getDetalhado(idSimulado).forEach(n -> {
+                
+                
+                // cell2.setPhrase(new Phrase(n.getMatricula(), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+                
+                // cell2.setPhrase(new Phrase(n.getAluno(), font2));
+                // cell2.setColspan(2);
+                // cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+                // table.addCell(cell2);
+                
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getQtdAcertoFG()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+                // table.addCell(cell2);
+
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getNotaObjetivasFG()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getQtdAcertoCE()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getNotaObjetivasCE()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getTotalAcertoObjetivas()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getNotaObjetivasTotal()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getNotaDiscursivaFG()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getNotaDiscursivaCE()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getNotaFinalFG()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getNotaFinalCE()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+
+                // cell2.setPhrase(new Phrase(String.valueOf(n.getNotaTotal()), font2));
+                // cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+                // table.addCell(cell2);
+
+            });
+            
+            document.add(table);
+            document.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return "deu certo mano";
+        
     }
 
 

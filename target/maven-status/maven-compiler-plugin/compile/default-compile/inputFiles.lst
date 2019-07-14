@@ -33,6 +33,7 @@
 /Users/dantas/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/UsuarioRepository.java
 /Users/dantas/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/AreaConhecimentoRepository.java
 /Users/dantas/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/SimuladoDisciplinasEntity.java
+/Users/dantas/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/reports/export/CreatePDF.java
 /Users/dantas/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/TipoRespostaRepository.java
 /Users/dantas/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/SimuladoResolucaoEntity.java
 /Users/dantas/Projetos/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/SimuladoEntity.java

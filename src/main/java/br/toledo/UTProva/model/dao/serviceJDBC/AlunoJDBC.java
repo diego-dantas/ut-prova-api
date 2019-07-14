@@ -13,8 +13,8 @@ import org.springframework.jdbc.core.RowMapper;
 
 import org.springframework.stereotype.Service;
 
-
 import br.toledo.UTProva.model.dao.serviceJDBC.useful.DynamicSQL;
+import br.toledo.UTProva.model.dao.serviceJDBC.useful.FormatDecimal;
 import br.toledo.UTProva.model.dto.SimuladoDashAluno;
 
 @Service
@@ -140,7 +140,7 @@ public class AlunoJDBC{
                         simulado.setSimuladosFinalizados(rs.getInt("simulados_finalizados"));
                         simulado.setQuestoesRespondidas(rs.getInt("questoes_respondidas"));
                         simulado.setQuestoesCertas(rs.getInt("questoes_certas"));
-                        simulado.setPercentual(percentual);
+                        simulado.setPercentual(FormatDecimal.formatDecimal(percentual));
                         simulado.setDataInicio(rs.getDate("data_inicio"));
                         simulado.setDataFinal(rs.getDate("data_final"));
                         return simulado;

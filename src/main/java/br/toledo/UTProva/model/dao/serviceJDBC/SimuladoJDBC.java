@@ -45,8 +45,8 @@ public class SimuladoJDBC {
                     simulado.setNome(rs.getString("nome"));
                     simulado.setRascunho(rs.getBoolean("rascunho"));
                     simulado.setStatus(rs.getString("status"));
-                    simulado.setDataHoraInicial(rs.getDate("data_hora_inicial"));
-                    simulado.setDataHoraFinal(rs.getDate("data_hora_inicial"));
+                    simulado.setDataHoraInicial(rs.getTimestamp("data_hora_inicial"));
+                    simulado.setDataHoraFinal(rs.getTimestamp("data_hora_inicial"));
                     return simulado;
                 }
             });
@@ -93,8 +93,8 @@ public class SimuladoJDBC {
                     simulado.setNome(rs.getString("nome"));
                     simulado.setRascunho(rs.getBoolean("rascunho"));
                     simulado.setStatus(rs.getString("status"));
-                    simulado.setDataHoraInicial(rs.getDate("data_hora_inicial"));
-                    simulado.setDataHoraFinal(rs.getDate("data_hora_inicial"));
+                    simulado.setDataHoraInicial(rs.getTimestamp("data_hora_inicial"));
+                    simulado.setDataHoraFinal(rs.getTimestamp("data_hora_inicial"));
                     return simulado;
                 }
             });
@@ -346,7 +346,7 @@ public class SimuladoJDBC {
                 " and   s.id in(" +
                 sqlCurso + "\n " +
                 sqlTurma + "\n" +
-                sqlDisciplina + ")"
+                sqlDisciplina + ") order by s.id desc "
             ;            
             List<Map<String, Object>> simulados = this.jdbcTemplate.query(sql,
                 new Object[]{},
@@ -411,8 +411,8 @@ public class SimuladoJDBC {
                         simulado.setQuestoesRespondidas(rs.getInt("questoes_respondidas"));
                         simulado.setQuestoesCertas(rs.getInt("questoes_certas"));
                         simulado.setPercentual(FormatDecimal.formatDecimal(percentual));
-                        simulado.setDataInicio(rs.getDate("data_inicio"));
-                        simulado.setDataFinal(rs.getDate("data_final"));
+                        simulado.setDataInicio(rs.getTimestamp("data_inicio"));
+                        simulado.setDataFinal(rs.getTimestamp("data_final"));
                         simulado.setNome(rs.getString("nome"));
                         return simulado;
                     }
@@ -522,8 +522,8 @@ public class SimuladoJDBC {
                         simulado.setQuestoesRespondidas(rs.getInt("questoes_respondidas"));
                         simulado.setQuestoesCertas(rs.getInt("questoes_certas"));
                         simulado.setPercentual(FormatDecimal.formatDecimal(percentual));
-                        simulado.setDataInicio(rs.getDate("data_inicio"));
-                        simulado.setDataFinal(rs.getDate("data_final"));
+                        simulado.setDataInicio(rs.getTimestamp("data_inicio"));
+                        simulado.setDataFinal(rs.getTimestamp("data_final"));
                         simulado.setNome(rs.getString("nome_aluno"));
                         return simulado;
                     }

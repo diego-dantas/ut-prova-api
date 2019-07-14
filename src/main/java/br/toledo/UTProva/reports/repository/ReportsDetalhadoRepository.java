@@ -105,7 +105,7 @@ public class ReportsDetalhadoRepository{
                 "  and 		ssa.simulado_status_id 	= 3  " + 
                 "  group by  " + 
                 " 	id_simulado,  " + 
-                " 	ssa.nome_aluno ";
+                " 	ssa.nome_aluno order by ssa.nome_aluno ";
 
                 List<DetalhadoReports> detalhadoReports = this.jdbcTemplate.query(sql,
                     new Object[]{},

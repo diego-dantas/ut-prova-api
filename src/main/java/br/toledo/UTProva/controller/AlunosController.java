@@ -97,7 +97,8 @@ public class AlunosController{
                 SimuladoEntity simulado = new SimuladoEntity();
                 
                 simulado.setId(idSimulado);
-    
+                System.out.println("notaConhecimentoEspecifico "+ aluno.getNotas().get("notaConhecimentoEspecifico"));
+                System.out.println("notaFormacaoGeral "+ aluno.getNotas().get("notaFormacaoGeral"));
                 AlunoQuestaoDiscursiva alunoDiscursiva = new AlunoQuestaoDiscursiva();
                 String notaConhecimentoEspecifico = aluno.getNotas().get("notaConhecimentoEspecifico") != null ? 
                                                         aluno.getNotas().get("notaConhecimentoEspecifico").toString() : 
