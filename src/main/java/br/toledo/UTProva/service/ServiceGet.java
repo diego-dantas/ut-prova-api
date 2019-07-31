@@ -115,11 +115,7 @@ public class ServiceGet {
             con.setRequestProperty("Authorization", "Bearer " + token);
             
             int responseCode = con.getResponseCode();
-            // if (responseCode == HttpURLConnection.HTTP_OK) { // success
-            //     System.out.println(Useful.getResponse(con));
-            // } else {
-            //     System.out.println("ERROR NA HORA DE PEGA O PERIODO LETIVO " + responseCode);
-            // }
+         
         }catch(MalformedURLException e){
             e.printStackTrace();
         }catch(IOException io){

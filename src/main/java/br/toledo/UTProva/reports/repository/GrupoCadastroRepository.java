@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import br.toledo.UTProva.model.dao.repository.ReportsRepository;
+import br.toledo.UTProva.model.dao.serviceJDBC.useful.FormatDecimal;
 import br.toledo.UTProva.reports.dto.AreaConhecimentoReports;
 import br.toledo.UTProva.reports.dto.ConteudoReports;
 import br.toledo.UTProva.reports.dto.GrupoCadastro;
@@ -86,7 +87,7 @@ public class GrupoCadastroRepository{
                         double percentual = (((double) rs.getInt("questoes_certas")) / ((double) rs.getInt("questoes_respondidas")))  * 100;
                         aReports.setId(rs.getLong("id_simulado"));
                         aReports.setDescricao(rs.getString("area_conhecimento"));
-                        aReports.setPercentual(percentual);
+                        aReports.setPercentual(FormatDecimal.formatDecimal(percentual));
                         return aReports;
                     }
                 }
@@ -139,7 +140,7 @@ public class GrupoCadastroRepository{
                         double percentual = (((double) rs.getInt("questoes_certas")) / ((double) rs.getInt("questoes_respondidas")))  * 100;
                         cReports.setId(rs.getLong("id_simulado"));
                         cReports.setDescricao(rs.getString("conteudo"));
-                        cReports.setPercentual(percentual);
+                        cReports.setPercentual(FormatDecimal.formatDecimal(percentual));
                         return cReports;
                     }
                 }
@@ -190,7 +191,7 @@ public class GrupoCadastroRepository{
                         double percentual = (((double) rs.getInt("questoes_certas")) / ((double) rs.getInt("questoes_respondidas")))  * 100;
                         hReports.setId(rs.getLong("id_simulado"));
                         hReports.setDescricao(rs.getString("habilidade"));
-                        hReports.setPercentual(percentual);
+                        hReports.setPercentual(FormatDecimal.formatDecimal(percentual));
                         return hReports;
                     }
                 }

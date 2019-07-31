@@ -45,11 +45,10 @@ public class Contexto {
 
                 responseHeaders.setAccessControlExposeHeaders(exposeHeaders); 
                 responseHeaders.set("Access-Token", "Bearer " + token);
-                // System.out.println("TO no contexto 200");
                 return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
                 
             } else {
-                System.out.println("GET request not worked 4");
+                System.out.println("GET request not worked  | Busca de Contexto");
             }
         }catch(Exception e){
             e.printStackTrace();

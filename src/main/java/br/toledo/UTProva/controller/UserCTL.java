@@ -218,7 +218,6 @@ public class UserCTL {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao buscar os simulados do aluno " + e);
         }
         return null;
     }

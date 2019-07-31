@@ -45,7 +45,6 @@ public class SimuladoFilterRepositoty {
             return turmas;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ERRO AO BUSCAR AS TURMAS POR CURSO " + e);
         }
         return null;
     }
@@ -71,7 +70,6 @@ public class SimuladoFilterRepositoty {
             return disciplinas;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ERRO AO BUSCAR AS DISCIPLINAS POR TURMA " + e);
         }
         return null;
     }
@@ -86,7 +84,6 @@ public class SimuladoFilterRepositoty {
             return retorno;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ERRO AO DA O UPDATE NA RESPOSTA DA QUESTÃO " + e);
         }
         return -1;
     }

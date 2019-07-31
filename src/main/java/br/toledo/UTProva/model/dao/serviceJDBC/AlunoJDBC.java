@@ -80,10 +80,6 @@ public class AlunoJDBC{
             }
             percentualTotal = ( ((double) qtdQuestaoRespondidaCerta) / ((double) qtdQuestaoRespondida) ) * 100; 
                 
-            // System.out.println("totalSimulado " + qtdsimulado + "\n" + 
-            //                    "totalQuestoesCertas " + qtdQuestaoRespondidaCerta + "\n" + 
-            //                    "totalQuestoesRespondidas " + qtdQuestaoRespondida + "\n" + 
-            //                    "totalPercentual " + percentualTotal);
 
             Map<String, Object> mapTotal = new HashMap<String, Object>();
             mapTotal.put("totalSimulado", qtdsimulado);

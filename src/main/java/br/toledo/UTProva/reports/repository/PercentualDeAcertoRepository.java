@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import br.toledo.UTProva.model.dao.repository.ReportsRepository;
+import br.toledo.UTProva.model.dao.serviceJDBC.useful.FormatDecimal;
 import br.toledo.UTProva.model.dto.SimuladoDashAluno;
 import br.toledo.UTProva.reports.dto.PercentualDeAcerto;
 import br.toledo.UTProva.reports.dto.PercentualDeAcertoCSV;
@@ -155,7 +156,7 @@ public class PercentualDeAcertoRepository{
                         
                         percentualDeAcerto.setIdAluno(rs.getString("id_aluno"));
                         percentualDeAcerto.setNomeAluno(rs.getString("nome"));
-                        percentualDeAcerto.setTaxaAcerto(percentual);
+                        percentualDeAcerto.setTaxaAcerto(FormatDecimal.formatDecimal(percentual));
                         return percentualDeAcerto;
                     }
                 }
@@ -173,7 +174,7 @@ public class PercentualDeAcertoRepository{
             
             PercentualDeAcertoCSV percentualDeAcertoCSV = new PercentualDeAcertoCSV();
             percentualDeAcertoCSV.setAlunos(percentualDeAcertos);
-            percentualDeAcertoCSV.setMediaSimulado(mediaSimulado);
+            percentualDeAcertoCSV.setMediaSimulado(FormatDecimal.formatDecimal(mediaSimulado));
             return percentualDeAcertoCSV;
 
         } catch (Exception e) {

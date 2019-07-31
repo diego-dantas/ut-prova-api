@@ -71,7 +71,6 @@ public class SimuladoJDBC {
             return simuladoDTO;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ERRO AO BUSCAR O SIMULADO POR ID " + e);
         }
         return null;
     }
@@ -119,7 +118,6 @@ public class SimuladoJDBC {
             return simuladoDTO;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ERRO AO BUSCAR O SIMULADO POR ID " + e);
         }
         return null;
     }
@@ -167,7 +165,6 @@ public class SimuladoJDBC {
             return simulados;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ERRO AO BUSCAR O SIMULADO POR ID E ALUNOS" + e);
         }
         return null;
     }
@@ -204,7 +201,6 @@ public class SimuladoJDBC {
             return delete;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ERRO AO DELETAR O SIMULADO" + e);
         }
         return delete;
     }
@@ -229,7 +225,6 @@ public class SimuladoJDBC {
             return map;
         }catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao alterar o status do simulado " + e);
             map.put("success", false);
             map.put("message", "Erro ao alterar o status");
         }
@@ -271,7 +266,6 @@ public class SimuladoJDBC {
             return simulados;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ERRO AO BUSCAR O SIMULADO POR ID E ALUNOS" + e);
         }
         return null;
     }
@@ -287,7 +281,6 @@ public class SimuladoJDBC {
             return retorno;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("ERRO AO FINALIZAR O SIMULADO " + e);
         }
         return -1;
     }
@@ -429,10 +422,7 @@ public class SimuladoJDBC {
             }
             percentualTotal = ( ((double) qtdQuestaoRespondidaCerta) / ((double) qtdQuestaoRespondida) ) * 100; 
                 
-            // System.out.println("totalSimulado " + qtdsimulado + "\n" + 
-            //                    "totalQuestoesCertas " + qtdQuestaoRespondidaCerta + "\n" + 
-            //                    "totalQuestoesRespondidas " + qtdQuestaoRespondida + "\n" + 
-            //                    "totalPercentual " + percentualTotal);
+
 
             Map<String, Object> mapTotal = new HashMap<String, Object>();
             mapTotal.put("totalSimulado", qtdsimulado);
@@ -538,10 +528,7 @@ public class SimuladoJDBC {
             }
             percentualTotal = ( ((double) qtdQuestaoRespondidaCerta) / ((double) qtdQuestaoRespondida) ) * 100; 
                 
-            // System.out.println("totalSimulado " + qtdsimulado + "\n" + 
-            //                    "totalQuestoesCertas " + qtdQuestaoRespondidaCerta + "\n" + 
-            //                    "totalQuestoesRespondidas " + qtdQuestaoRespondida + "\n" + 
-            //                    "totalPercentual " + percentualTotal);
+       
 
             Map<String, Object> mapTotal = new HashMap<String, Object>();
             mapTotal.put("totalQuestoesCertas", qtdQuestaoRespondidaCerta);

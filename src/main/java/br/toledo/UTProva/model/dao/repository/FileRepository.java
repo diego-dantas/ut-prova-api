@@ -49,7 +49,6 @@ public class FileRepository {
             return map;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao salvar imagem no servidor " + e);
             return map;
         }
         

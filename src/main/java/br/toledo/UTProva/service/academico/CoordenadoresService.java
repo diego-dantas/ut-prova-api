@@ -135,22 +135,4 @@ public class CoordenadoresService {
         }
         return retorno;
     }
-   
-
-    // public String getTurmas(String token){
-    //     String retorno = "";
-    //     System.out.println("To aqui pegando as Turmas !");
-    //     try {
-    //         HttpURLConnection con = Gateway.createHttpConnect("GET", Endpoint.ACADEMICO_COORDENADOR_TURMAS, token);
-    //         int responseCode = con.getResponseCode();
-    //         if (responseCode == HttpURLConnection.HTTP_OK) { // success
-    //             retorno = Useful.getResponse(con);
-    //         } else {
-    //             System.out.println("ERROR NA HORA DE PEGA AS TURMAS " + responseCode);
-    //         }
-    //     } catch (Exception e) {
-    //         //TODO: handle exception
-    //     }
-    //     return retorno;
-    // }
 }

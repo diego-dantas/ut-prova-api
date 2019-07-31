@@ -69,7 +69,6 @@ public class QuestaoFilterRepository {
             return ids;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao deleta a questão " + e);
         }
         return null;
     }
@@ -191,9 +190,7 @@ public class QuestaoFilterRepository {
 
             return questaoDTO;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro ao deleta a questão " + e);
-        }
+            e.printStackTrace();        }
         return null;
     }
 
@@ -207,7 +204,6 @@ public class QuestaoFilterRepository {
                       "where q.tipo_resposta_id = 1 " +
                       "and sq.simulado_id = " + idSimulado;
                       
-                    //   System.out.println("SQL 2 " + sql2);
  
          try {
             String sqlStatus = "select count(id) from simulado_status_aluno where id_aluno = '" + idAluno + "' and simulado_id = " + idSimulado;
@@ -273,10 +269,7 @@ public class QuestaoFilterRepository {
                         " order by tq.id "; 
                 List<Long> tipoQuestaoEntities = this.jdbcTemplate.queryForList(sqlDiscursivas, Long.class);
                 if (tipoQuestaoEntities.size() > 0) {
-                    AlunoQuestaoDiscursiva alunoQuestaoDiscursiva = new AlunoQuestaoDiscursiva();
-                   
-                    System.out.println("to aqui mano vamos fazer funcionar ");
-                    
+                    AlunoQuestaoDiscursiva alunoQuestaoDiscursiva = new AlunoQuestaoDiscursiva();                    
                 
                     alunoQuestaoDiscursiva.setIdAluno(idAluno);
                     alunoQuestaoDiscursiva.setNomeAluno(nomeAluno);
@@ -336,7 +329,6 @@ public class QuestaoFilterRepository {
              return questoes;
          } catch (Exception e) {
              e.printStackTrace();
-             System.out.println("Erro ao deleta a questão " + e);
          }
          return null;
      }

@@ -453,7 +453,6 @@ public class SimuladoController {
             return ResponseEntity.ok(questaoRetornoDTOs);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Erro ao buscar o simulado pelo id " + idSimulado+  " \n" + e);
         } 
         
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

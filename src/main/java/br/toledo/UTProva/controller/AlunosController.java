@@ -19,12 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.toledo.UTProva.model.dao.entity.AlunoQuestaoDiscursiva;
 import br.toledo.UTProva.model.dao.entity.SimuladoEntity;
-import br.toledo.UTProva.model.dao.entity.TipoQuestaoEntity;
 import br.toledo.UTProva.model.dao.repository.AlunoQuestaoDiscursivaRepository;
 import br.toledo.UTProva.model.dao.repository.TipoQuestaoRepository;
 import br.toledo.UTProva.model.dto.AlunoQuestaoDiscursivaDTO;
-import br.toledo.UTProva.model.dto.SimuladoDTO;
-import br.toledo.UTProva.model.dto.TipoQuestaoDTO;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -42,12 +39,6 @@ public class AlunosController{
             List<AlunoQuestaoDiscursiva> alunoQuestaoDiscursivas = alunoQuestaoDiscursivaRepository.findByIdSimulado(idSimulado);
             List<AlunoQuestaoDiscursivaDTO> alunosDTOs = new ArrayList<>();
             alunoQuestaoDiscursivas.forEach(alunos -> {
-               
-
-                // TipoQuestaoEntity tipoQuestaoEntity = tipoQuestaoRepository.getOne(alunos.getTipoQuestao().getId());
-                // TipoQuestaoDTO tipo = new TipoQuestaoDTO();
-                // tipo.setId(tipoQuestaoEntity.getId());
-                // tipo.setDescricao(tipoQuestaoEntity.getDescricao());
                 Map<String, Object> map = new HashMap<>();
                 Map<String, Object> simulado = new HashMap<>();
                 simulado.put("id", alunos.getSimulado().getId());
@@ -74,7 +65,6 @@ public class AlunosController{
 
             return new ResponseEntity<>(alunosDTOs, HttpStatus.OK);
         } catch (Exception e) {
-           System.out.println("Deu merda mano na busca dos alunos ");
            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -90,15 +80,10 @@ public class AlunosController{
             List<AlunoQuestaoDiscursiva> alunosDiscursivas = new ArrayList<>();
             Gson gson = new Gson();
             alunos.forEach(aluno -> {
-                // System.out.println("vamos la mano " + aluno.getNotas().get("notaFormacaoGeral").toString());
-                // String al = gson.toJson(aluno);
-                // System.out.println("vamos la mano " + al);
                 Long idSimulado = Long.valueOf(aluno.getSimulado().get("id").toString());
                 SimuladoEntity simulado = new SimuladoEntity();
                 
                 simulado.setId(idSimulado);
-                System.out.println("notaConhecimentoEspecifico "+ aluno.getNotas().get("notaConhecimentoEspecifico"));
-                System.out.println("notaFormacaoGeral "+ aluno.getNotas().get("notaFormacaoGeral"));
                 AlunoQuestaoDiscursiva alunoDiscursiva = new AlunoQuestaoDiscursiva();
                 String notaConhecimentoEspecifico = aluno.getNotas().get("notaConhecimentoEspecifico") != null ? 
                                                         aluno.getNotas().get("notaConhecimentoEspecifico").toString() : 
@@ -124,7 +109,6 @@ public class AlunosController{
 
             return new ResponseEntity<>(map, HttpStatus.OK);
         } catch (Exception e) {
-           System.out.println("Deu merda para salvar as questoes discursivas ");
            map.put("Status", "Error");
            map.put("Message", "Erro ao gravar a nota do aluno");
            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);

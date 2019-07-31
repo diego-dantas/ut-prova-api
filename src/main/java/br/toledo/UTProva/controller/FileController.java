@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 
 import java.io.*;
@@ -64,6 +66,36 @@ public class FileController {
 
             return new ResponseEntity<byte[]>(IOUtils.toByteArray(is), headers, HttpStatus.OK);
 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @GetMapping(value="/getPDF")
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> getPDF(@RequestParam("name") String name) {
+
+        try {
+            ClassPathResource pdfFile = new ClassPathResource("/reports/Detalhado-2019-07-15T19:20:07.045.pdf");
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("application/pdf"));
+            headers.add("Access-Control-Allow-Origin", "*");
+            headers.add("Access-Control-Allow-Methods", "GET, POST, PUT");
+            headers.add("Access-Control-Allow-Headers", "Content-Type");
+            headers.add("Content-Disposition", "filename=" + name);
+            headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+            headers.add("Pragma", "no-cache");
+            headers.add("Expires", "0");
+            
+            headers.setContentLength(pdfFile.contentLength());
+            ResponseEntity<InputStreamResource> response = new ResponseEntity<InputStreamResource>(
+                new InputStreamResource(pdfFile.getInputStream()), headers, HttpStatus.OK);
+            return response;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.BAD_REQUEST);

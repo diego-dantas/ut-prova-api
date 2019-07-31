@@ -74,7 +74,7 @@ public class ServicePost {
                 return new ResponseEntity<String>(retorno, responseHeaders, HttpStatus.OK);
                 
             } else {
-                System.out.println("GET request not worked 3");
+                System.out.println("GET request not worked | Busca de Contexto");
             }
         }catch(MalformedURLException e){
             e.printStackTrace();
@@ -126,7 +126,6 @@ public class ServicePost {
             out.flush();
             out.close();
             int responseCode = con.getResponseCode();
-			// System.out.println("Response Code Login : " + responseCode);
 			
 			
             

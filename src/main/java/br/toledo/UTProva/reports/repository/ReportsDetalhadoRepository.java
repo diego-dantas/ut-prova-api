@@ -24,9 +24,6 @@ public class ReportsDetalhadoRepository{
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static DecimalFormat df = new DecimalFormat("#.##");
-
-
     public List<DetalhadoReports> getDetalhado(Long idSimulado){
 
         try {
@@ -85,18 +82,32 @@ public class ReportsDetalhadoRepository{
                 "                 and correta = true  " + 
                 "             )  " + 
                 "             as questoes_certas_ce, " + 
-                "             ( " + 
-                "             	select nota_formacao_geral  " + 
-                "                 from aluno_questao_discursiva  " + 
-                "                 where simulado_id = ssa.simulado_id   " + 
-                "                 and id_aluno = ssa.id_aluno  " + 
-                "             ) as nota_formacao_geral_discursiva, " + 
-                "             ( " + 
-                "             	select nota_conhecimento_especifico  " + 
-                "                 from aluno_questao_discursiva  " + 
-                "                 where simulado_id = ssa.simulado_id   " + 
-                "                 and id_aluno = ssa.id_aluno  " + 
-                "             ) as nota_conhecimento_especifico_discursiva " + 
+                "                case  " +
+                "                when  " +
+                "                    (select count(nota_formacao_geral) " +
+                "                    from aluno_questao_discursiva   " +
+                "                    where simulado_id = ssa.simulado_id    " +
+                "                    and id_aluno = ssa.id_aluno) > 0 " +
+                "                then  " +
+                "                    (select nota_formacao_geral " +
+                "                    from aluno_questao_discursiva   " +
+                "                    where simulado_id = ssa.simulado_id    " +
+                "                    and id_aluno = ssa.id_aluno) " +
+                "                else -1 " +
+                "            end as nota_formacao_geral_discursiva,  " +
+                "            case  " +
+                "                when " +
+                "                    (select count(nota_conhecimento_especifico)  " +
+                "                    from aluno_questao_discursiva   " +
+                "                    where simulado_id = ssa.simulado_id    " +
+                "                    and id_aluno = ssa.id_aluno) > 0 " +
+                "                then  " +
+                "                    (select nota_conhecimento_especifico " +
+                "                    from aluno_questao_discursiva   " +
+                "                    where simulado_id = ssa.simulado_id    " +
+                "                    and id_aluno = ssa.id_aluno) " +
+                "                else -1  " +
+                "            end as nota_conhecimento_especifico_discursiva " +
                 "  from 	    simulado_status_aluno ssa  " + 
                 "  join 		simulado_resolucao sr on sr.id_simulado = ssa.simulado_id and sr.id_aluno = ssa.id_aluno  " + 
                 "  join 		alternativa a on a.id = sr.id_alternativa     " + 
@@ -113,26 +124,44 @@ public class ReportsDetalhadoRepository{
                         public DetalhadoReports mapRow(ResultSet rs, int numRow) throws SQLException{
 
                             DetalhadoReports dReports = new DetalhadoReports();
-                            double percentual = (((double) rs.getInt("questoes_certas")) / ((double) rs.getInt("questoes_respondidas")))  * 100;
-                            double notaObjetivasFG = (((double) rs.getInt("questoes_certas_fg")) / ((double) rs.getInt("total_questoes_fg")))  * 100;
-                            double notaObjetivasCE = (((double) rs.getInt("questoes_certas_ce")) / ((double) rs.getInt("total_questoes_ce")))  * 100;
-                            double notaObjetivasTotal = (((double) rs.getInt("questoes_certas")) / ((double) rs.getInt("questoes_respondidas")))  * 100;
+                            double notaObjetivasFG    = 0;
+                            double notaObjetivasCE    = 0;
+                            double notaObjetivasTotal = 0;
+                            double notaDiscursivaFG   = 0;
+                            double notaDiscursivaCE   = 0;
+                            if(rs.getDouble("total_questoes_fg") > 0)     notaObjetivasFG    = (((double) rs.getDouble("questoes_certas_fg")) / ((double) rs.getDouble("total_questoes_fg")))     * 100;
+                            if(rs.getDouble("total_questoes_ce") > 0)     notaObjetivasCE    = (((double) rs.getDouble("questoes_certas_ce")) / ((double) rs.getDouble("total_questoes_ce")))     * 100;
+                            if(rs.getDouble("questoes_respondidas") > 0)  notaObjetivasTotal = (((double) rs.getDouble("questoes_certas"))    / ((double) rs.getDouble("questoes_respondidas")))  * 100;
                             
-                            double notaDiscursivaFG = (double) (rs.getInt("nota_formacao_geral_discursiva") * 10);
-                            double notaDiscursivaCE = (double) (rs.getInt("nota_conhecimento_especifico_discursiva") * 10);
+                            if(rs.getDouble("nota_formacao_geral_discursiva") != -1)          notaDiscursivaFG = (double) (rs.getDouble("nota_formacao_geral_discursiva") * 10);
+                            if(rs.getDouble("nota_conhecimento_especifico_discursiva") != -1) notaDiscursivaCE = (double) (rs.getDouble("nota_conhecimento_especifico_discursiva") * 10);
 
                             double notaFinalFG = 0;
                             double notaFinalCE = 0;
                             double notaFinal = 0;
-                            if(rs.getBoolean("enade")){
+                            
+                            if(rs.getBoolean("enade") == true && (rs.getDouble("total_questoes_fg") > 0 && rs.getDouble("total_questoes_ce") > 0) && ((rs.getDouble("nota_formacao_geral_discursiva") != -1) && (rs.getDouble("nota_conhecimento_especifico_discursiva") != -1))){                               
                                 notaFinalFG = (notaObjetivasFG * 0.6) + (notaDiscursivaFG * 0.4);
                                 notaFinalCE = (notaObjetivasCE * 0.85) + (notaDiscursivaCE * 0.15);
-                                notaFinal   = (notaFinalFG * 0.25) + (notaFinalCE * 0.75);
-                            }else{
+                                notaFinal   = (notaFinalFG * 0.25) + (notaFinalCE * 0.75);                                                               
+                            }else if(rs.getBoolean("enade") == false && (rs.getDouble("total_questoes_fg") > 0 && rs.getDouble("total_questoes_ce") > 0) && ((rs.getDouble("nota_formacao_geral_discursiva") != -1) && (rs.getDouble("nota_conhecimento_especifico_discursiva") != -1))){                               
                                 notaFinalFG = (notaObjetivasFG * 0.5) + (notaDiscursivaFG * 0.5);
                                 notaFinalCE = (notaObjetivasCE * 0.5) + (notaDiscursivaCE * 0.5);
-                                notaFinal   = (notaFinalFG * 0.5) + (notaFinalCE * 0.5);
+                                notaFinal   = (notaFinalFG * 0.5) + (notaFinalCE * 0.5);                                
+                            }else if(rs.getDouble("total_questoes_ce") > 0 && (rs.getDouble("nota_conhecimento_especifico_discursiva") != -1)){                                
+                                notaFinalCE = (notaObjetivasCE * 0.5) + (notaDiscursivaCE * 0.5);
+                                notaFinal   = notaFinalCE;                                
+                            }else if(rs.getDouble("total_questoes_ce") > 0 && (rs.getDouble("nota_conhecimento_especifico_discursiva") == -1)){
+                                notaFinalCE = notaObjetivasCE;
+                                notaFinal   = notaObjetivasCE; 
+                            }else if(rs.getDouble("total_questoes_fg") > 0 && (rs.getDouble("nota_formacao_geral_discursiva") != -1)){                                
+                                notaFinalFG = (notaObjetivasFG * 0.5) + (notaDiscursivaFG * 0.5);
+                                notaFinal   = notaFinalFG;                                
+                            }else if(rs.getDouble("total_questoes_fg") > 0 && (rs.getDouble("nota_formacao_geral_discursiva") == -1)){
+                                notaFinalFG = notaObjetivasFG;
+                                notaFinal   = notaObjetivasFG; 
                             }
+                            
                             
                             
                             dReports.setMatricula(rs.getString("id_aluno"));

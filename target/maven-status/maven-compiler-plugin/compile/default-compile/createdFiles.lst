@@ -90,6 +90,7 @@ br/toledo/UTProva/model/dto/UsuarioDTO.class
 br/toledo/UTProva/service/academico/AlunoService$2.class
 br/toledo/UTProva/model/dto/GrupoDTO.class
 br/toledo/UTProva/model/dto/TurmaRetornoDTO.class
+br/toledo/UTProva/controller/RelatorioController.class
 br/toledo/UTProva/reports/dto/GrupoCadastro.class
 br/toledo/UTProva/reports/repository/ReportsDetalhadoRepository$1.class
 br/toledo/UTProva/model/dao/repository/SimuladoResolucaoRepository.class
