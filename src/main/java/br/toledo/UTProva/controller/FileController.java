@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
@@ -28,11 +29,14 @@ import java.net.URLConnection;
 
 
 import br.toledo.UTProva.model.dao.repository.FileRepository;
+import br.toledo.UTProva.reports.ExcelUseful;
 
 @RestController
 @RequestMapping(path = "/api")
 public class FileController {
 
+   @Autowired
+   ExcelUseful excelUseful;
 
     @PostMapping(path = "/upload/{origin}")
     public ResponseEntity<Map> uploadFilePlan(@PathVariable("origin") String origin,  @RequestParam("files") List<MultipartFile> files) throws IOException{
@@ -103,6 +107,13 @@ public class FileController {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping(value = "/upload/excel")
+    public void uploadExcel(@RequestParam("uploadexcel") MultipartFile file) throws IOException {
+        System.out.println(file.getOriginalFilename());
+        excelUseful.parseExcelToFile(file);
+        System.out.println(file.getOriginalFilename());
     }
 
 

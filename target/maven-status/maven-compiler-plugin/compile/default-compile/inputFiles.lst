@@ -47,9 +47,9 @@
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/TurmasDTO.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/SimuladoCursosRepository.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/SimuladoResolucaoEntity.java
-/home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/reports/ExcelView.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/repository/QuestaoRepository.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/ListIdsDTO.java
+/home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/reports/ExcelUseful.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/AlternativaEntity.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/db/DataConfiguration.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/TipoQuestaoEntity.java
