@@ -31,7 +31,7 @@ public class ProfessoresService {
             RestTemplate restTemplate = new RestTemplate(requestFactory);
            
             ResponseEntity<List<CursosDTO>> response = restTemplate.exchange(
-                "https://servicos.toledo.br" + Endpoint.ACADEMICO_PROFESSOR_CURSOS, 
+                "https://servicos.unitoledo.br" + Endpoint.ACADEMICO_PROFESSOR_CURSOS, 
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<List<CursosDTO>>(){});
@@ -60,7 +60,7 @@ public class ProfessoresService {
             RestTemplate restTemplate = new RestTemplate(requestFactory);
            
             ResponseEntity<List<TurmasDTO>> response = restTemplate.exchange(
-                "https://servicos.toledo.br" + Endpoint.ACADEMICO_PROFESSOR_TURMAS, 
+                "https://servicos.unitoledo.br" + Endpoint.ACADEMICO_PROFESSOR_TURMAS, 
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<List<TurmasDTO>>(){});
@@ -89,7 +89,7 @@ public class ProfessoresService {
             RestTemplate restTemplate = new RestTemplate(requestFactory);
            
             ResponseEntity<List<DisciplinasDTO>> response = restTemplate.exchange(
-                "https://servicos.toledo.br" + Endpoint.ACADEMICO_PROFESSOR_DISCIPLINAS, 
+                "https://servicos.unitoledo.br" + Endpoint.ACADEMICO_PROFESSOR_DISCIPLINAS, 
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<List<DisciplinasDTO>>(){});

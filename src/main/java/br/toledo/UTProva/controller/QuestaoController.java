@@ -144,10 +144,10 @@ public class QuestaoController{
             map.put("success", true);
             map.put("message", "Questão salva com sucesso !");
             return new ResponseEntity<>(map, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {            
             map.put("success", false);
-            map.put("message", "Erro ao salvar a Questão !");         
+            map.put("message", "Erro ao salvar a Questão !");      
+            map.put("message", e.getCause());    
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
     }

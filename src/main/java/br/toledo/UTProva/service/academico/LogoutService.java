@@ -27,7 +27,7 @@ public class LogoutService {
             RestTemplate restTemplate = new RestTemplate(requestFactory);
            
             ResponseEntity<Object> response = restTemplate.exchange(
-                "https://servicos.toledo.br" + Endpoint.ACADEMICO_LOGOUT, 
+                "https://servicos.unitoledo.br" + Endpoint.ACADEMICO_LOGOUT, 
                 HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<Object>(){});
