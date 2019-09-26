@@ -9,6 +9,7 @@
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/QuestoesFilterDTO.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/PrivilegiosDTO.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/ConteudoEntity.java
+/home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/entity/BaseEnadeEntity.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dto/DisciplinasRetornoDTO.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/model/dao/serviceJDBC/useful/DynamicSQL.java
 /home/fse_ddantas/Projetos/Toledo/ut-prova-api/src/main/java/br/toledo/UTProva/reports/export/CreatePDF.java

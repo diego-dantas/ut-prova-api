@@ -125,6 +125,7 @@ public class UserCTL {
                                        @RequestBody ContextoDTO contextoDTO) {
         try {
             Map<String, Object> map = new HashMap<String, Object>();
+            
             Gateway gateway = ServicePost.revalidToken(acessToken, contextoDTO);
 
             if (contextoDTO.getTipo().equals("COORDENADOR")) {
@@ -151,6 +152,9 @@ public class UserCTL {
             }else if(contextoDTO.getTipo().equals("ALUNO")){
 
                 AlunoService alunoService = new AlunoService();
+
+                
+
                 
                 List<Long> simulados = new ArrayList<>();
                 simulados.addAll(getAllSimuladoAluno(gateway.getToken(), contextoDTO.getIdUtilizador()));
@@ -194,7 +198,7 @@ public class UserCTL {
             AlunoService alunoService = new AlunoService();
             List<DisciplinasDTO> disciplinasDTO = alunoService.getDisciplinas(token);
             CursosDTO cursosDTOs = alunoService.getCursos(token);
-
+            
             //popula os id de disciplinas do aluno
             disciplinasDTO.forEach(n -> idsDisciplinas.add(n.getId()));
             simuladoDisciplinas = simuladoDisciplinasRepository.findByDisciplinasAndPeriodo(disciplinasDTO.get(0).getIdPeriodoLetivo(), idsDisciplinas);

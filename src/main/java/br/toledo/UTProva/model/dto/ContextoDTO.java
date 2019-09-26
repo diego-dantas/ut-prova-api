@@ -9,8 +9,8 @@ public class ContextoDTO {
     private String idUtilizador;
     private int idPeriodoLetivo;
     private int idMatrizAplicada;
-    private String inicioPeriodoLetivo;
-    private String terminoPeriodoLetivo;
+    // private String inicioPeriodoLetivo;
+    // private String terminoPeriodoLetivo;
     private int idNivelEnsino;
 
     public String getTipo() {
@@ -54,21 +54,21 @@ public class ContextoDTO {
         this.idNivelEnsino = idNivelEnsino;
     }
 
-    public String getTerminoPeriodoLetivo() {
-        return terminoPeriodoLetivo;
-    }
+    // public String getTerminoPeriodoLetivo() {
+    //     return terminoPeriodoLetivo;
+    // }
 
-    public void setTerminoPeriodoLetivo(String terminoPeriodoLetivo) {
-        this.terminoPeriodoLetivo = terminoPeriodoLetivo;
-    }
+    // public void setTerminoPeriodoLetivo(String terminoPeriodoLetivo) {
+    //     this.terminoPeriodoLetivo = terminoPeriodoLetivo;
+    // }
 
-    public String getInicioPeriodoLetivo() {
-        return inicioPeriodoLetivo;
-    }
+    // public String getInicioPeriodoLetivo() {
+    //     return inicioPeriodoLetivo;
+    // }
 
-    public void setInicioPeriodoLetivo(String inicioPeriodoLetivo) {
-        this.inicioPeriodoLetivo = inicioPeriodoLetivo;
-    }
+    // public void setInicioPeriodoLetivo(String inicioPeriodoLetivo) {
+    //     this.inicioPeriodoLetivo = inicioPeriodoLetivo;
+    // }
 
     public int getIdPeriodoLetivo() {
         return idPeriodoLetivo;

@@ -79,6 +79,7 @@ br/toledo/UTProva/model/dao/repository/QuestaoFilterRepository$5.class
 br/toledo/UTProva/service/academico/CoordenadoresService$3.class
 br/toledo/UTProva/model/dto/UserInfo.class
 br/toledo/UTProva/model/dao/entity/FonteEntity.class
+br/toledo/UTProva/reports/ExcelUseful.class
 br/toledo/UTProva/model/dao/serviceJDBC/SimuladoJDBC$2.class
 br/toledo/UTProva/model/dao/entity/SimuladoEntity.class
 br/toledo/UTProva/model/dao/repository/SimuladoFilterRepositoty.class
