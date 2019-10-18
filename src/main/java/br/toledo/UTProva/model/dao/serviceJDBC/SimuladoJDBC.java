@@ -270,6 +270,45 @@ public class SimuladoJDBC {
         return null;
     }
 
+    public List<SimuladoEntity> findSimuladosEnade(List<Long> idSimulados){
+        //date_format(s.data_hora_inicial, '%Y-%m-%d %H:%i:%s') as data_hora_inicial,  date_format(s.data_hora_final, '%Y-%m-%d %H:%i:%s') as data_hora_final,
+        try {
+            List<String> ids = new ArrayList<>();
+            idSimulados.forEach(n -> ids.add(n.toString()));
+            String  sql = "select 	distinct s.id, " +
+                        " s.data_hora_inicial, " +
+                        " s.data_hora_final, " +
+                        " s.nome, " +
+                        " s.rascunho, " +
+                        " if(sa.simulado_status_id > 0, 'Realizado', 'Pendente') as status_aluno" +
+                    " from 	simulados s "+
+                    " left join simulado_status_aluno sa on sa.simulado_id = s.id " +
+                    " where enade = true and s.id " + DynamicSQL.createInString(ids) +
+                    " order by s.id desc " 
+            ; 
+
+            
+            List<SimuladoEntity> simulados = this.jdbcTemplate.query(sql,
+            new Object[]{},
+            new RowMapper<SimuladoEntity>() {
+                public SimuladoEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    SimuladoEntity simulado = new SimuladoEntity();
+                    simulado.setId(rs.getLong("id"));
+                    simulado.setNome(rs.getString("nome"));
+                    simulado.setStatus(rs.getString("status_aluno"));
+                    simulado.setRascunho(rs.getBoolean("rascunho"));
+                    simulado.setDataHoraInicial(rs.getTimestamp("data_hora_inicial"));
+                    simulado.setDataHoraFinal(rs.getTimestamp("data_hora_final"));
+                    return simulado;
+                }
+            });
+            return simulados;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public int finalizaSimulado(Long idSimulado, String idAluno){
         try {

@@ -3,6 +3,7 @@ package br.toledo.UTProva.model.dao.serviceJDBC;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import br.toledo.UTProva.model.dao.serviceJDBC.useful.DynamicSQL;
 import br.toledo.UTProva.model.dao.serviceJDBC.useful.FormatDecimal;
+import br.toledo.UTProva.model.dto.SimuladoDTO;
 import br.toledo.UTProva.model.dto.SimuladoDashAluno;
+import br.toledo.UTProva.reports.enade.EnadeAlunoVO;
 
 @Service
 public class AlunoJDBC{
@@ -146,6 +149,34 @@ public class AlunoJDBC{
          
             map.put("result", simuladoDashAluno);
             return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<EnadeAlunoVO> getAlunoConceitoEnade(List<SimuladoDTO> simuladoDTOs){
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            List<Long> listLong = new ArrayList<>();
+            simuladoDTOs.forEach(n -> listLong.add(n.getId()));
+            
+            String sql = "select distinct id_aluno, nome_aluno from simulado_status_aluno where simulado_id " + DynamicSQL.createInLongs(listLong);
+            
+            
+            List<EnadeAlunoVO> simuladoDashAluno = this.jdbcTemplate.query(sql,
+                new Object[]{},
+                new RowMapper<EnadeAlunoVO>(){
+                    public EnadeAlunoVO mapRow(ResultSet rs, int numRow) throws SQLException{
+                        EnadeAlunoVO enadeAlunoVO = new EnadeAlunoVO();                        
+                        enadeAlunoVO.setRaAluno(rs.getString("id_aluno"));
+                        enadeAlunoVO.setNomeAluno(rs.getString("nome_aluno"));
+                   
+                        return enadeAlunoVO;
+                    }
+                }
+            );                
+            return simuladoDashAluno;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

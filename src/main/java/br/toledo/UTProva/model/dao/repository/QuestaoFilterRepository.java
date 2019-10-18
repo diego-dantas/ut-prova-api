@@ -101,7 +101,8 @@ public class QuestaoFilterRepository {
         "join tipo_questao tq on tq.id = q.tipo_id " + 
         "join tipo_resposta tr on tr.id = q.tipo_resposta_id " +
         "join fonte f on f.id = q.fonte_id \n" + sql;
-
+        
+        System.out.println(sql2);
         try {
             List<QuestaoDTO> questaoDTO = this.jdbcTemplate.query(sql2,
             new Object[]{},
@@ -196,19 +197,31 @@ public class QuestaoFilterRepository {
 
 
     public List<QuestaoRetornoDTO> getQuestao(Long idSimulado, String idAluno, String nomeAluno){
+
         
-        String sql2 = "select q.id, q.descricao, q.imagem, sr.id_alternativa "+
+        String sql2 = " select q.id, q.descricao, q.imagem, sr.id_alternativa, q.conteudo_id "+
+                      " from questoes q "+
+                      " join simulado_questoes sq on sq.questao_id = q.id "+
+                      " left join simulado_resolucao sr on sr.id_questao = q.id and sr.id_aluno = '" + idAluno + "' and sq.simulado_id = sr.id_simulado "+
+                      " where q.tipo_resposta_id = 1 " +
+                      " and sq.simulado_id = " + idSimulado + " order by q.conteudo_id ";
+        
+        String sqlContent = "select distinct(q.conteudo_id)"+
                       "from questoes q "+
                       "join simulado_questoes sq on sq.questao_id = q.id "+
                       "left join simulado_resolucao sr on sr.id_questao = q.id and sr.id_aluno = '" + idAluno + "' and sq.simulado_id = sr.id_simulado "+
                       "where q.tipo_resposta_id = 1 " +
                       "and sq.simulado_id = " + idSimulado;
-                      
+       
  
          try {
             String sqlStatus = "select count(id) from simulado_status_aluno where id_aluno = '" + idAluno + "' and simulado_id = " + idSimulado;
             int qtd = this.jdbcTemplate.queryForObject(sqlStatus, Integer.class);
 
+
+            List<Long> idsContent = this.jdbcTemplate.queryForList(sqlContent, Long.class);
+             // Randomiza os ids das questoes
+             Collections.shuffle(idsContent);
 
             if(qtd == 0){
 
@@ -285,6 +298,10 @@ public class QuestaoFilterRepository {
                     
             }
 
+
+            // idsContent.forEach(n -> {
+
+            // });
             
              List<QuestaoRetornoDTO> questaoDTO = this.jdbcTemplate.query(sql2,
              new Object[]{},
@@ -331,5 +348,67 @@ public class QuestaoFilterRepository {
              e.printStackTrace();
          }
          return null;
-     }
+    }
+
+
+    public List<QuestaoRetornoDTO> getQuestaoAlternativas(Long idSimulado){
+
+        
+        String sql2 = " select q.id, q.descricao, q.imagem, q.conteudo_id "+
+                      " from questoes q "+
+                      " join simulado_questoes sq on sq.questao_id = q.id "+                      
+                      " where q.tipo_resposta_id = 1 " +
+                      " and sq.simulado_id = " + idSimulado + " order by q.conteudo_id ";
+    
+       
+ 
+         try {
+            
+             List<QuestaoRetornoDTO> questaoDTO = this.jdbcTemplate.query(sql2,
+             new Object[]{},
+             new RowMapper<QuestaoRetornoDTO>() {
+             public QuestaoRetornoDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+                QuestaoRetornoDTO questao = new QuestaoRetornoDTO();
+                questao.setId(rs.getLong("id"));
+                questao.setDescricao(rs.getString("descricao"));
+                questao.setImagem(rs.getString("imagem"));
+                // questao.setRespondida(rs.getLong("id_alternativa"));
+                 
+                 return questao;
+             }
+             });
+ 
+            List<QuestaoRetornoDTO> questoes = new ArrayList<>();
+            for (QuestaoRetornoDTO q  : questaoDTO) {
+                QuestaoRetornoDTO questao = new QuestaoRetornoDTO();
+                 questao.setId(q.getId());
+                 questao.setDescricao(q.getDescricao());
+                 questao.setImagem(q.getImagem());
+                 questao.setRespondida(q.getRespondida());
+
+                 List<AlternativaRetornoDTO> alternativaDTOs = this.jdbcTemplate.query("select * from alternativa where questao_id = " + q.getId(),
+                 new Object[]{},
+                 new RowMapper<AlternativaRetornoDTO>() {
+                 public AlternativaRetornoDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    AlternativaRetornoDTO alternativaDTO = new AlternativaRetornoDTO();
+                     alternativaDTO.setId(rs.getLong("id"));
+                     alternativaDTO.setDescricao(rs.getString("descricao"));
+                     
+                     return alternativaDTO;
+                 }
+                 });
+ 
+                 questao.setAlternativas(alternativaDTOs);
+                 questoes.add(questao);
+             }
+            
+ 
+ 
+             return questoes;
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+         return null;
+    }
+
 }

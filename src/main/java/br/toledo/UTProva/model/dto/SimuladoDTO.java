@@ -11,6 +11,7 @@ public class SimuladoDTO {
     private Date dataHoraFinal;
     private boolean rascunho;
     private boolean enade;
+    private boolean isContent;
     private String status;
     private List<QuestaoDTO> questoes;
     private List<CursosDTO> cursos;
@@ -19,6 +20,14 @@ public class SimuladoDTO {
 
     public String getNome() {
         return nome;
+    }
+
+    public boolean isContent() {
+        return isContent;
+    }
+
+    public void setContent(boolean isContent) {
+        this.isContent = isContent;
     }
 
     public String getStatus() {

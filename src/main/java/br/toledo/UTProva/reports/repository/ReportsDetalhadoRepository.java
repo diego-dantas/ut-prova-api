@@ -3,6 +3,7 @@ package br.toledo.UTProva.reports.repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.print.Doc;
@@ -11,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import br.toledo.UTProva.reports.dto.AcertosDetalhado;
 import br.toledo.UTProva.reports.dto.DetalhadoReports;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -192,7 +195,84 @@ public class ReportsDetalhadoRepository{
 
     }
 
+    public List<AcertosDetalhado> reportsAcertosDetalhados(Long idSimulado){
+        try {            
+            String sql = 
+                " select 	ssa.id_aluno,  " + 
+                " 		ssa.nome_aluno, " + 
+                "         trim(c.description) as conteudo, " + 
+                "         q.id as id_questao, " + 
+                "         a.correta " + 
+                " from 	simulado_status_aluno ssa " + 
+                " inner join simulado_resolucao sr on sr.id_simulado = ssa.simulado_id and sr.id_aluno = ssa.id_aluno " + 
+                " inner join questoes q on q.id = sr.id_questao " + 
+                " inner join conteudos c on c.id = q.conteudo_id " + 
+                " left join alternativa a on a.id = sr.id_alternativa " + 
+                " where 	 " + 
+                " 	ssa.simulado_id = " +  idSimulado + 
+                " order by ssa.id_aluno, trim(c.description), q.id ";
 
+            List<AcertosDetalhado> rAcertosDetalhados = this.jdbcTemplate.query(sql, 
+                new Object[]{},
+                new RowMapper<AcertosDetalhado>(){
+                    public AcertosDetalhado mapRow(ResultSet rs, int numRow) throws SQLException{
+                        AcertosDetalhado acertosDetalhado = new AcertosDetalhado();
+                        
+                        acertosDetalhado.setIdAluno(rs.getLong("id_aluno"));
+                        acertosDetalhado.setNomeAluno(rs.getString("nome_aluno"));
+                        acertosDetalhado.setConteudo(rs.getString("conteudo"));
+                        acertosDetalhado.setIdQuestao(rs.getLong("id_questao"));
+                        acertosDetalhado.setCorreta(rs.getString("correta"));
+                        return acertosDetalhado;
+                    }
+                }
+            );                
+
+            return rAcertosDetalhados;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<AcertosDetalhado> reportsAcertosDetalhadosResumo(Long idSimulado){
+        try {            
+            String sql = 
+                " select 	ssa.id_aluno,  " + 
+                " 		ssa.nome_aluno, " + 
+                "         trim(c.description) as conteudo, " +                 
+                "         sum(a.correta) qtd_correta" + 
+                " from 	simulado_status_aluno ssa " + 
+                " inner join simulado_resolucao sr on sr.id_simulado = ssa.simulado_id and sr.id_aluno = ssa.id_aluno " + 
+                " inner join questoes q on q.id = sr.id_questao " + 
+                " inner join conteudos c on c.id = q.conteudo_id " + 
+                " left join alternativa a on a.id = sr.id_alternativa " + 
+                " where 	 " + 
+                " 	ssa.simulado_id = " +  idSimulado + 
+                " group by ssa.id_aluno, ssa.nome_aluno, trim(c.description) " + 
+                " order by ssa.id_aluno, ssa.nome_aluno, trim(c.description) ";
+
+            List<AcertosDetalhado> rAcertosDetalhados = this.jdbcTemplate.query(sql, 
+                new Object[]{},
+                new RowMapper<AcertosDetalhado>(){
+                    public AcertosDetalhado mapRow(ResultSet rs, int numRow) throws SQLException{
+                        AcertosDetalhado acertosDetalhado = new AcertosDetalhado();
+                        
+                        acertosDetalhado.setIdAluno(rs.getLong("id_aluno"));
+                        acertosDetalhado.setNomeAluno(rs.getString("nome_aluno"));
+                        acertosDetalhado.setConteudo(rs.getString("conteudo"));                        
+                        acertosDetalhado.setCorreta(rs.getString("qtd_correta"));
+                        return acertosDetalhado;
+                    }
+                }
+            );                
+
+            return rAcertosDetalhados;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     private static double formatDecimal(Double valor){
 

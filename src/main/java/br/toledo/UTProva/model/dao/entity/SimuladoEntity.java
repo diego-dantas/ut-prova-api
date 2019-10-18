@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "simulados")
 public class SimuladoEntity implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Long id;
     private String nome;
@@ -25,6 +25,7 @@ public class SimuladoEntity implements Serializable {
     private Date dataHoraFinal;
     private boolean rascunho;
     private boolean enade;
+    private boolean isContent;
     private String status;
     private List<SimuladoQuestoesEntity> simuladoQuestao;
     private List<SimuladoCursosEntity> simuladoCursos;
@@ -37,6 +38,15 @@ public class SimuladoEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
         return id;
+    }
+
+    @Column(name = "conteudo", nullable = false)
+    public boolean isContent() {
+        return isContent;
+    }
+
+    public void setContent(boolean isContent) {
+        this.isContent = isContent;
     }
 
     public boolean isEnade() {

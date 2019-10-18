@@ -28,6 +28,7 @@ import br.toledo.UTProva.model.dao.serviceJDBC.AlunoJDBC;
 import br.toledo.UTProva.model.dao.serviceJDBC.SimuladoJDBC;
 import br.toledo.UTProva.model.dao.serviceJDBC.useful.DynamicSQL;
 import br.toledo.UTProva.model.dto.AlternativaDTO;
+import br.toledo.UTProva.model.dto.AlternativaRetornoDTO;
 import br.toledo.UTProva.model.dto.CursosDTO;
 import br.toledo.UTProva.model.dto.DisciplinasDTO;
 import br.toledo.UTProva.model.dto.FonteDTO;
@@ -40,13 +41,33 @@ import br.toledo.UTProva.model.dto.SimuladoStatusDTO;
 import br.toledo.UTProva.model.dto.TipoRespostaDTO;
 import br.toledo.UTProva.model.dto.TurmasDTO;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.itextpdf.io.IOException;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -87,6 +108,13 @@ public class SimuladoController {
     private AlunoJDBC alunoJDBC;
 
 
+
+    private static String UPLOAD_DIR = System.getProperty("user.dir");
+    public static String getUPLOAD_DIR() {
+        return UPLOAD_DIR;
+    }
+
+
     @PostMapping(value = "/createUpdateSimulado")
     public ResponseEntity<SimuladoDTO> postMethodName(@RequestBody SimuladoDTO simuladoDTO) {
 
@@ -97,12 +125,14 @@ public class SimuladoController {
             List<SimuladoCursosEntity> simuladoCursos = new ArrayList<>();
             List<SimuladoTurmasEntity> simuladoTurmas= new ArrayList<>();
             List<SimuladoDisciplinasEntity> simuladoDisciplinas= new ArrayList<>();
+            
 
             simulado.setId(simuladoDTO.getId());
             simulado.setNome(simuladoDTO.getNome());
             simulado.setRascunho(simuladoDTO.isRascunho());
             simulado.setEnade(simuladoDTO.isEnade());
             simulado.setStatus(simuladoDTO.getStatus());
+            simulado.setContent(simuladoDTO.isContent());
             simulado.setDataHoraInicial(simuladoDTO.getDataHoraInicial());
             simulado.setDataHoraFinal(simuladoDTO.getDataHoraFinal());
 
@@ -286,6 +316,126 @@ public class SimuladoController {
                     sDTO.setNome(simuladoRetorno.getNome());
                     sDTO.setRascunho(simuladoRetorno.isRascunho());
                     sDTO.setEnade(simuladoRetorno.isEnade());
+                    sDTO.setContent(simuladoRetorno.isContent());
+                    sDTO.setStatus(simuladoRetorno.getStatus());
+                    sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
+                    sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
+                    
+                    List<SimuladoCursosEntity> sc = simuladoCursosRepository.findCursoBySimulado(simuladoRetorno.getId());
+                    for (SimuladoCursosEntity si : sc) {
+                        CursosDTO cursosDTO = new CursosDTO();    
+                        cursosDTO.setId(si.getIdCurso());
+                        cursosDTO.setNome(si.getNome());
+                        cursosDTOs.add(cursosDTO);
+                    }
+                    sDTO.setCursos(cursosDTOs);
+    
+    
+                    List<SimuladoTurmasEntity> st = simuladoTurmasRepository.findTurmasBySimulado(simuladoRetorno.getId());
+                    for (SimuladoTurmasEntity si : st) {
+                       TurmasDTO turmasDTO = new  TurmasDTO(); 
+                        turmasDTO.setId(si.getIdTurma());
+                        turmasDTO.setNome(si.getNome());
+                        turmasDTOs.add(turmasDTO);
+                    }
+                    sDTO.setTurmas(turmasDTOs);
+    
+    
+                    List<SimuladoDisciplinasEntity> sd = simuladoDisciplinasRepository.findDisciplinasBySimulado(simuladoRetorno.getId());
+                    for (SimuladoDisciplinasEntity si : sd) {
+                        DisciplinasDTO disciplinasDTO = new DisciplinasDTO();    
+                        disciplinasDTO.setId(si.getIdDisciplina());
+                        disciplinasDTO.setNome(si.getNome());
+                        disciplinasDTOs.add(disciplinasDTO);
+                    }
+                    sDTO.setDisciplinas(disciplinasDTOs);
+                  
+                    simuladoDTOs.add(sDTO);
+                }
+            }
+            
+            return ResponseEntity.ok(simuladoDTOs);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/getAllSimuladoEnade")
+    public ResponseEntity<List<SimuladoDTO>> getAllSimuladoEnade(@RequestBody SimuladoDTO simuladoDTO) {
+
+        try {
+            List<SimuladoDisciplinasEntity> simuladoDisciplinas = new ArrayList<>();
+            List<SimuladoCursosEntity>      simuladoCursos      = new ArrayList<>();
+            List<SimuladoTurmasEntity>      simuladoTurmas      = new ArrayList<>();
+            List<SimuladoDTO>               simuladoDTOs        = new ArrayList<>();
+            List<String> idsDisciplinas = new ArrayList<>();
+            List<String> idsTurmas      = new ArrayList<>();
+            List<String> idsCursos      = new ArrayList<>();
+            List<Long>   idsSimulados   = new ArrayList<>();
+            
+            simuladoDTO.getCursos().forEach(n -> idsCursos.add(n.getId()));
+            simuladoDTO.getTurmas().forEach(n -> idsTurmas.add(n.getId()));
+            simuladoDTO.getDisciplinas().forEach(n -> idsDisciplinas.add(n.getId()));
+
+            if(simuladoDTO.getCursos() != null && simuladoDTO.getCursos().size() > 0){
+                simuladoDTO.getCursos().forEach(n -> idsCursos.add(n.getId()));
+                simuladoCursos = simuladoCursosRepository.findByCursoAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsCursos);
+                if(!simuladoCursos.isEmpty()){
+                    simuladoCursos.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }
+
+                simuladoTurmas = simuladoTurmasRepository.findTurmasByCursosAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsCursos);
+                if(!simuladoTurmas.isEmpty()){
+                    simuladoTurmas.forEach(n -> idsTurmas.add(n.getIdTurma())); 
+                    simuladoTurmas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                    simuladoDisciplinas = simuladoDisciplinasRepository.findByInTurmasAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsTurmas);
+                }
+                    
+                if(!simuladoDisciplinas.isEmpty()){
+                    simuladoDisciplinas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }
+                    
+            }
+
+            if(simuladoDTO.getTurmas() != null && simuladoDTO.getTurmas().size() > 0){
+                simuladoDTO.getTurmas().forEach(n -> idsTurmas.add(n.getId()));
+                simuladoTurmas = simuladoTurmasRepository.findByTurmasAndPeriodo(simuladoDTO.getTurmas().get(0).getIdPeriodoLetivo(), idsTurmas);
+                if(!simuladoTurmas.isEmpty()){
+                    simuladoTurmas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                    simuladoDisciplinas  = simuladoDisciplinasRepository.findByInTurmasAndPeriodo(simuladoDTO.getCursos().get(0).getIdPeriodoLetivo(), idsTurmas);
+                }
+                    
+                if(!simuladoDisciplinas.isEmpty()){
+                    simuladoDisciplinas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }       
+            }
+            
+            if(simuladoDTO.getDisciplinas() != null && simuladoDTO.getDisciplinas().size() > 0){
+                simuladoDTO.getDisciplinas().forEach(n -> idsDisciplinas.add(n.getId()));
+                simuladoDisciplinas = simuladoDisciplinasRepository.findByDisciplinasAndPeriodo(simuladoDTO.getDisciplinas().get(0).getIdPeriodoLetivo(), idsDisciplinas);
+                if(!simuladoDisciplinas.isEmpty()){
+                    simuladoDisciplinas.forEach(n -> idsSimulados.add(n.getSimulado().getId()));
+                }
+            }   
+
+            
+            if(idsSimulados.size() > 0){
+                List<SimuladoEntity> simuladosRetorno = simuladoJDBC.findSimuladosEnade(idsSimulados);
+                for(SimuladoEntity  simuladoRetorno : simuladosRetorno){
+                    
+                    
+                    SimuladoDTO sDTO = new SimuladoDTO();
+                    List<CursosDTO> cursosDTOs = new ArrayList<>();
+                    List<TurmasDTO> turmasDTOs = new ArrayList<>();
+                    List<DisciplinasDTO> disciplinasDTOs = new ArrayList<>();
+                    
+                    sDTO.setId(simuladoRetorno.getId());
+                    sDTO.setNome(simuladoRetorno.getNome());
+                    sDTO.setRascunho(simuladoRetorno.isRascunho());
+                    sDTO.setEnade(simuladoRetorno.isEnade());
+                    sDTO.setContent(simuladoRetorno.isContent());
                     sDTO.setStatus(simuladoRetorno.getStatus());
                     sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
                     sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
@@ -352,6 +502,7 @@ public class SimuladoController {
             sDTO.setNome(simuladoRetorno.getNome());
             sDTO.setRascunho(simuladoRetorno.isRascunho());
             sDTO.setEnade(simuladoRetorno.isEnade());
+            sDTO.setContent(simuladoRetorno.isContent());
             sDTO.setStatus(simuladoRetorno.getStatus());
             sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
             sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
@@ -478,6 +629,7 @@ public class SimuladoController {
             sDTO.setNome(simuladoRetorno.getNome());
             sDTO.setRascunho(simuladoRetorno.isRascunho());
             sDTO.setEnade(simuladoRetorno.isEnade());
+            sDTO.setContent(simuladoRetorno.isContent());
             sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
             sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
 
@@ -664,6 +816,7 @@ public class SimuladoController {
                 sDTO.setNome(simuladoRetorno.getNome());
                 sDTO.setRascunho(simuladoRetorno.isRascunho());
                 sDTO.setEnade(simuladoRetorno.isEnade());
+                sDTO.setContent(simuladoRetorno.isContent());
                 sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
                 sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
                 
@@ -960,4 +1113,154 @@ public class SimuladoController {
         
     }
 
+
+
+    @GetMapping(value = "/print/simulado/{idSimulado}")
+    public void printSimulado(@PathVariable("idSimulado") Long idSimulado, HttpSession session,HttpServletResponse response)
+                throws DocumentException, MalformedURLException, IOException {
+
+        System.out.println("id " + idSimulado);
+
+        try {
+
+            SimuladoEntity simulado = simuladoRepository.getOne(idSimulado);
+            
+            String name = simulado.getNome().replace(" ", "_") + ".pdf";
+            File directory = new File(getUPLOAD_DIR() + "/reports/");
+
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+            String source = getUPLOAD_DIR() + "/reports/" + "" + name;
+
+            
+            Image imgSoc = Image.getInstance(getUPLOAD_DIR() + "/imgs/unitoledo.png");
+            imgSoc.scaleToFit(100,100);
+
+            Document document = new Document(PageSize.A4);
+    
+            PdfWriter writer =  PdfWriter.getInstance(document, new FileOutputStream(source));
+            document.open();
+            Font f = new Font(Font.FontFamily.COURIER, 15, Font.BOLD);
+            
+            Paragraph p1 = new Paragraph();            
+            p1.add(imgSoc);
+            Paragraph p2 = new Paragraph(simulado.getNome(), f);
+            p2.setAlignment(Element.ALIGN_CENTER);
+            document.add(p1);
+            document.add(p2);            
+
+            QuestaoEntity questaoEntity =  questaoRepository.getOne(14L);
+            QuestaoEntity questaoEntity1 =  questaoRepository.getOne(17L);
+            
+            List<QuestaoRetornoDTO> questaoRetornoDTOs = questaoFilterRepository.getQuestaoAlternativas(idSimulado);
+            Integer qt = 1;
+            for(QuestaoRetornoDTO q : questaoRetornoDTOs) {
+                System.out.println("id da questão " + q.getId());
+                if(q.getId() == 14L){
+                    Paragraph p = new Paragraph("Questão " + String.valueOf(qt++), f);
+                    p.setAlignment(Element.ALIGN_LEFT);
+                    document.add(p);
+                    StringBuilder htmlBuilder = new StringBuilder();
+                    htmlBuilder.append(new String("<hr/><br/>"));                 
+                    
+                    htmlBuilder.append(new String(q.getDescricao()));            
+                    htmlBuilder.append(new String("<br/>"));                
+                    htmlBuilder.append(new String("<br/><br/>"));
+    
+                    InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
+                    XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+    
+    
+                    // for(AlternativaRetornoDTO a : q.getAlternativas()){ 
+                    //     // System.out.println("id da alter " + a.getId());
+                    //     if(a.getId() == 713){
+                    //         Paragraph pa = new Paragraph("Alternativa A" + String.valueOf(qt++));
+                    //         pa.setAlignment(Element.ALIGN_LEFT);
+                    //         document.add(pa);
+                    //         htmlBuilder.append(new String("<p>Alternativa A</p>")); 
+                    //         htmlBuilder.append(new String("<p>Somente as afirmações I, II e III estão corretas</p>"));
+                    //         htmlBuilder.append(new String("<p></p>"));
+                    //         htmlBuilder.append(new String("<pre style='text-align:start;'># include &lt;iostream&gt;<br><br>class Passaro                       // classe base<br>{<br>public:<br>   virtual void MostraNome()<br>   {<br>      std::cout &lt;&lt; 'um passaro';<br>   }<br>   virtual ~Passaro() {}<br>};<br><br>class Cisne: public Passaro         // Cisne é um pássaro<br>{<br>public:<br>   void MostraNome()<br>   {<br>      std::cout &lt;&lt; 'um cisne';        // sobrecarrega a função virtual<br>   }<br>};<br><br>int main()<br>{<br>   Passaro* passaro = new Cisne;<br><br>   passaro-&gt;MostraNome();            // produz na saída 'um cisne', e não 'um pássaro'<br><br>   delete passaro;<br>}</pre>"));
+                    //         htmlBuilder.append(new String("<p></p>"));
+                    //         htmlBuilder.append(new String("<p>Texto após im</p>"));
+    
+                    //         htmlBuilder.append(new String(a.getDescricao())); 
+                                                
+                    //     }
+                       
+                    // }
+
+                    htmlBuilder.append(new String("<p>Alternativa A</p>")); 
+                    htmlBuilder.append(new String("<p>Somente as afirmações I, II e III estão corretas</p>"));
+                    htmlBuilder.append(new String("<p></p>"));
+                    htmlBuilder.append(new String("<pre style='text-align:start;'>if (!directory.exists()) {</pre>"));
+                    htmlBuilder.append(new String("<pre><span style='color: rgba(0,0,0,0.65);background-color: rgb(241,241,241);font-size: 14px;font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;'>      directory.mkdir();</span></pre>"));
+                    htmlBuilder.append(new String("<pre><span style='color: rgba(0,0,0,0.65);background-color: rgb(241,241,241);font-size: 14px;font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;'>}</span></pre>"));                    
+                    htmlBuilder.append(new String("<p></p>"));
+                    htmlBuilder.append(new String("<p>Texto após im</p>"));
+    
+                    is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
+                    XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+                }
+                
+                
+                
+            }
+
+
+            // StringBuilder htmlBuilder = new StringBuilder();
+            // htmlBuilder.append(new String("<hr/><br/>"));      
+            // htmlBuilder.append(new String("<h3>"+String.valueOf(qt++)+"<h3/>"));      
+            // htmlBuilder.append(new String(questaoEntity.getDescricao()));            
+            // htmlBuilder.append(new String("<br/><br/><br/><hr/>"));
+            // InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
+            // XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+            // Paragraph p3 = new Paragraph("Questão 01", f);
+            // p3.setAlignment(Element.ALIGN_LEFT);
+            // document.add(p3);
+            // StringBuilder htmlBuilder = new StringBuilder();
+            // htmlBuilder.append(new String("<hr/><br/>")); 
+         
+            // htmlBuilder.append(new String(questaoEntity.getDescricao()));            
+            // htmlBuilder.append(new String("<br/><br/><br/>"));              
+            // InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
+            // XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+
+            // Paragraph p4 = new Paragraph("Questão 02", f);
+            // p4.setAlignment(Element.ALIGN_LEFT);
+            // document.add(p4);
+            
+            // StringBuilder htmlBuilder1 = new StringBuilder();
+            // htmlBuilder1.append(new String(questaoEntity1.getDescricao()));   
+            // htmlBuilder1.append(new String("<br/><br/><br/><hr/>"));          
+            // InputStream is1 = new ByteArrayInputStream(htmlBuilder1.toString().getBytes());
+            // XMLWorkerHelper.getInstance().parseXHtml(writer, document, is1);  
+            
+            // Paragraph p5 = new Paragraph("Questão 03", f);
+            // p5.setAlignment(Element.ALIGN_LEFT);
+            // document.add(p5);
+            // StringBuilder htmlBuilder2 = new StringBuilder();
+            // htmlBuilder2.append(new String(questaoEntity.getDescricao()));   
+            // htmlBuilder2.append(new String("<br/><br/><br/>"));         
+            // InputStream is2 = new ByteArrayInputStream(htmlBuilder2.toString().getBytes());
+            // XMLWorkerHelper.getInstance().parseXHtml(writer, document, is2);  
+            
+    
+        
+            document.close();
+            
+            String filePathToBeServed = source;
+            File fileToDownload = new File(filePathToBeServed);
+
+            InputStream inputStream = new FileInputStream(fileToDownload);
+            response.setContentType("application/force-download");
+            response.setHeader("Content-Disposition", "attachment; filename="+name); 
+            IOUtils.copy(inputStream, response.getOutputStream());
+            response.flushBuffer();
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

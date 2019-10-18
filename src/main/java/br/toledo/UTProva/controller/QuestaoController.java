@@ -71,14 +71,14 @@ public class QuestaoController{
         
         try {
 
-            if(questaoDTO.getId() != null){
-                int qtd = simuladoQuestoesRepository.countSimuladoAluno(questaoDTO.getId());
-                if(qtd > 0){
-                    map.put("success", false);
-                    map.put("message", "Não foi possível efetuar a alteração. Motivo: A Questão possui vínculo com Simulado iniciado.");
-                    return new ResponseEntity<>(map, HttpStatus.OK);
-                }
-            }
+            // if(questaoDTO.getId() != null){
+            //     int qtd = simuladoQuestoesRepository.countSimuladoAluno(questaoDTO.getId());
+            //     if(qtd > 0){
+            //         map.put("success", false);
+            //         map.put("message", "Não foi possível efetuar a alteração. Motivo: A Questão possui vínculo com Simulado iniciado.");
+            //         return new ResponseEntity<>(map, HttpStatus.OK);
+            //     }
+            // }
 
             if(questaoDTO.getId() != null && questaoDTO.isStatus() == false){
                 int qtd = simuladoQuestoesRepository.countSimuladoByQuestao(questaoDTO.getId());
@@ -231,7 +231,7 @@ public class QuestaoController{
             if(questoesFilterDTO.getDiscursiva().equalsIgnoreCase("S") || questoesFilterDTO.getDiscursiva().equalsIgnoreCase("N")) {
                 Long discursiva = 1l;
                 if(questoesFilterDTO.getDiscursiva().equalsIgnoreCase("S")) discursiva = 2l;
-if(qtdFilter == 0) {
+                if(qtdFilter == 0) {
                     sql += " where tipo_resposta_id = " + discursiva;
                 }else {
                     sql +=" and tipo_resposta_id = " + discursiva;
@@ -309,7 +309,7 @@ if(qtdFilter == 0) {
                 qtdFilter++ ;
             }
             
-
+            
             List<QuestaoDTO> questaoDTO = questaoFilterRepository.joinQuestao(sql);
             return ResponseEntity.ok(questaoDTO);
 
