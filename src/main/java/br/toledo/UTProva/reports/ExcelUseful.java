@@ -128,8 +128,10 @@ public class ExcelUseful {
                     } 
                     //SetConceitoEnadeFaixa
                     if(currentCell.getColumnIndex() == 11 && currentCell.getRowIndex() > 0){                        
-                        if(currentCell.getCellTypeEnum() == CellType.BLANK)  
+                        if(currentCell.getCellTypeEnum() == CellType.BLANK) {
                             vazio = true;
+                        } 
+                            
                         if(currentCell.getCellTypeEnum() == CellType.STRING)  
                             enadeVO.setConceitoEnadeFaixa(Integer.valueOf(currentCell.getStringCellValue()));
                         if(currentCell.getCellTypeEnum() == CellType.NUMERIC) 

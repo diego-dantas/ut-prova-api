@@ -1,46 +1,5 @@
 package br.toledo.UTProva.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import br.toledo.UTProva.model.dao.entity.AlternativaEntity;
-import br.toledo.UTProva.model.dao.entity.FonteEntity;
-import br.toledo.UTProva.model.dao.entity.QuestaoEntity;
-import br.toledo.UTProva.model.dao.entity.SimuladoCursosEntity;
-import br.toledo.UTProva.model.dao.entity.SimuladoDisciplinasEntity;
-import br.toledo.UTProva.model.dao.entity.SimuladoEntity;
-import br.toledo.UTProva.model.dao.entity.SimuladoQuestoesEntity;
-import br.toledo.UTProva.model.dao.entity.SimuladoResolucaoEntity;
-import br.toledo.UTProva.model.dao.entity.SimuladoTurmasEntity;
-import br.toledo.UTProva.model.dao.entity.TipoRespostaEntity;
-import br.toledo.UTProva.model.dao.repository.AlternativaRepository;
-import br.toledo.UTProva.model.dao.repository.FonteRepository;
-import br.toledo.UTProva.model.dao.repository.QuestaoRepository;
-import br.toledo.UTProva.model.dao.repository.SimuladoCursosRepository;
-import br.toledo.UTProva.model.dao.repository.SimuladoDisciplinasRepository;
-import br.toledo.UTProva.model.dao.repository.SimuladoFilterRepositoty;
-import br.toledo.UTProva.model.dao.repository.QuestaoFilterRepository;
-import br.toledo.UTProva.model.dao.repository.SimuladoQuestoesRepository;
-import br.toledo.UTProva.model.dao.repository.SimuladoRepository;
-import br.toledo.UTProva.model.dao.repository.SimuladoTurmasRepository;
-import br.toledo.UTProva.model.dao.repository.TipoRespostaRepository;
-import br.toledo.UTProva.model.dao.serviceJDBC.AlunoJDBC;
-import br.toledo.UTProva.model.dao.serviceJDBC.SimuladoJDBC;
-import br.toledo.UTProva.model.dao.serviceJDBC.useful.DynamicSQL;
-import br.toledo.UTProva.model.dto.AlternativaDTO;
-import br.toledo.UTProva.model.dto.AlternativaRetornoDTO;
-import br.toledo.UTProva.model.dto.CursosDTO;
-import br.toledo.UTProva.model.dto.DisciplinasDTO;
-import br.toledo.UTProva.model.dto.FonteDTO;
-import br.toledo.UTProva.model.dto.QuestaoDTO;
-import br.toledo.UTProva.model.dto.QuestaoRetornoDTO;
-import br.toledo.UTProva.model.dto.SimuladoDTO;
-import br.toledo.UTProva.model.dto.SimuladoResolucaoDTO;
-import br.toledo.UTProva.model.dto.SimuladoRetornoDTO;
-import br.toledo.UTProva.model.dto.SimuladoStatusDTO;
-import br.toledo.UTProva.model.dto.TipoRespostaDTO;
-import br.toledo.UTProva.model.dto.TurmasDTO;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,6 +34,43 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.toledo.UTProva.model.dao.entity.AlternativaEntity;
+import br.toledo.UTProva.model.dao.entity.FonteEntity;
+import br.toledo.UTProva.model.dao.entity.QuestaoEntity;
+import br.toledo.UTProva.model.dao.entity.SimuladoCursosEntity;
+import br.toledo.UTProva.model.dao.entity.SimuladoDisciplinasEntity;
+import br.toledo.UTProva.model.dao.entity.SimuladoEntity;
+import br.toledo.UTProva.model.dao.entity.SimuladoQuestoesEntity;
+import br.toledo.UTProva.model.dao.entity.SimuladoResolucaoEntity;
+import br.toledo.UTProva.model.dao.entity.SimuladoTurmasEntity;
+import br.toledo.UTProva.model.dao.entity.TipoRespostaEntity;
+import br.toledo.UTProva.model.dao.repository.AlternativaRepository;
+import br.toledo.UTProva.model.dao.repository.FonteRepository;
+import br.toledo.UTProva.model.dao.repository.QuestaoFilterRepository;
+import br.toledo.UTProva.model.dao.repository.QuestaoRepository;
+import br.toledo.UTProva.model.dao.repository.SimuladoCursosRepository;
+import br.toledo.UTProva.model.dao.repository.SimuladoDisciplinasRepository;
+import br.toledo.UTProva.model.dao.repository.SimuladoFilterRepositoty;
+import br.toledo.UTProva.model.dao.repository.SimuladoQuestoesRepository;
+import br.toledo.UTProva.model.dao.repository.SimuladoRepository;
+import br.toledo.UTProva.model.dao.repository.SimuladoTurmasRepository;
+import br.toledo.UTProva.model.dao.repository.TipoRespostaRepository;
+import br.toledo.UTProva.model.dao.serviceJDBC.AlunoJDBC;
+import br.toledo.UTProva.model.dao.serviceJDBC.SimuladoJDBC;
+import br.toledo.UTProva.model.dto.AlternativaDTO;
+import br.toledo.UTProva.model.dto.CursosDTO;
+import br.toledo.UTProva.model.dto.DisciplinasDTO;
+import br.toledo.UTProva.model.dto.FonteDTO;
+import br.toledo.UTProva.model.dto.QuestaoDTO;
+import br.toledo.UTProva.model.dto.QuestaoRetornoDTO;
+import br.toledo.UTProva.model.dto.SimuladoDTO;
+import br.toledo.UTProva.model.dto.SimuladoResolucaoDTO;
+import br.toledo.UTProva.model.dto.SimuladoRetornoDTO;
+import br.toledo.UTProva.model.dto.TipoRespostaDTO;
+import br.toledo.UTProva.model.dto.TurmasDTO;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -1150,63 +1146,165 @@ public class SimuladoController {
             document.add(p1);
             document.add(p2);            
 
-            QuestaoEntity questaoEntity =  questaoRepository.getOne(14L);
-            QuestaoEntity questaoEntity1 =  questaoRepository.getOne(17L);
-            
-            List<QuestaoRetornoDTO> questaoRetornoDTOs = questaoFilterRepository.getQuestaoAlternativas(idSimulado);
-            Integer qt = 1;
-            for(QuestaoRetornoDTO q : questaoRetornoDTOs) {
-                System.out.println("id da questão " + q.getId());
-                if(q.getId() == 14L){
-                    Paragraph p = new Paragraph("Questão " + String.valueOf(qt++), f);
-                    p.setAlignment(Element.ALIGN_LEFT);
-                    document.add(p);
-                    StringBuilder htmlBuilder = new StringBuilder();
-                    htmlBuilder.append(new String("<hr/><br/>"));                 
-                    
-                    htmlBuilder.append(new String(q.getDescricao()));            
-                    htmlBuilder.append(new String("<br/>"));                
-                    htmlBuilder.append(new String("<br/><br/>"));
-    
-                    InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
-                    XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
-    
-    
-                    // for(AlternativaRetornoDTO a : q.getAlternativas()){ 
-                    //     // System.out.println("id da alter " + a.getId());
-                    //     if(a.getId() == 713){
-                    //         Paragraph pa = new Paragraph("Alternativa A" + String.valueOf(qt++));
-                    //         pa.setAlignment(Element.ALIGN_LEFT);
-                    //         document.add(pa);
-                    //         htmlBuilder.append(new String("<p>Alternativa A</p>")); 
-                    //         htmlBuilder.append(new String("<p>Somente as afirmações I, II e III estão corretas</p>"));
-                    //         htmlBuilder.append(new String("<p></p>"));
-                    //         htmlBuilder.append(new String("<pre style='text-align:start;'># include &lt;iostream&gt;<br><br>class Passaro                       // classe base<br>{<br>public:<br>   virtual void MostraNome()<br>   {<br>      std::cout &lt;&lt; 'um passaro';<br>   }<br>   virtual ~Passaro() {}<br>};<br><br>class Cisne: public Passaro         // Cisne é um pássaro<br>{<br>public:<br>   void MostraNome()<br>   {<br>      std::cout &lt;&lt; 'um cisne';        // sobrecarrega a função virtual<br>   }<br>};<br><br>int main()<br>{<br>   Passaro* passaro = new Cisne;<br><br>   passaro-&gt;MostraNome();            // produz na saída 'um cisne', e não 'um pássaro'<br><br>   delete passaro;<br>}</pre>"));
-                    //         htmlBuilder.append(new String("<p></p>"));
-                    //         htmlBuilder.append(new String("<p>Texto após im</p>"));
-    
-                    //         htmlBuilder.append(new String(a.getDescricao())); 
-                                                
-                    //     }
-                       
-                    // }
+            QuestaoEntity questaoEntity =  questaoRepository.getOne(3191L);
+            List<AlternativaEntity> q = alternativaRepository.findAlternativasByQuestao(questaoEntity.getId());
+            StringBuilder htmlBuilder = new StringBuilder();
+            htmlBuilder.append(new String(questaoEntity.getDescricao()));    
+            // htmlBuilder.append(new String("<p>Letra b direito</p><p style='text-align: center'><img src='http://localhost:5000/api/getFile?name=letra-b_852.jpg' alt='undefined' style='float:right;height: 100px;width: 100px'/></p><p></p>"));    
+            // htmlBuilder.append(new String("<p>Letra b direito</p><p style='text-align: right'><img src='http://localhost:5000/api/getFile?name=letra-b_852.jpg' alt='undefined' style='float:right;height: 100px;width: 100px'/></p><p></p>"));    
+            for(AlternativaEntity a : q){ 
+                // System.out.println("id da alter " + a.getId());
+               
+                
+                Paragraph pa = new Paragraph("Alternativa A1");
+                pa.setAlignment(Element.ALIGN_LEFT);
+                document.add(pa);  
+                String castDesc = ""; 
 
-                    htmlBuilder.append(new String("<p>Alternativa A</p>")); 
-                    htmlBuilder.append(new String("<p>Somente as afirmações I, II e III estão corretas</p>"));
-                    htmlBuilder.append(new String("<p></p>"));
-                    htmlBuilder.append(new String("<pre style='text-align:start;'>if (!directory.exists()) {</pre>"));
-                    htmlBuilder.append(new String("<pre><span style='color: rgba(0,0,0,0.65);background-color: rgb(241,241,241);font-size: 14px;font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;'>      directory.mkdir();</span></pre>"));
-                    htmlBuilder.append(new String("<pre><span style='color: rgba(0,0,0,0.65);background-color: rgb(241,241,241);font-size: 14px;font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;'>}</span></pre>"));                    
-                    htmlBuilder.append(new String("<p></p>"));
-                    htmlBuilder.append(new String("<p>Texto após im</p>"));
-    
-                    is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
-                    XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+                if(a.getDescricao().contains("float:right;")){
+                    castDesc = a.getDescricao().replace("\"", "'");
+                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: right'");                    
+                } else if(a.getDescricao().contains("float:left;")) {
+                    castDesc = a.getDescricao().replace("\"", "'");
+                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: left'");  
+                }else{
+                    castDesc = a.getDescricao().replace("\"", "'");
                 }
-                
-                
-                
+
+                htmlBuilder.append(new String(castDesc)); 
+                htmlBuilder.append(new String("<p></p><hr/>"));                                                                               
             }
+            for(AlternativaEntity a : q){ 
+                // System.out.println("id da alter " + a.getId());
+               
+                
+                Paragraph pa = new Paragraph("Alternativa A2");
+                pa.setAlignment(Element.ALIGN_LEFT);
+                document.add(pa);  
+                String castDesc = ""; 
+
+                if(a.getDescricao().contains("float:right;")){
+                    castDesc = a.getDescricao().replace("\"", "'");
+                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: right'");                    
+                } else if(a.getDescricao().contains("float:left;")) {
+                    castDesc = a.getDescricao().replace("\"", "'");
+                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: left'");  
+                }else{
+                    castDesc = a.getDescricao().replace("\"", "'");
+                }
+
+                htmlBuilder.append(new String(castDesc)); 
+                htmlBuilder.append(new String("<p></p><hr/>"));                                                                               
+            }
+            for(AlternativaEntity a : q){ 
+                // System.out.println("id da alter " + a.getId());
+               
+                
+                Paragraph pa = new Paragraph("Alternativa A3");
+                pa.setAlignment(Element.ALIGN_LEFT);
+                document.add(pa);  
+                String castDesc = ""; 
+
+                if(a.getDescricao().contains("float:right;")){
+                    castDesc = a.getDescricao().replace("\"", "'");
+                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: right'");                    
+                } else if(a.getDescricao().contains("float:left;")) {
+                    castDesc = a.getDescricao().replace("\"", "'");
+                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: left'");  
+                }else{
+                    castDesc = a.getDescricao().replace("\"", "'");
+                }
+
+                htmlBuilder.append(new String(castDesc)); 
+                htmlBuilder.append(new String("<p></p><hr/>"));                                                                               
+            }
+            for(AlternativaEntity a : q){ 
+                // System.out.println("id da alter " + a.getId());
+               
+                
+                Paragraph pa = new Paragraph("Alternativa A 4");
+                pa.setAlignment(Element.ALIGN_LEFT);
+                document.add(pa);  
+                String castDesc = ""; 
+
+                if(a.getDescricao().contains("float:right;")){
+                    castDesc = a.getDescricao().replace("\"", "'");
+                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: right'");                    
+                } else if(a.getDescricao().contains("float:left;")) {
+                    castDesc = a.getDescricao().replace("\"", "'");
+                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: left'");  
+                }else{
+                    castDesc = a.getDescricao().replace("\"", "'");
+                }
+
+                htmlBuilder.append(new String(castDesc)); 
+                htmlBuilder.append(new String("<p></p><hr/>"));                                                                               
+            }
+
+            
+            
+
+                
+
+            InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
+            XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+            //XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+            //QuestaoEntity questaoEntity1 =  questaoRepository.getOne(17L);
+            
+            // List<QuestaoRetornoDTO> questaoRetornoDTOs = questaoFilterRepository.getQuestaoAlternativas(idSimulado);
+            // Integer qt = 1;
+            // for(QuestaoRetornoDTO q : questaoRetornoDTOs) {
+            //     System.out.println("id da questão " + q.getId());
+            //     if(q.getId() == 14L){
+            //         Paragraph p = new Paragraph("Questão " + String.valueOf(qt++), f);
+            //         p.setAlignment(Element.ALIGN_LEFT);
+            //         document.add(p);
+            //         StringBuilder htmlBuilder = new StringBuilder();
+            //         htmlBuilder.append(new String("<hr/><br/>"));                 
+                    
+            //         htmlBuilder.append(new String(q.getDescricao()));            
+            //         htmlBuilder.append(new String("<br/>"));                
+            //         htmlBuilder.append(new String("<br/><br/>"));
+    
+            //         InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
+            //         XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+    
+    
+            //         // for(AlternativaRetornoDTO a : q.getAlternativas()){ 
+            //         //     // System.out.println("id da alter " + a.getId());
+            //         //     if(a.getId() == 713){
+            //         //         Paragraph pa = new Paragraph("Alternativa A" + String.valueOf(qt++));
+            //         //         pa.setAlignment(Element.ALIGN_LEFT);
+            //         //         document.add(pa);
+            //         //         htmlBuilder.append(new String("<p>Alternativa A</p>")); 
+            //         //         htmlBuilder.append(new String("<p>Somente as afirmações I, II e III estão corretas</p>"));
+            //         //         htmlBuilder.append(new String("<p></p>"));
+            //         //         htmlBuilder.append(new String("<pre style='text-align:start;'># include &lt;iostream&gt;<br><br>class Passaro                       // classe base<br>{<br>public:<br>   virtual void MostraNome()<br>   {<br>      std::cout &lt;&lt; 'um passaro';<br>   }<br>   virtual ~Passaro() {}<br>};<br><br>class Cisne: public Passaro         // Cisne é um pássaro<br>{<br>public:<br>   void MostraNome()<br>   {<br>      std::cout &lt;&lt; 'um cisne';        // sobrecarrega a função virtual<br>   }<br>};<br><br>int main()<br>{<br>   Passaro* passaro = new Cisne;<br><br>   passaro-&gt;MostraNome();            // produz na saída 'um cisne', e não 'um pássaro'<br><br>   delete passaro;<br>}</pre>"));
+            //         //         htmlBuilder.append(new String("<p></p>"));
+            //         //         htmlBuilder.append(new String("<p>Texto após im</p>"));
+    
+            //         //         htmlBuilder.append(new String(a.getDescricao())); 
+                                                
+            //         //     }
+                       
+            //         // }
+
+            //         htmlBuilder.append(new String("<p>Alternativa A</p>")); 
+            //         htmlBuilder.append(new String("<p>Somente as afirmações I, II e III estão corretas</p>"));
+            //         htmlBuilder.append(new String("<p></p>"));
+            //         htmlBuilder.append(new String("<pre style='text-align:start;'>if (!directory.exists()) {</pre>"));
+            //         htmlBuilder.append(new String("<pre><span style='color: rgba(0,0,0,0.65);background-color: rgb(241,241,241);font-size: 14px;font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;'>      directory.mkdir();</span></pre>"));
+            //         htmlBuilder.append(new String("<pre><span style='color: rgba(0,0,0,0.65);background-color: rgb(241,241,241);font-size: 14px;font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;'>}</span></pre>"));                    
+            //         htmlBuilder.append(new String("<p></p>"));
+            //         htmlBuilder.append(new String("<p>Texto após im</p>"));
+    
+            //         is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
+            //         XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+            //     }
+                
+                
+                
+            //}
 
 
             // StringBuilder htmlBuilder = new StringBuilder();

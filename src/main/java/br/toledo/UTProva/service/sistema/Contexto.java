@@ -32,7 +32,7 @@ public class Contexto {
            
             ResponseEntity<GruposDTO> response = restTemplate.exchange(
                 Gateway.SERVICE_TOLEDO + Endpoint.SISTEMA_CONTEXTO + idUser, 
-                HttpMethod.POST,
+                HttpMethod.GET,
                 requestEntity,
                 new ParameterizedTypeReference<GruposDTO>(){});
 
