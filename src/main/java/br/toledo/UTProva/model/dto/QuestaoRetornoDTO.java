@@ -5,18 +5,26 @@ import java.util.List;
 import br.toledo.UTProva.model.dto.TipoQuestaoDTO;;
 
 public class QuestaoRetornoDTO {
-    
+
     private Long id;
     private String descricao;
     private String imagem;
     private Long respondida;
+    private Long tipoResposta;
     private List<AlternativaRetornoDTO> alternativas;
 
     public Long getId() {
         return id;
     }
 
-    
+    public Long getTipoResposta() {
+        return tipoResposta;
+    }
+
+    public void setTipoResposta(Long tipoResposta) {
+        this.tipoResposta = tipoResposta;
+    }
+
     public String getImagem() {
         return imagem;
     }

@@ -61,6 +61,7 @@ import br.toledo.UTProva.model.dao.repository.TipoRespostaRepository;
 import br.toledo.UTProva.model.dao.serviceJDBC.AlunoJDBC;
 import br.toledo.UTProva.model.dao.serviceJDBC.SimuladoJDBC;
 import br.toledo.UTProva.model.dto.AlternativaDTO;
+import br.toledo.UTProva.model.dto.AlternativaRetornoDTO;
 import br.toledo.UTProva.model.dto.CursosDTO;
 import br.toledo.UTProva.model.dto.DisciplinasDTO;
 import br.toledo.UTProva.model.dto.FonteDTO;
@@ -799,6 +800,7 @@ public class SimuladoController {
         }
     }
     
+    
     public ResponseEntity<List<SimuladoRetornoDTO>> getSimulados(List<Long> idsSimulados ){
         
         try {
@@ -1111,254 +1113,159 @@ public class SimuladoController {
 
 
 
-    @GetMapping(value = "/print/simulado/{idSimulado}")
-    public void printSimulado(@PathVariable("idSimulado") Long idSimulado, HttpSession session,HttpServletResponse response)
+    @GetMapping(value = "/print/simulado/{idSimulado}/{tipo}")
+    public void printSimulado(@PathVariable("idSimulado") Long idSimulado, 
+                              @PathVariable("tipo") int tipo,
+                              HttpSession session,
+                              HttpServletResponse response)
                 throws DocumentException, MalformedURLException, IOException {
 
         System.out.println("id " + idSimulado);
-
+        
         try {
 
             SimuladoEntity simulado = simuladoRepository.getOne(idSimulado);
-            
-            String name = simulado.getNome().replace(" ", "_") + ".pdf";
-            File directory = new File(getUPLOAD_DIR() + "/reports/");
-
-            if (!directory.exists()) {
-                directory.mkdir();
-            }
-            String source = getUPLOAD_DIR() + "/reports/" + "" + name;
-
-            
-            Image imgSoc = Image.getInstance(getUPLOAD_DIR() + "/imgs/unitoledo.png");
-            imgSoc.scaleToFit(100,100);
-
-            Document document = new Document(PageSize.A4);
+            if(simulado.getNome().isEmpty() == false){
+                String name = simulado.getNome().replace(" ", "_");
+                name = name.replace("/", "_");
+                name = name.replace("\\", "_") + ".pdf";
+                File directory = new File(getUPLOAD_DIR() + "/reports/");
     
-            PdfWriter writer =  PdfWriter.getInstance(document, new FileOutputStream(source));
-            document.open();
-            Font f = new Font(Font.FontFamily.COURIER, 15, Font.BOLD);
-            
-            Paragraph p1 = new Paragraph();            
-            p1.add(imgSoc);
-            Paragraph p2 = new Paragraph(simulado.getNome(), f);
-            p2.setAlignment(Element.ALIGN_CENTER);
-            document.add(p1);
-            document.add(p2);            
-
-            QuestaoEntity questaoEntity =  questaoRepository.getOne(3191L);
-            List<AlternativaEntity> q = alternativaRepository.findAlternativasByQuestao(questaoEntity.getId());
-            StringBuilder htmlBuilder = new StringBuilder();
-            htmlBuilder.append(new String(questaoEntity.getDescricao()));    
-            // htmlBuilder.append(new String("<p>Letra b direito</p><p style='text-align: center'><img src='http://localhost:5000/api/getFile?name=letra-b_852.jpg' alt='undefined' style='float:right;height: 100px;width: 100px'/></p><p></p>"));    
-            // htmlBuilder.append(new String("<p>Letra b direito</p><p style='text-align: right'><img src='http://localhost:5000/api/getFile?name=letra-b_852.jpg' alt='undefined' style='float:right;height: 100px;width: 100px'/></p><p></p>"));    
-            for(AlternativaEntity a : q){ 
-                // System.out.println("id da alter " + a.getId());
-               
-                
-                Paragraph pa = new Paragraph("Alternativa A1");
-                pa.setAlignment(Element.ALIGN_LEFT);
-                document.add(pa);  
-                String castDesc = ""; 
-
-                if(a.getDescricao().contains("float:right;")){
-                    castDesc = a.getDescricao().replace("\"", "'");
-                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: right'");                    
-                } else if(a.getDescricao().contains("float:left;")) {
-                    castDesc = a.getDescricao().replace("\"", "'");
-                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: left'");  
-                }else{
-                    castDesc = a.getDescricao().replace("\"", "'");
+                if (!directory.exists()) {
+                    directory.mkdir();
                 }
-
-                htmlBuilder.append(new String(castDesc)); 
-                htmlBuilder.append(new String("<p></p><hr/>"));                                                                               
-            }
-            for(AlternativaEntity a : q){ 
-                // System.out.println("id da alter " + a.getId());
-               
-                
-                Paragraph pa = new Paragraph("Alternativa A2");
-                pa.setAlignment(Element.ALIGN_LEFT);
-                document.add(pa);  
-                String castDesc = ""; 
-
-                if(a.getDescricao().contains("float:right;")){
-                    castDesc = a.getDescricao().replace("\"", "'");
-                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: right'");                    
-                } else if(a.getDescricao().contains("float:left;")) {
-                    castDesc = a.getDescricao().replace("\"", "'");
-                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: left'");  
-                }else{
-                    castDesc = a.getDescricao().replace("\"", "'");
-                }
-
-                htmlBuilder.append(new String(castDesc)); 
-                htmlBuilder.append(new String("<p></p><hr/>"));                                                                               
-            }
-            for(AlternativaEntity a : q){ 
-                // System.out.println("id da alter " + a.getId());
-               
-                
-                Paragraph pa = new Paragraph("Alternativa A3");
-                pa.setAlignment(Element.ALIGN_LEFT);
-                document.add(pa);  
-                String castDesc = ""; 
-
-                if(a.getDescricao().contains("float:right;")){
-                    castDesc = a.getDescricao().replace("\"", "'");
-                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: right'");                    
-                } else if(a.getDescricao().contains("float:left;")) {
-                    castDesc = a.getDescricao().replace("\"", "'");
-                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: left'");  
-                }else{
-                    castDesc = a.getDescricao().replace("\"", "'");
-                }
-
-                htmlBuilder.append(new String(castDesc)); 
-                htmlBuilder.append(new String("<p></p><hr/>"));                                                                               
-            }
-            for(AlternativaEntity a : q){ 
-                // System.out.println("id da alter " + a.getId());
-               
-                
-                Paragraph pa = new Paragraph("Alternativa A 4");
-                pa.setAlignment(Element.ALIGN_LEFT);
-                document.add(pa);  
-                String castDesc = ""; 
-
-                if(a.getDescricao().contains("float:right;")){
-                    castDesc = a.getDescricao().replace("\"", "'");
-                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: right'");                    
-                } else if(a.getDescricao().contains("float:left;")) {
-                    castDesc = a.getDescricao().replace("\"", "'");
-                    castDesc = castDesc.replace("style='text-align: center'", "style='text-align: left'");  
-                }else{
-                    castDesc = a.getDescricao().replace("\"", "'");
-                }
-
-                htmlBuilder.append(new String(castDesc)); 
-                htmlBuilder.append(new String("<p></p><hr/>"));                                                                               
-            }
-
-            
-            
-
-                
-
-            InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
-            XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
-            //XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
-            //QuestaoEntity questaoEntity1 =  questaoRepository.getOne(17L);
-            
-            // List<QuestaoRetornoDTO> questaoRetornoDTOs = questaoFilterRepository.getQuestaoAlternativas(idSimulado);
-            // Integer qt = 1;
-            // for(QuestaoRetornoDTO q : questaoRetornoDTOs) {
-            //     System.out.println("id da questão " + q.getId());
-            //     if(q.getId() == 14L){
-            //         Paragraph p = new Paragraph("Questão " + String.valueOf(qt++), f);
-            //         p.setAlignment(Element.ALIGN_LEFT);
-            //         document.add(p);
-            //         StringBuilder htmlBuilder = new StringBuilder();
-            //         htmlBuilder.append(new String("<hr/><br/>"));                 
-                    
-            //         htmlBuilder.append(new String(q.getDescricao()));            
-            //         htmlBuilder.append(new String("<br/>"));                
-            //         htmlBuilder.append(new String("<br/><br/>"));
+                String source = getUPLOAD_DIR() + "/reports/" + "" + name;
     
-            //         InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
-            //         XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
-    
-    
-            //         // for(AlternativaRetornoDTO a : q.getAlternativas()){ 
-            //         //     // System.out.println("id da alter " + a.getId());
-            //         //     if(a.getId() == 713){
-            //         //         Paragraph pa = new Paragraph("Alternativa A" + String.valueOf(qt++));
-            //         //         pa.setAlignment(Element.ALIGN_LEFT);
-            //         //         document.add(pa);
-            //         //         htmlBuilder.append(new String("<p>Alternativa A</p>")); 
-            //         //         htmlBuilder.append(new String("<p>Somente as afirmações I, II e III estão corretas</p>"));
-            //         //         htmlBuilder.append(new String("<p></p>"));
-            //         //         htmlBuilder.append(new String("<pre style='text-align:start;'># include &lt;iostream&gt;<br><br>class Passaro                       // classe base<br>{<br>public:<br>   virtual void MostraNome()<br>   {<br>      std::cout &lt;&lt; 'um passaro';<br>   }<br>   virtual ~Passaro() {}<br>};<br><br>class Cisne: public Passaro         // Cisne é um pássaro<br>{<br>public:<br>   void MostraNome()<br>   {<br>      std::cout &lt;&lt; 'um cisne';        // sobrecarrega a função virtual<br>   }<br>};<br><br>int main()<br>{<br>   Passaro* passaro = new Cisne;<br><br>   passaro-&gt;MostraNome();            // produz na saída 'um cisne', e não 'um pássaro'<br><br>   delete passaro;<br>}</pre>"));
-            //         //         htmlBuilder.append(new String("<p></p>"));
-            //         //         htmlBuilder.append(new String("<p>Texto após im</p>"));
-    
-            //         //         htmlBuilder.append(new String(a.getDescricao())); 
-                                                
-            //         //     }
-                       
-            //         // }
-
-            //         htmlBuilder.append(new String("<p>Alternativa A</p>")); 
-            //         htmlBuilder.append(new String("<p>Somente as afirmações I, II e III estão corretas</p>"));
-            //         htmlBuilder.append(new String("<p></p>"));
-            //         htmlBuilder.append(new String("<pre style='text-align:start;'>if (!directory.exists()) {</pre>"));
-            //         htmlBuilder.append(new String("<pre><span style='color: rgba(0,0,0,0.65);background-color: rgb(241,241,241);font-size: 14px;font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;'>      directory.mkdir();</span></pre>"));
-            //         htmlBuilder.append(new String("<pre><span style='color: rgba(0,0,0,0.65);background-color: rgb(241,241,241);font-size: 14px;font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;'>}</span></pre>"));                    
-            //         htmlBuilder.append(new String("<p></p>"));
-            //         htmlBuilder.append(new String("<p>Texto após im</p>"));
-    
-            //         is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
-            //         XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
-            //     }
                 
-                
-                
-            //}
-
-
-            // StringBuilder htmlBuilder = new StringBuilder();
-            // htmlBuilder.append(new String("<hr/><br/>"));      
-            // htmlBuilder.append(new String("<h3>"+String.valueOf(qt++)+"<h3/>"));      
-            // htmlBuilder.append(new String(questaoEntity.getDescricao()));            
-            // htmlBuilder.append(new String("<br/><br/><br/><hr/>"));
-            // InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
-            // XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
-            // Paragraph p3 = new Paragraph("Questão 01", f);
-            // p3.setAlignment(Element.ALIGN_LEFT);
-            // document.add(p3);
-            // StringBuilder htmlBuilder = new StringBuilder();
-            // htmlBuilder.append(new String("<hr/><br/>")); 
-         
-            // htmlBuilder.append(new String(questaoEntity.getDescricao()));            
-            // htmlBuilder.append(new String("<br/><br/><br/>"));              
-            // InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
-            // XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
-
-            // Paragraph p4 = new Paragraph("Questão 02", f);
-            // p4.setAlignment(Element.ALIGN_LEFT);
-            // document.add(p4);
-            
-            // StringBuilder htmlBuilder1 = new StringBuilder();
-            // htmlBuilder1.append(new String(questaoEntity1.getDescricao()));   
-            // htmlBuilder1.append(new String("<br/><br/><br/><hr/>"));          
-            // InputStream is1 = new ByteArrayInputStream(htmlBuilder1.toString().getBytes());
-            // XMLWorkerHelper.getInstance().parseXHtml(writer, document, is1);  
-            
-            // Paragraph p5 = new Paragraph("Questão 03", f);
-            // p5.setAlignment(Element.ALIGN_LEFT);
-            // document.add(p5);
-            // StringBuilder htmlBuilder2 = new StringBuilder();
-            // htmlBuilder2.append(new String(questaoEntity.getDescricao()));   
-            // htmlBuilder2.append(new String("<br/><br/><br/>"));         
-            // InputStream is2 = new ByteArrayInputStream(htmlBuilder2.toString().getBytes());
-            // XMLWorkerHelper.getInstance().parseXHtml(writer, document, is2);  
-            
+                Image imgSoc = Image.getInstance(getUPLOAD_DIR() + "/imgs/unitoledo.png");
+                imgSoc.scaleToFit(100,100);
     
+                Document document = new Document(PageSize.A4);
         
-            document.close();
+                PdfWriter writer =  PdfWriter.getInstance(document, new FileOutputStream(source));
+                document.open();
+                Font f = new Font(Font.FontFamily.COURIER, 15, Font.BOLD);
+                
+                Paragraph p1 = new Paragraph();            
+                p1.add(imgSoc);
+                Paragraph p2 = new Paragraph(simulado.getNome(), f);
+                p2.setAlignment(Element.ALIGN_CENTER);
+                document.add(p1);
+                document.add(p2);            
+                
+                List<QuestaoRetornoDTO> questaoRetornoDTOs = questaoFilterRepository.getQuestaoAll(idSimulado, tipo);
+                Integer qt = 1;
+                for(QuestaoRetornoDTO q : questaoRetornoDTOs) {
+                    System.out.println("id da questão " + q.getId());
+                    
+                    Paragraph p = new Paragraph("Questão " + String.valueOf(qt++), f);
+                    p.setAlignment(Element.ALIGN_LEFT);
+                    document.add(p);
+                    StringBuilder htmlBuilder = new StringBuilder();
+                    htmlBuilder.append(new String("<hr/><br/>")); 
+                    
+                    // String castDesc = q.getDescricao().replace("\"", "'");
+    
+                    
+                    // if(q.getDescricao().contains("float:right;")){
+                    //     castDesc = castDesc.replace("style='text-align: center", "style='text-align: right'");                    
+                    // } else if(q.getDescricao().contains("float:left;")) {
+                    //     castDesc = castDesc.replace("style='text-align: center'", "style='text-align: left'");  
+                    // }
+    
+                    String[] descQuestao = castStringHtml(q.getDescricao());
+                    for (int i = 0; i < descQuestao.length; i++) {                        
+                        htmlBuilder.append(new String(descQuestao[i])); 
+                    }
+                    
+                    if(q.getTipoResposta() == 2){
+                        htmlBuilder.append(new String("<br/><br/><br/>"));
+                        for(int i = 0; i < 15; i++){                            
+                            htmlBuilder.append(new String("<hr/>")); 
+                        }
+                        htmlBuilder.append(new String("<br/><br/><br/>"));
+                    }else{
+                        String[] alter = {"A", "B", "C", "D", "E"};
+                        int at = 0;
+                        htmlBuilder.append(new String("<br/><br/><p>Alternativas </p><br/>")); 
+    
+                        for(AlternativaRetornoDTO a : q.getAlternativas()){
+                            htmlBuilder.append(new String("<p>" + String.valueOf(alter[at++]) + ")</p>")); 
+    
+                            // String castAlterDesc = a.getDescricao().replace("\"", "'");
+                            // String[] teste = a.getDescricao().split("><");
+                            // System.out.println(castAlterDesc+"\n\n\n");
+                            // if(a.getDescricao().contains("float:right;")){
+                            //     castAlterDesc = castAlterDesc.replace("style='text-align: center;", "style='text-align: right;");                    
+                            // }else if(a.getDescricao().contains("float:left;")) {
+                            //     castAlterDesc = castAlterDesc.replace("style='text-align: center;", "style='text-align: left;");  
+                            // }
+                            //htmlBuilder.append(new String(castAlterDesc)); 
+    
+                            String[] descAlter = castStringHtml(a.getDescricao());
+                            for (int i = 0; i < descAlter.length; i++) {
+                                
+                                htmlBuilder.append(new String("<p>"+descAlter[i])+"</p><br/>"); 
+                            }
+    
+    
+                        }
+                    }
+                    
+                    htmlBuilder.append(new String("<br/><br/><br/>"));                
+                    
+    
+                    InputStream is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
+                    is = new ByteArrayInputStream(htmlBuilder.toString().getBytes());
+                    XMLWorkerHelper.getInstance().parseXHtml(writer, document, is);
+    
+         
+                }            
             
-            String filePathToBeServed = source;
-            File fileToDownload = new File(filePathToBeServed);
-
-            InputStream inputStream = new FileInputStream(fileToDownload);
-            response.setContentType("application/force-download");
-            response.setHeader("Content-Disposition", "attachment; filename="+name); 
-            IOUtils.copy(inputStream, response.getOutputStream());
-            response.flushBuffer();
-            inputStream.close();
+                document.close();
+                
+                String filePathToBeServed = source;
+                File fileToDownload = new File(filePathToBeServed);
+    
+                InputStream inputStream = new FileInputStream(fileToDownload);
+                response.setContentType("application/force-download");
+                response.setHeader("Content-Disposition", "attachment; filename="+name); 
+                IOUtils.copy(inputStream, response.getOutputStream());
+                response.flushBuffer();
+                inputStream.close();
+            }
+            
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+    public String[] castStringHtml(String html){
+        try {
+            
+            html = html.replace("\"", "'");
+            html = html.replace("<br>", "<br/>");
+            html = html.replace("><img", ">#<img");
+            html = html.replace("/></", "/>#</");
+            html = html.replace("><", ">,<");
+            String[] htmlArray = html.split(",");
+            
+            for(int i = 0; i < htmlArray.length; i++){                
+                if(htmlArray[i].contains("float:right;")){
+                    htmlArray[i] = htmlArray[i].replace("style='text-align: center", "style='text-align: right");                    
+                } else if(htmlArray[i].contains("float:left;")) {
+                    htmlArray[i] = htmlArray[i].replace("style='text-align: center", "style='text-align: left");  
+                }
+                htmlArray[i] = htmlArray[i].replace(">#<", "><");             
+            }
+            return htmlArray;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+       
+    }
+
 }

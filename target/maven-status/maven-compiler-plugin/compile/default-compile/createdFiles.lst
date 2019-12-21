@@ -105,6 +105,7 @@ br/toledo/UTProva/reports/dto/GrupoCadastro.class
 br/toledo/UTProva/reports/repository/ReportsDetalhadoRepository$1.class
 br/toledo/UTProva/model/dao/repository/SimuladoResolucaoRepository.class
 br/toledo/UTProva/model/dto/ListIdsDTO.class
+br/toledo/UTProva/model/dao/repository/QuestaoFilterRepository$8.class
 br/toledo/UTProva/controller/FileController.class
 br/toledo/UTProva/model/dto/TurmasDTO.class
 br/toledo/UTProva/service/ServiceGet.class
@@ -161,6 +162,7 @@ br/toledo/UTProva/model/dao/entity/SimuladoResolucaoEntity.class
 br/toledo/UTProva/service/academico/CoordenadoresService$2.class
 br/toledo/UTProva/reports/repository/ReportsDetalhadoRepository$2.class
 br/toledo/UTProva/service/academico/ProfessoresService$3.class
+br/toledo/UTProva/model/dao/repository/QuestaoFilterRepository$9.class
 br/toledo/UTProva/model/dao/serviceJDBC/SimuladoJDBC$1.class
 br/toledo/UTProva/model/dao/entity/UsuarioEntity.class
 br/toledo/UTProva/model/dao/repository/QuestaoFilterRepository$2.class
