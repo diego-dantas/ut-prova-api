@@ -426,7 +426,7 @@ public class QuestaoFilterRepository {
                       " from questoes q " +
                       " join simulado_questoes sq on sq.questao_id = q.id " +                      
                       " where q.tipo_resposta_id in " + tipo + 
-                      " and sq.simulado_id = " + idSimulado + " order by q.conteudo_id ";
+                      " and sq.simulado_id = " + idSimulado + " order by q.conteudo_id, q.id ";
     
        
  

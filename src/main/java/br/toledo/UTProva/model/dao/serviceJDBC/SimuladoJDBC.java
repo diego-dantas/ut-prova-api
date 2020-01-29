@@ -460,14 +460,14 @@ public class SimuladoJDBC {
                 qtdQuestaoRespondidaCerta += sis.getQuestoesCertas();
             }
             percentualTotal = ( ((double) qtdQuestaoRespondidaCerta) / ((double) qtdQuestaoRespondida) ) * 100; 
-                
-
+                            
+            if(percentualTotal >= 0) percentualTotal = FormatDecimal.formatDecimal(percentualTotal);
 
             Map<String, Object> mapTotal = new HashMap<String, Object>();
             mapTotal.put("totalSimulado", qtdsimulado);
             mapTotal.put("totalQuestoesCertas", qtdQuestaoRespondidaCerta);
             mapTotal.put("totalQuestoesRespondidas", qtdQuestaoRespondida);
-            mapTotal.put("totalPercentual", FormatDecimal.formatDecimal(percentualTotal));
+            mapTotal.put("totalPercentual", percentualTotal);
 
             map.put("total", mapTotal);
             map.put("list", dashAdmin);

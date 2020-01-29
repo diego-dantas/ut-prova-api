@@ -1241,6 +1241,115 @@ public class SimuladoController {
         }
     }
 
+    @GetMapping(value = "/getSimuladoIdPrint/{id}")
+    public ResponseEntity<List<SimuladoDTO>> getSimuladoIdPrint(@PathVariable("id") Long idSimulado) {
+        
+        try {
+           
+            List<QuestaoDTO> questaoDTOs = new ArrayList<>();
+            List<SimuladoDTO> simuladoDTOs = new ArrayList<>();
+
+            SimuladoEntity simuladoRetorno = simuladoRepository.getOne(idSimulado);
+            
+            
+            SimuladoDTO sDTO = new SimuladoDTO();
+            List<CursosDTO> cursosDTOs = new ArrayList<>();
+            List<TurmasDTO> turmasDTOs = new ArrayList<>();
+            List<DisciplinasDTO> disciplinasDTOs = new ArrayList<>();
+            sDTO.setId(simuladoRetorno.getId());
+            sDTO.setNome(simuladoRetorno.getNome());
+            sDTO.setRascunho(simuladoRetorno.isRascunho());
+            sDTO.setEnade(simuladoRetorno.isEnade());
+            sDTO.setContent(simuladoRetorno.isContent());
+            sDTO.setStatus(simuladoRetorno.getStatus());
+            sDTO.setDataHoraInicial(simuladoRetorno.getDataHoraInicial());
+            sDTO.setDataHoraFinal(simuladoRetorno.getDataHoraFinal());
+            
+            List<SimuladoCursosEntity> sc = simuladoCursosRepository.findCursoBySimulado(idSimulado);
+            for (SimuladoCursosEntity si : sc) {
+                CursosDTO cursosDTO = new CursosDTO();    
+                cursosDTO.setId(si.getIdCurso());
+                cursosDTO.setNome(si.getNome());
+                cursosDTO.setIdPeriodoLetivo(si.getIdPeriodoLetivo());
+                cursosDTOs.add(cursosDTO);
+            }
+            sDTO.setCursos(cursosDTOs);
+            List<SimuladoTurmasEntity> st = simuladoTurmasRepository.findTurmasBySimulado(idSimulado);
+            for (SimuladoTurmasEntity si : st) {
+               TurmasDTO turmasDTO = new  TurmasDTO(); 
+                turmasDTO.setId(si.getIdTurma());
+                turmasDTO.setNome(si.getNome());
+                turmasDTO.setIdCurso(si.getIdCurso());
+                turmasDTO.setIdPeriodoLetivo(si.getIdPeriodoLetivo());
+                turmasDTOs.add(turmasDTO);
+            }
+            sDTO.setTurmas(turmasDTOs);
+            List<SimuladoDisciplinasEntity> sd = simuladoDisciplinasRepository.findDisciplinasBySimulado(idSimulado);
+            for (SimuladoDisciplinasEntity si : sd) {
+                DisciplinasDTO disciplinasDTO = new DisciplinasDTO();    
+                disciplinasDTO.setId(si.getIdDisciplina());
+                disciplinasDTO.setNome(si.getNome());
+                disciplinasDTO.setIdTurma(si.getIdTurma());
+                disciplinasDTO.setIdPeriodoLetivo(si.getIdPeriodoLetivo());
+                disciplinasDTOs.add(disciplinasDTO);
+            }
+            sDTO.setDisciplinas(disciplinasDTOs);
+            
+                
+                
+            List<SimuladoQuestoesEntity> sq = simuladoQuestoesRepository.findByQuestoes(idSimulado);
+            for(SimuladoQuestoesEntity sim : sq){
+                QuestaoEntity questaoEntity = questaoRepository.getOne(sim.getQuestao().getId());
+                FonteEntity fonteEntity = fonteRepository.getOne(questaoEntity.getFonte().getId());
+                TipoRespostaEntity tipoRespostaEntity = tipoRespostaRepository.getOne(questaoEntity.getTipoResposta().getId());
+
+                QuestaoDTO questaoDTO = new QuestaoDTO();
+
+                TipoRespostaDTO tipoResposta = new TipoRespostaDTO();
+                tipoResposta.setId(tipoRespostaEntity.getId());
+                tipoResposta.setDescricao(tipoRespostaEntity.getDescricao());
+                questaoDTO.setTipoResposta(tipoResposta);
+                
+                FonteDTO fonte = new FonteDTO();
+                fonte.setId(fonteEntity.getId());
+                fonte.setDescription(fonteEntity.getDescription());
+                fonte.setStatus(fonteEntity.isStatus());
+                questaoDTO.setFonte(fonte);
+
+                questaoDTO.setId(questaoEntity.getId());
+                questaoDTO.setDescricao(questaoEntity.getDescricao());
+                questaoDTO.setStatus(questaoEntity.isStatus());
+                questaoDTO.setAno(questaoEntity.getAno());
+                questaoDTO.setAlterCorreta(questaoEntity.getAlterCorreta());
+                questaoDTO.setImagem(questaoEntity.getImagem());
+                
+                
+                if(questaoEntity.getTipoResposta().getId() != 2){
+                    List<AlternativaEntity> alternativaEntities = alternativaRepository.findByQuestao(questaoEntity);
+                    List<AlternativaDTO> alternativas    = new ArrayList<>();
+                    for(AlternativaEntity alter : alternativaEntities){
+                        AlternativaDTO alternativaDTO = new AlternativaDTO();
+                        alternativaDTO.setId(alter.getId());
+                        alternativaDTO.setCorreta(alter.isCorreta());
+                        alternativaDTO.setDescricao(alter.getDescricao());
+                        alternativas.add(alternativaDTO);
+                    }
+                    //Collections.shuffle(alternativas);
+                    questaoDTO.setAlternativas(alternativas);
+                }
+                questaoDTOs.add(questaoDTO);
+            }
+            //Collections.shuffle(questaoDTOs);
+            sDTO.setQuestoes(questaoDTOs);
+            simuladoDTOs.add(sDTO);
+            
+            return ResponseEntity.ok(simuladoDTOs);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } 
+    }
 
     public String[] castStringHtml(String html){
         try {

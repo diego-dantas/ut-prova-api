@@ -11,7 +11,7 @@ public interface SimuladoQuestoesRepository extends JpaRepository<SimuladoQuesto
     
     List<SimuladoQuestoesEntity> findBySimulado(SimuladoEntity simulado);
     
-    @Query(value = "select * from simulado_questoes where simulado_id =:idSimulado order by questao_id ", nativeQuery = true)
+    @Query(value = "select sq.* from simulado_questoes sq inner join questoes qt on qt.id = sq.questao_id where sq.simulado_id =:idSimulado order by qt.conteudo_id,  sq.questao_id ", nativeQuery = true)
     List<SimuladoQuestoesEntity> findByQuestoes(@Param("idSimulado") Long idSimulado);
 
     @Query(value = "select count(simulado_id) from simulado_questoes where simulado_id =:id ", nativeQuery = true)
